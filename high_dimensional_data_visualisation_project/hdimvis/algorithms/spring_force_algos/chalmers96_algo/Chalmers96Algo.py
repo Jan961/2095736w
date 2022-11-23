@@ -12,10 +12,10 @@ class Chalmers96(SpringForceBase):
     """
     def __init__(self, dataset: np.ndarray=None, nodes: List[Node]=None,
                  distance_fn: Callable[[np.ndarray, np.ndarray], float]=euclidean,
-                 iterations: int=50, neighbour_set_size: int=5, sample_set_size: int=10,
-                 target_node_speed: float=0.0, enable_cache: bool=True):
+                 neighbour_set_size: int=5, sample_set_size: int=10,
+                 enable_cache: bool=True,
+                 alpha: float=None):
         super().__init__(dataset=dataset, nodes=nodes, distance_fn=distance_fn,
-                         iterations=iterations, target_node_speed=target_node_speed,
                          enable_cache=enable_cache,
                          name='chalmers96')
         assert neighbour_set_size > 0, "neighbour_set_size must be > 0"
@@ -24,6 +24,11 @@ class Chalmers96(SpringForceBase):
         self.sample_set_size:    int = sample_set_size
         self.neighbours: Dict[int, List[int]] = dict()
         self.data_size_factor: float = 0.5 / (neighbour_set_size + sample_set_size)
+        self.alpha : float = alpha
+        self.iteration_no :int = 0
+
+    def get_iteration_no(self):
+        return self.iteration_no
 
     def one_iteration(self, alpha: float=1) -> None:
         """
@@ -39,6 +44,7 @@ class Chalmers96(SpringForceBase):
                 self._set_velocity(self.nodes[i], self.nodes[j], alpha, cache_distance=True)
             self._update_neighbours(i, samples=sample_set)
         self._apply_velocities()
+        self.iteration += 1
 
 
     def _get_neighbours(self, index: int) -> List[int]:

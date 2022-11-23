@@ -13,25 +13,34 @@ import math
 class SpringForceBase(BaseAlgorithm):
     def __init__(self, dataset: np.ndarray = None, nodes: List[Node] = None,
                  distance_fn: Callable[[np.ndarray, np.ndarray], float] = euclidean,
-                 iterations: int = 50, target_node_speed: float = 0.0,
-                 enable_cache: bool = True) -> None:
+                 enable_cache: bool = True, alpha: float = 1) -> None:
 
-        assert iterations >= 0, "iterations must be non-negative"
         assert dataset is not None or nodes is not None, "must provide either dataset or nodes"
 
         self.nodes: List[Node] = nodes if nodes is not None else self.build_nodes(dataset)
-        self.iterations: int = iterations
         self.data_size_factor: float = 1
-        self._i: int = 0  # current iteration
         self.distance_fn: Callable[[np.ndarray, np.ndarray], float] = distance_fn
         self._average_speeds: List[float] = list()
-        self.target_node_speed: float = target_node_speed
         self.enable_cache: bool = enable_cache
+        self.alpha = alpha
         if enable_cache:
             self.distances: Dict[FrozenSet[Node], float] = dict()
         else:
             # Change the distance function
             self.distance = self.distance_no_cache
+
+
+    @abstractmethod
+    def one_iteration(self, alpha: float) -> None:
+        """
+        Perform one iteration of the spring layout
+        """
+        pass
+
+    @abstractmethod
+    def get_iteration_no(self):
+        pass
+
 
     def build_nodes(self, dataset: np.ndarray) -> List[Node]:
         """
@@ -39,8 +48,13 @@ class SpringForceBase(BaseAlgorithm):
         """
         return list(np.apply_along_axis(Node, axis=1, arr=dataset))
 
-    def current_iteration(self) -> int:
-        return self._i
+    def get_get_evaluation_metrics(self, **kwargs):
+        output = {}
+        if 'average speed' in kwargs.keys():
+            output['average speed'] = self.get_average_speed()
+        if 'stress' in  kwargs.keys():
+            output['stress'] = self.get_stress()
+        return output
 
     def get_positions(self) -> np.ndarray:
         return np.array([(n.x, n.y) for n in self.nodes])
@@ -54,9 +68,9 @@ class SpringForceBase(BaseAlgorithm):
         actual_distance: float = 0.0
         for source, target in combinations(self.nodes, 2):
             high_d_distance = self.distance(source, target, cache=False)
-            low_d_distance = math.sqrt((target.x - source.x)**2 + (target.y - source.y)**2)
-            distance_diff += (high_d_distance - low_d_distance)**2
-            actual_distance += low_d_distance**2
+            low_d_distance = math.sqrt((target.x - source.x) ** 2 + (target.y - source.y) ** 2)
+            distance_diff += (high_d_distance - low_d_distance) ** 2
+            actual_distance += low_d_distance ** 2
         if actual_distance == 0:
             return math.inf
         return math.sqrt(distance_diff / actual_distance)
@@ -64,10 +78,9 @@ class SpringForceBase(BaseAlgorithm):
     def get_memory(self) -> int:
         return get_size(self)
 
-    def average_speed(self) -> float:
+    def get_average_speed(self) -> float:
         """ Return the 5-running mean of the average node speeds """
-        return mean(self._average_speeds[-5:]) if len(self._average_speeds) > 0 else np.inf
-
+        return np.mean(self._average_speeds[-5:]) if len(self._average_speeds) > 0 else np.inf
 
 
     def distance_no_cache(self, source: Node, target: Node, cache: bool = False) -> float:
@@ -87,17 +100,11 @@ class SpringForceBase(BaseAlgorithm):
             self.distances[pair] = distance
         return distance
 
-    @abstractmethod
-    def one_iteration(self, alpha: float) -> None:
-        """
-        Perform one iteration of the spring layout
-        """
-        pass
 
-    def _force(self, current_distance, real_distance, alpha: float=1) -> float:
+    def _force(self, current_distance, real_distance, alpha: float = 1) -> float:
         return (current_distance - real_distance) * alpha * self.data_size_factor / current_distance
 
-    def _calculate_velocity(self, source: Node, target: Node, alpha: float=1,
+    def _calculate_velocity(self, source: Node, target: Node, alpha: float = 1,
                             cache_distance: bool = False) -> Tuple[float, float]:
         """
         Calculate the spring force to apply between two nodes i and j
