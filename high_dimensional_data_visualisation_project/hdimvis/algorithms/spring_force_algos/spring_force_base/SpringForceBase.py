@@ -1,5 +1,5 @@
-from ... import BaseAlgorithm
-from .import Node
+from ...BaseAlgorithm import BaseAlgorithm
+from .Node import Node
 from ..utils import jiggle, get_size, mean
 from ....distance_measures.euclidian_and_manhattan import euclidean
 from itertools import combinations
@@ -48,13 +48,15 @@ class SpringForceBase(BaseAlgorithm):
         """
         return list(np.apply_along_axis(Node, axis=1, arr=dataset))
 
-    def get_get_evaluation_metrics(self, **kwargs):
+    def get_evaluation_metrics(self, *args):
+        assert 'average speed' in args or 'stress' in args
+
         output = {}
-        if 'average speed' in kwargs.keys():
+        if 'average speed' in args:
             output['average speed'] = self.get_average_speed()
-        if 'stress' in  kwargs.keys():
+        if 'stress' in  args:
             output['stress'] = self.get_stress()
-        return output
+        return output if len(output) > 1 else list(output.values())[0]
 
     def get_positions(self) -> np.ndarray:
         return np.array([(n.x, n.y) for n in self.nodes])
@@ -135,8 +137,8 @@ class SpringForceBase(BaseAlgorithm):
         """
         vx, vy = self._calculate_velocity(source, target, alpha=alpha,
                                           cache_distance=cache_distance)
-        source.add_velocity(vx, vy)
-        target.add_velocity(-vx, -vy)
+        source.increment_velocity(vx, vy)
+        target.increment_velocity(-vx, -vy)
 
     def _apply_velocities(self) -> None:
         """

@@ -1,4 +1,5 @@
-from ..spring_force_base import SpringForceBase,Node
+from ..spring_force_base.SpringForceBase import SpringForceBase
+from ..spring_force_base.Node import Node
 from ..utils import random_sample_set
 from ....distance_measures.euclidian_and_manhattan import euclidean
 from typing import Callable, List, Dict
@@ -16,8 +17,7 @@ class Chalmers96(SpringForceBase):
                  enable_cache: bool=True,
                  alpha: float=None):
         super().__init__(dataset=dataset, nodes=nodes, distance_fn=distance_fn,
-                         enable_cache=enable_cache,
-                         name='chalmers96')
+                         enable_cache=enable_cache,)
         assert neighbour_set_size > 0, "neighbour_set_size must be > 0"
         assert sample_set_size > 0, "sample_set_size must be > 0"
         self.neighbour_set_size: int = neighbour_set_size
@@ -26,6 +26,10 @@ class Chalmers96(SpringForceBase):
         self.data_size_factor: float = 0.5 / (neighbour_set_size + sample_set_size)
         self.alpha : float = alpha
         self.iteration_no :int = 0
+        self.name = 'chalmers96'
+
+    def get_name(self):
+        return self.name
 
     def get_iteration_no(self):
         return self.iteration_no
@@ -44,7 +48,7 @@ class Chalmers96(SpringForceBase):
                 self._set_velocity(self.nodes[i], self.nodes[j], alpha, cache_distance=True)
             self._update_neighbours(i, samples=sample_set)
         self._apply_velocities()
-        self.iteration += 1
+        self.iteration_no += 1
 
 
     def _get_neighbours(self, index: int) -> List[int]:

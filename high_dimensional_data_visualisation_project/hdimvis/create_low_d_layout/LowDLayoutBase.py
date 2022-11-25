@@ -1,6 +1,12 @@
 from ..algorithms import BaseAlgorithm
+from abc import ABCMeta, abstractmethod
 
 class LowDLayoutBase:
 
-    def create(self, algorithm):
+    @abstractmethod
+    def run(self):
+        pass
+
+    @abstractmethod
+    def get_final_positions(self):
         pass
