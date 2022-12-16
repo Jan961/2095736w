@@ -114,37 +114,4 @@ def test_spring_force_builds_nodes_correctly():
     assert np.array_equal(spring_force.nodes[1].datapoint, dataset[1, :])
 
 
-def test_get_stress_returns_expected_stress_with_perfect_layout():
-    # Data that should result in 0 stress layout
-    # with euclidean distance
-    mock_dataset = np.array([
-        [0, 0],
-        [0, 1],
-    ])
 
-    algorithm = Chalmers96(dataset=mock_dataset)
-    [algorithm.one_iteration() for i in range(100)]
-
-    expected_stress = 0
-    np.assert_almost_equal(algorithm.get_stress(), expected_stress)
-
-
-def test_get_stress_returns_expected_stress_with_bad_layout():
-    mock_dataset = np.array([
-        [0, 0],
-        [0, 1],
-        [1, 0],
-        [1, 1],
-    ])
-
-    # Distance function that does not allow for a zero
-    # stress layout with given data
-    def bad_distance(a, b):
-        return 1
-
-    algorithm = SpringForce(dataset=mock_dataset, distance_fn=bad_distance, iterations=100)
-    algorithm.spring_layout()
-
-    # precalculated nearly optimal stress for this case
-    expected_stress = 0.1715728
-    assert_almost_equal(algorithm.get_stress(), expected_stress)

@@ -25,14 +25,11 @@ class Chalmers96(SpringForceBase):
         self.neighbours: Dict[int, List[int]] = dict()
         self.data_size_factor: float = 0.5 / (neighbour_set_size + sample_set_size)
         self.alpha : float = alpha
-        self.iteration_no :int = 0
         self.name = 'chalmers96'
 
     def get_name(self):
         return self.name
 
-    def get_iteration_no(self):
-        return self.iteration_no
 
     def one_iteration(self, alpha: float=1) -> None:
         """
@@ -48,6 +45,7 @@ class Chalmers96(SpringForceBase):
                 self._set_velocity(self.nodes[i], self.nodes[j], alpha, cache_distance=True)
             self._update_neighbours(i, samples=sample_set)
         self._apply_velocities()
+        self.iteration_no += 1
 
 
 

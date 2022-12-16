@@ -23,6 +23,7 @@ class SpringForceBase(BaseAlgorithm):
         self._average_speeds: List[float] = list()
         self.enable_cache: bool = enable_cache
         self.alpha = alpha
+        self.iteration_no: int = 0
         if enable_cache:
             self.distances: Dict[FrozenSet[Node], float] = dict()
         else:
@@ -37,9 +38,9 @@ class SpringForceBase(BaseAlgorithm):
         """
         pass
 
-    @abstractmethod
+
     def get_iteration_no(self):
-        pass
+        return self.iteration_no
 
 
     def build_nodes(self, dataset: np.ndarray) -> List[Node]:
@@ -82,7 +83,7 @@ class SpringForceBase(BaseAlgorithm):
 
     def get_average_speed(self) -> float:
         """ Return the 5-running mean of the average node speeds """
-        return np.mean(self._average_speeds[-5:]) if len(self._average_speeds) > 0 else np.inf
+        return mean(self._average_speeds[-5:]) if len(self._average_speeds) > 0 else np.inf
 
 
     def distance_no_cache(self, source: Node, target: Node, cache: bool = False) -> float:
