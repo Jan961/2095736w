@@ -107,7 +107,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
-Pipfile/
+/high_dimensional_data_visualisation_project/Pipfile
 
 
 # mkdocs documentation
