@@ -49,15 +49,14 @@ class SpringForceBase(BaseAlgorithm):
         """
         return list(np.apply_along_axis(Node, axis=1, arr=dataset))
 
-    def get_evaluation_metrics(self, *args):
+    def get_evaluation_metrics(self, *args) -> float:
         assert 'average speed' in args or 'stress' in args
 
-        output = {}
         if 'average speed' in args:
-            output['average speed'] = self.get_average_speed()
+            return self.get_average_speed()
         if 'stress' in  args:
-            output['stress'] = self.get_stress()
-        return output if len(output) > 1 else list(output.values())[0]
+            return self.get_stress()
+
 
     def get_positions(self) -> np.ndarray:
         return np.array([(n.x, n.y) for n in self.nodes])

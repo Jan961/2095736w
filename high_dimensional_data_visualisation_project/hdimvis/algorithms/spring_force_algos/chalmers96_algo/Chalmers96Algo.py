@@ -52,7 +52,7 @@ class Chalmers96(SpringForceBase):
     def _get_neighbours(self, index: int) -> List[int]:
         """
         Get the list of neighbour indices for a given node index sorted by distance.
-        If no neighbouts exist yet then they are randomly sampled.
+        If no neighbours exist yet then they are randomly sampled.
         """
         if index not in self.neighbours:
             random_sample = random_sample_set(self.neighbour_set_size, len(self.nodes), {index})
