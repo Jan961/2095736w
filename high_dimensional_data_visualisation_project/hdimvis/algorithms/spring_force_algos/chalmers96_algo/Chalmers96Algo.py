@@ -1,5 +1,5 @@
-from ..spring_force_base.SpringForceBase import SpringForceBase
-from ..spring_force_base.Node import Node
+from hdimvis.algorithms.spring_force_algos.SpringForceBase import SpringForceBase
+from hdimvis.algorithms.spring_force_algos.Node import Node
 from ..utils import random_sample_set
 from ....distance_measures.euclidian_and_manhattan import euclidean
 from typing import Callable, List, Dict

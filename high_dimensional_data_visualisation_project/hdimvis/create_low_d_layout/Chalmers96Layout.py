@@ -1,21 +1,19 @@
+from typing import List, Tuple
+
 from .LowDLayoutBase import LowDLayoutBase
+from ..algorithms.BaseAlgorithm import BaseAlgorithm
 from ..algorithms.spring_force_algos.chalmers96_algo.Chalmers96Algo import Chalmers96
 import numpy as np
 import matplotlib.pyplot as plt
 
 class Chalmers96Layout(LowDLayoutBase):
 
-    def __init__(self, algorithm: Chalmers96):
-        assert isinstance(algorithm, Chalmers96)
-        self.algorithm = algorithm
-        self.final_positions: np.ndarray = np.zeros(1)
+    def __init__(self, algorithm: BaseAlgorithm):
+        super().__init__(algorithm)
+        assert isinstance(self.algorithm, Chalmers96)
 
 
-
-    def get_final_positions(self):
-        return self.final_positions
-
-    def run(self, return_after: int = 50, target_node_speed: float = 0.0, ) -> None:
+    def run(self, metric_collection: List[Tuple] =None, return_after: int = 50, target_node_speed: float = 0.0, ) -> None:
         """
         Method to perform the main spring layout calculation, move the nodes iterations
         number of times unless return_after is given.
@@ -23,7 +21,6 @@ class Chalmers96Layout(LowDLayoutBase):
         times. Subsequent calls to create will continue from the previous number of
         iterations.
         """
-
 
         if return_after is not None:
             assert return_after >= 0
@@ -34,7 +31,7 @@ class Chalmers96Layout(LowDLayoutBase):
             # Return calculated positions for datapoints
             if return_after is not None and self.algorithm.get_iteration_no() >= return_after:
                 return
-            average_speed = self.algorithm.get_evaluation_metrics('average speed')
+            average_speed = self.algorithm.get_metrics('average speed')
             if target_node_speed >0 and target_node_speed >= average_speed:
                 return
 

@@ -31,7 +31,7 @@ def random_sample_set(size: int, n: int, exclude: Set[int] = None) -> List[int]:
 
 def sample(n: int, exclude: Set[int] = None) -> int:
     """
-    Return a random number in the the range 0 to n-1
+    Return a random number in the range 0 to n-1
     not in exclude set.
     """
     s = random.randint(0, n - 1)

@@ -8,7 +8,7 @@ class BaseAlgorithm(ABC):
     def get_positions(self) -> np.ndarray:
         pass
     @abstractmethod
-    def get_evaluation_metrics(self, **kwargs) -> dict:
+    def get_metrics(self, **kwargs) -> dict:
         pass
     # @abstractmethod
     # def get_time_per_iter(self) -> int:

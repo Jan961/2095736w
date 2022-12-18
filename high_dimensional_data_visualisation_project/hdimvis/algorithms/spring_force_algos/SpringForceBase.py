@@ -1,10 +1,10 @@
-from ...BaseAlgorithm import BaseAlgorithm
-from .Node import Node
-from ..utils import jiggle, get_size, mean
-from ....distance_measures.euclidian_and_manhattan import euclidean
+from hdimvis.algorithms.BaseAlgorithm import BaseAlgorithm
+from hdimvis.algorithms.spring_force_algos.Node import Node
+from hdimvis.algorithms.spring_force_algos.utils import jiggle, get_size, mean
+from hdimvis.distance_measures.euclidian_and_manhattan import euclidean
 from itertools import combinations
 from typing import Callable, Tuple, List, Dict, FrozenSet
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 import numpy as np
 import math
 
@@ -49,7 +49,7 @@ class SpringForceBase(BaseAlgorithm):
         """
         return list(np.apply_along_axis(Node, axis=1, arr=dataset))
 
-    def get_evaluation_metrics(self, *args) -> float:
+    def get_metrics(self, *args) -> float:
         assert 'average speed' in args or 'stress' in args
 
         if 'average speed' in args:

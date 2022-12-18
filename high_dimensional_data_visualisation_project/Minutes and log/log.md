@@ -16,5 +16,6 @@
 ## Week 12
 
 ### 18 Dec 2022
-* *1 hour* 
+* *1 hour* visualisation and fixing VC
+* *6 hour* research on how to evaluate layouts and how to explore the algorithms' parameter space
 

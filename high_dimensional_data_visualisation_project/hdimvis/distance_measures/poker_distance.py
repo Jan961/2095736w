@@ -28,19 +28,6 @@ def _groupped(self, iterable, n):
     return zip(*[iter(iterable)] * n)
 
 
-def _annotate_poker(self, node, i):
-    def card(suit, rank):
-        return self.cards[((suit - 1) * 13) + rank - 1]
-
-    arr = node.datapoint
-    hand = []
-    for s, r in self.groupped(arr[:10], 2):
-        hand.append(card(s, r))
-    if (len(arr) > 10):
-        hand.append(self.hand_classes[arr[10]])
-    return ' '.join(hand)
-
-
 
 
 
