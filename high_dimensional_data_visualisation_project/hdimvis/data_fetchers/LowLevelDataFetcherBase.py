@@ -1,9 +1,14 @@
 from abc import ABC, abstractmethod
-from typing import Any
+
+
+import numpy as np
+
 
 class LowLevelDataFetcherBase(ABC):
 
     @abstractmethod
-    def fetch_dataset(self) -> Any:
+    def fetch_dataset(self) -> np.ndarray:
         pass
 
+    def fetch_labels(self) -> np.ndarray:
+        return None

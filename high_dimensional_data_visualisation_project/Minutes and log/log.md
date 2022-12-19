@@ -13,9 +13,11 @@
 * Follow the structure provided, grouping time by weeks.  Quantise time to the half hour.
 
 
-## Week 12
+
 
 ### 18 Dec 2022
 * *1 hour* visualisation and fixing VC
-* *6 hour* research on how to evaluate layouts and how to explore the algorithms' parameter space
+* *6 hours* research on how to evaluate layouts and how to explore the algorithms' parameter space
 
+### 18 Dec 2022
+* *2 hours* re-reading the stochastic quartet paper 

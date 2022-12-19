@@ -10,3 +10,11 @@ We can make nice swarm plots with accuracy values obtained from cross validation
 * Use a 3 dimensional colour cube for testing  
 
 
+
+* stochastic MDS paper  uses slightly different stress
+* they claim that hybrid or pivot (and loads of others) - many parameters add cumbersome complexity
+* t-SNE, UMAP don't preserve global structures well
+* SQUAD MDS - O(N) - but that's per iteration ( like with all the other algorithms )  
+therefore important how many iterations needed for convergence
+* Squad MDS uses something called Nesterov momentum 
+* Squad MDS initialises the embedding with PCA

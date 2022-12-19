@@ -12,7 +12,8 @@ def create_low_lvl_data_fetcher(dataset_name: str='poker', **kwargs) -> LowLevel
 
 class DataFetcher:
 
-    def fetch_data(self, dataset_name='poker', **kwargs) -> np.ndarray:
+    def fetch_data(self, dataset_name='poker', **kwargs):
         low_lvl_data_fetcher = create_low_lvl_data_fetcher(dataset_name, **kwargs)
-        data: np.ndarray = low_lvl_data_fetcher.fetch_dataset()
-        return data
+        data = low_lvl_data_fetcher.fetch_dataset()
+        labels = low_lvl_data_fetcher.fetch_labels()
+        return data, labels
