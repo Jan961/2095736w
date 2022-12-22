@@ -16,4 +16,5 @@ class DataFetcher:
         low_lvl_data_fetcher = create_low_lvl_data_fetcher(dataset_name, **kwargs)
         data = low_lvl_data_fetcher.fetch_dataset()
         labels = low_lvl_data_fetcher.fetch_labels()
+
         return data, labels

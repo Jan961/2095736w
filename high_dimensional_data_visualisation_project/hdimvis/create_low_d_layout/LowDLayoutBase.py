@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, Tuple
 
 from ..algorithms import BaseAlgorithm
 from abc import abstractmethod
@@ -7,10 +7,12 @@ import numpy as np
 
 class LowDLayoutBase:
 
-    def __init__(self, algorithm: BaseAlgorithm):
+    def __init__(self, algorithm: BaseAlgorithm, data:np.ndarray, labels: np.ndarray):
         self.algorithm = algorithm
         self.final_positions: np.ndarray = np.zeros(1)
         self.metrics: Dict[str: np.ndarray] = None
+        self.data = data
+        self.labels= labels
 
 
     # method to create the layout - it repeatedly calls "collect_metrics" as it runs

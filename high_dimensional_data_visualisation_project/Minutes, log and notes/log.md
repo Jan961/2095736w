@@ -19,5 +19,8 @@
 * *1 hour* visualisation and fixing VC
 * *6 hours* research on how to evaluate layouts and how to explore the algorithms' parameter space
 
-### 18 Dec 2022
+### 19 Dec 2022
 * *2 hours* re-reading the stochastic quartet paper 
+
+### 22 Dec 2022
+* *4.5 hours* further research on evaluation, initialisation and possible improvements
