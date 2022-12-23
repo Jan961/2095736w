@@ -24,3 +24,6 @@
 
 ### 22 Dec 2022
 * *4.5 hours* further research on evaluation, initialisation and possible improvements
+
+### 23 Dec 2022
+* *1.5 hours* starting to adapt squad, 2019 change code to include initialisation

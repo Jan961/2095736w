@@ -11,15 +11,15 @@ import math
 
 
 class SpringForceBase(BaseAlgorithm):
-    def __init__(self, dataset: np.ndarray = None, nodes: List[Node] = None,
-                 distance_fn: Callable[[np.ndarray, np.ndarray], float] = euclidean,
+    def __init__(self, dataset: np.ndarray, initial_layout: np.ndarray = None,
+                 distance_fn: Callable[[np.ndarray, np.ndarray], float] = euclidean, nodes: List[Node] = None,
                  enable_cache: bool = True, alpha: float = 1) -> None:
 
+        super().__init__(dataset, initial_layout, distance_fn)
         assert dataset is not None or nodes is not None, "must provide either dataset or nodes"
 
-        self.nodes: List[Node] = nodes if nodes is not None else self.build_nodes(dataset)
+        self.nodes: List[Node] = nodes if nodes is not None else self.build_nodes(self.dataset, self.initial_layout)
         self.data_size_factor: float = 1
-        self.distance_fn: Callable[[np.ndarray, np.ndarray], float] = distance_fn
         self._average_speeds: List[float] = list()
         self.enable_cache: bool = enable_cache
         self.alpha = alpha
@@ -40,14 +40,19 @@ class SpringForceBase(BaseAlgorithm):
 
 
     def get_iteration_no(self):
+
         return self.iteration_no
 
 
-    def build_nodes(self, dataset: np.ndarray) -> List[Node]:
+    def build_nodes(self, dataset: np.ndarray, initial_layout: np.ndarray) -> List[Node]:
         """
         Construct a Node for each datapoint
         """
-        return list(np.apply_along_axis(Node, axis=1, arr=dataset))
+        #contactenate the datapoints with the initial positions for low-d mappings
+        #for the apply_along_axis fn
+        conc = np.concatenate((dataset, initial_layout), axis=1)
+
+        return list(np.apply_along_axis(Node, axis=1, arr= conc))
 
     def get_metrics(self, *args) -> float:
         assert 'average speed' in args or 'stress' in args

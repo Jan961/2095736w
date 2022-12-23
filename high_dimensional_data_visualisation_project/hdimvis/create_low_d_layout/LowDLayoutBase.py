@@ -9,7 +9,7 @@ class LowDLayoutBase:
 
     def __init__(self, algorithm: BaseAlgorithm, data:np.ndarray, labels: np.ndarray):
         self.algorithm = algorithm
-        self.final_positions: np.ndarray = np.zeros(1)
+        self.final_positions: np.ndarray = None
         self.metrics: Dict[str: np.ndarray] = None
         self.data = data
         self.labels= labels

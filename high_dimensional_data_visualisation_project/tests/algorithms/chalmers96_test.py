@@ -4,7 +4,7 @@ from hdimvis.create_low_d_layout.LowDLayoutCreation import LowDLayoutCreation
 import matplotlib.pyplot as plt
 import numpy as np
 
-dataset = DataFetcher().fetch_data('poker', size=500)
+dataset, labels = DataFetcher().fetch_data('poker', size=500)
 
 def test_get_neighbours_returns_correct_size_set():
     algorithm = Chalmers96(dataset=dataset, neighbour_set_size=5)
