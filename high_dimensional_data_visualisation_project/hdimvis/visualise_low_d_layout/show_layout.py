@@ -4,8 +4,8 @@ import numpy as np
 import  matplotlib.pyplot as plt
 
 
-def show_layout(layout:LowDLayoutBase, dataset: np.ndarray, alpha: float = None, color_by: Callable[[np.ndarray],
-            float] = None, color_map: str = 'viridis', size: float = 40) -> None:
+def show_layout(layout:LowDLayoutBase, dataset: np.ndarray, use_labels: bool=False, alpha: float = None, color_by: Callable[[np.ndarray],
+            float] = None, color_map: str = 'viridis', size: float = 1) -> None:
     """
 
 
@@ -26,14 +26,18 @@ def show_layout(layout:LowDLayoutBase, dataset: np.ndarray, alpha: float = None,
     # Color nodes
     colors = 'b'
     cmap = None
-    if color_by is not None and dataset is not None:
+
+    if use_labels:
+        colors = layout.labels
+    elif color_by is not None and dataset is not None:
         colors = np.apply_along_axis(color_by, axis=1, arr=dataset)
         cmap = plt.cm.get_cmap(color_map)
 
 
     # Draw plot
-    sc = plt.scatter(x, y, s=size, alpha=alpha, c=colors, cmap=cmap)
-    plt.axis('off')
+    fig, ax = plt.subplots()
+    ax.scatter(x, y, alpha=alpha, s=1, c=colors, cmap=cmap)
+    # plt.axis('off')
     plt.show()
 
 

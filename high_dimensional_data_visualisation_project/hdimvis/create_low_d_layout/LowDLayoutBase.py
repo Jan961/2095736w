@@ -1,4 +1,4 @@
-from typing import Dict, Tuple
+from typing import Dict, Tuple, List
 
 from ..algorithms import BaseAlgorithm
 from abc import abstractmethod
@@ -12,12 +12,12 @@ class LowDLayoutBase:
         self.final_positions: np.ndarray = None
         self.metrics: Dict[str: np.ndarray] = None
         self.data = data
-        self.labels= labels
+        self.labels = labels
 
 
     # method to create the layout - it repeatedly calls "collect_metrics" as it runs
     @abstractmethod
-    def run(self):
+    def run(self, metric_collection: List[Tuple] =None):
         pass
 
     def get_final_positions(self):

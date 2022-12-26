@@ -1,5 +1,5 @@
 from hdimvis.data_fetchers.DataFetcher import DataFetcher
-from hdimvis.algorithms.spring_force_algos.chalmers96_algo.Chalmers96Algo import Chalmers96
+from hdimvis.algorithms.spring_force_algos.chalmers96_algo.Chalmers96 import Chalmers96
 from hdimvis.create_low_d_layout.LowDLayoutCreation import LowDLayoutCreation
 import matplotlib.pyplot as plt
 import numpy as np

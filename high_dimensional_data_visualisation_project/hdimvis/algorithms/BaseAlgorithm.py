@@ -11,6 +11,7 @@ class BaseAlgorithm(ABC):
         self.initial_layout = initial_layout if initial_layout is not None \
             else np.zeros((self.dataset.shape[0], 2))
         self.distance_fn = distance_fn
+        self.iteration_no: int = 0
 
     @abstractmethod
     def get_positions(self) -> np.ndarray:

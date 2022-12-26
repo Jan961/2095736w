@@ -23,7 +23,6 @@ class SpringForceBase(BaseAlgorithm):
         self._average_speeds: List[float] = list()
         self.enable_cache: bool = enable_cache
         self.alpha = alpha
-        self.iteration_no: int = 0
         if enable_cache:
             self.distances: Dict[FrozenSet[Node], float] = dict()
         else:

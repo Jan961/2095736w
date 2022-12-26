@@ -11,7 +11,7 @@ class Chalmers96(SpringForceBase):
     An implementation of Chalmers' 1996 Neighbour and Sampling algorithm.
     Using random sampling to find the closest neighbours from the data set.
     """
-    def __init__(self, dataset: np.ndarray, initial_layout: np.ndarray = None,
+    def __init__(self, dataset: np.ndarray, initial_layout: np.ndarray,
                  distance_fn: Callable[[np.ndarray, np.ndarray], float] = euclidean, nodes: List[Node] = None,
                  enable_cache: bool = True, alpha: float = 1, neighbour_set_size: int = 5, sample_set_size: int = 10):
         super().__init__(dataset, initial_layout, distance_fn, nodes, enable_cache, alpha)
