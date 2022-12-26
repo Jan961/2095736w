@@ -7,7 +7,7 @@ import os
 
 class AirfoilNoiseFetcher(LowLevelDataFetcherBase):
 
-    def fetch_dataset(self, normalise_with_z_score = True):
+    def load_dataset(self, normalise_with_z_score = True):
         label_idx = -1
         XY = np.genfromtxt( os.path.join(DATA_ROOT,'airfoil_noise.csv'), delimiter=";", skip_header=1)
         Y = XY[:, label_idx]

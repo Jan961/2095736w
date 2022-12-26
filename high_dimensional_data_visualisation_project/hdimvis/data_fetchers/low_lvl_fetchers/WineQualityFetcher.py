@@ -8,7 +8,7 @@ import os
 class WineQualityFetcher(LowLevelDataFetcherBase):
 
 
-    def fetch_dataset(self, normalise_with_zscore =True):
+    def load_dataset(self, normalise_with_zscore =True):
         XY = np.genfromtxt( os.path.join(DATA_ROOT, 'winequality-red.csv'), delimiter=";", skip_header=1)
         Y = XY[:, -1]
         X = XY[:, :-1]

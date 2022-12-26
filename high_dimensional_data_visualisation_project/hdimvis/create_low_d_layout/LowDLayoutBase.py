@@ -1,16 +1,16 @@
 from typing import Dict, Tuple, List
 
-from ..algorithms import BaseAlgorithm
+from ..algorithms.BaseAlgorithm import BaseAlgorithm
 from abc import abstractmethod
 import pickle
 import numpy as np
 
 class LowDLayoutBase:
 
-    def __init__(self, algorithm: BaseAlgorithm, data:np.ndarray, labels: np.ndarray):
+    def __init__(self, algorithm, data:np.ndarray, labels: np.ndarray):
         self.algorithm = algorithm
-        self.final_positions: np.ndarray = None
-        self.metrics: Dict[str: np.ndarray] = None
+        self.final_positions = None
+        self.metrics: Dict[str: np.ndarray]
         self.data = data
         self.labels = labels
 

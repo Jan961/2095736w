@@ -6,9 +6,9 @@ import os
 
 class COIL20Fetcher(LowLevelDataFetcherBase):
 
-    def fetch_dataset(self):
+    def load_dataset(self):
         from scipy.io import loadmat
         mat = loadmat(os.path.join(DATA_ROOT,"COIL20.mat"))
         X, Y = mat['X']+1e-8, mat['Y']
         Y = (Y.astype(int) - 1).reshape((-1,))
-        return X, Y
+        return (X, Y)

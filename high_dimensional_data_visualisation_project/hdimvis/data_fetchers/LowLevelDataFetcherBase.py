@@ -2,11 +2,11 @@ from abc import ABC, abstractmethod
 import numpy as np
 
 
-class LowLevelDataFetcherBase(ABC):
+class LowLevelDataFetcherBase:
 
     #returns data and labels as a tuple
     @abstractmethod
-    def fetch_dataset(self, **kwargs) -> (np.ndarray, np.ndarray) :
+    def load_dataset(self, **kwargs) -> (np.ndarray, np.ndarray):
         pass
 
 

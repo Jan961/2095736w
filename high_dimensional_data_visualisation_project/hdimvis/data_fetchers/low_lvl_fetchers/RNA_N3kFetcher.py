@@ -6,6 +6,6 @@ import os
 
 class RNA_N3kFetcher(LowLevelDataFetcherBase):
 
-    def fetch_dataset(self):
+    def load_dataset(self):
         XY = np.load( os.path.join(DATA_ROOT,'RNAseq_N3k.npy'))
         return XY[:, :-1], XY[:, -1]

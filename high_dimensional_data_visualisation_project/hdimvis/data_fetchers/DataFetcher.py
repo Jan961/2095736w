@@ -17,15 +17,15 @@ class DataFetcher:
         elif dataset_name == 'bonds':
             low_lvl_data_fetcher = BondsFetcher()
         elif dataset_name == 'coil20':
-            low_lvl_data_fetcher = BondsFetcher()
+            low_lvl_data_fetcher = COIL20Fetcher()
         elif dataset_name == 'rna N3k':
             low_lvl_data_fetcher = RNA_N3kFetcher()
         elif dataset_name == 'airfoil':
             low_lvl_data_fetcher = AirfoilNoiseFetcher()
         elif dataset_name == 'wine quality':
-            low_lvl_data_fetcher = WineQualityFetcher
+            low_lvl_data_fetcher = WineQualityFetcher()
 
 
-        data, labels = low_lvl_data_fetcher.fetch_dataset()
+        (data, labels) = low_lvl_data_fetcher.load_dataset()
 
         return data, labels

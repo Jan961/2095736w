@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 
 class Chalmers96Layout(LowDLayoutBase):
 
-    def __init__(self, algorithm: BaseAlgorithm, data: np.ndarray, labels: np.ndarray):
+    def __init__(self, algorithm: Chalmers96, data: np.ndarray, labels: np.ndarray):
         super().__init__(algorithm, data, labels)
         assert isinstance(self.algorithm, Chalmers96)
 
@@ -21,7 +21,6 @@ class Chalmers96Layout(LowDLayoutBase):
         times. Subsequent calls to create will continue from the previous number of
         iterations.
         """
-
         if no_iters is not None:
             assert no_iters >= 0
         assert target_node_speed >= 0

@@ -16,7 +16,6 @@ class LowDLayoutCreation:
 
         if isinstance(algorithm, Chalmers96):
             layout = Chalmers96Layout(algorithm, data, labels)
-            return layout
 
         elif isinstance(algorithm, SQuaD):
             layout = SQuaDLayout(algorithm, data, labels)

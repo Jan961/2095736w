@@ -37,7 +37,7 @@ def show_layout(layout:LowDLayoutBase, dataset: np.ndarray, use_labels: bool=Fal
     # Draw plot
     fig, ax = plt.subplots()
     ax.scatter(x, y, alpha=alpha, s=1, c=colors, cmap=cmap)
-    # plt.axis('off')
+    plt.axis('off')
     plt.show()
 
 
