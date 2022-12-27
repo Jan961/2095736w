@@ -7,23 +7,25 @@ import numpy as np
 
 class LowDLayoutBase:
 
-    def __init__(self, algorithm, data:np.ndarray, labels: np.ndarray):
+    def __init__(self, algorithm, data:np.ndarray, labels: np.ndarray, metric_collection: dict[str: int] = None ):
         self.algorithm = algorithm
         self.final_positions = None
-        self.metrics: Dict[str: np.ndarray]
-        self.data = data
+        self.generation_metrics: Dict[str: np.ndarray]  # values of various metrics (e.g. stress) collected during
+        self.data = data                                # the generation of the layout
         self.labels = labels
+        self.metric_collection = metric_collection
 
 
     # method to create the layout - it repeatedly calls "collect_metrics" as it runs
     @abstractmethod
-    def run(self, metric_collection: List[Tuple] =None):
+    def run(self):
         pass
 
     def get_final_positions(self):
         return self.final_positions
 
     def collect_metrics(self):
+
         pass
 
     def save(self):

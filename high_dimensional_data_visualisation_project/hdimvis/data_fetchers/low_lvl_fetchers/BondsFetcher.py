@@ -8,7 +8,7 @@ import pandas as pd
 class BondsFetcher(LowLevelDataFetcherBase):
     def __init__(self):
         self.indices = [1,1,1,1]
-        self.dicts = [{},{},{},{}] #dicts and an indices to convert currency iso strings into integers from 1
+        self.dicts = [{},{},{},{}] #dicts and an indices to convert strings into some numerical value
 
 
     def load_dataset(self, **kwargs) -> (np.ndarray, np.ndarray):
@@ -35,7 +35,7 @@ class BondsFetcher(LowLevelDataFetcherBase):
         arr = np.zeros(9)
 
         idx_to_convert =[2,3,7,8] #indices of the entries in the imput list that need to be converted from
-                                # string names to some numerica value
+                                # string names into some numerica value
 
         idx_simple_convert = [0,1,4,5,6] #indices that just need a simple float to str conversion
 

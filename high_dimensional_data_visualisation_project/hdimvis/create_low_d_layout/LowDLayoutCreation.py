@@ -12,7 +12,8 @@ from .SQuaDLayout import SQuaDLayout
 class LowDLayoutCreation:
 
 
-    def create_layout(self, algorithm: BaseAlgorithm, data: np.ndarray, labels: np.ndarray, metric_collection: List[Tuple] = None, **kwargs):
+    def create_layout(self, algorithm: BaseAlgorithm, data: np.ndarray, labels: np.ndarray,
+                      metric_collection: dict[str: int] = None, **kwargs):
 
         if isinstance(algorithm, Chalmers96):
             layout = Chalmers96Layout(algorithm, data, labels)
@@ -20,6 +21,6 @@ class LowDLayoutCreation:
         elif isinstance(algorithm, SQuaD):
             layout = SQuaDLayout(algorithm, data, labels)
 
-
+        # print all the info here
         layout.run(metric_collection, **kwargs)
         return layout
