@@ -36,5 +36,9 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test with pytest
       run: |
-        pytest high_dimensional_data_visualisation_project/tests
+        pwd
+        ls -l
+        export PYTHONPATH="$PYTHONPATH:."
+        python -c "import sys;print(sys.path)"
+        pytest
 
