@@ -11,7 +11,6 @@ from .SQuaDLayout import SQuaDLayout
 
 class LowDLayoutCreation:
 
-
     def create_layout(self, algorithm: BaseAlgorithm, data: np.ndarray, labels: np.ndarray,
                       metric_collection: dict[str: int] = None, **kwargs):
 

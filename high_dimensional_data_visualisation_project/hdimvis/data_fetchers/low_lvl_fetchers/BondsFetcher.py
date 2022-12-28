@@ -2,7 +2,6 @@ from hdimvis.data_fetchers.LowLevelDataFetcherBase import LowLevelDataFetcherBas
 import numpy as np
 from hdimvis.data_fetchers.config import DATA_ROOT
 import os
-import pandas as pd
 
 
 class BondsFetcher(LowLevelDataFetcherBase):
