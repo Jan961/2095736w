@@ -29,4 +29,7 @@
 * *1.5 hours* starting to adapt squad, 2019 change code to include initialisation
 * 
 ### 26 Dec 2022
-* *5.5 hours* squad adaptation almost finished, bugs, data fetchers  
+* *5.5 hours* squad adaptation almost finished, bugs, data fetchers
+
+### 28 Dec 2022
+* *6 hours* mostly struggling with setting up a CI pipeline and the " ModuleNotFoundError: No module named 'hdimvis"" error

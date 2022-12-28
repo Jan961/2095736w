@@ -3,9 +3,7 @@ from hdimvis.algorithms.spring_force_algos.chalmers96_algo.Chalmers96 import Cha
 from hdimvis.create_low_d_layout.LowDLayoutCreation import LowDLayoutCreation
 import matplotlib.pyplot as plt
 import numpy as np
-import os
-import sys
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 dataset, labels = DataFetcher().fetch_data('poker', size=500)
 
 def test_get_neighbours_returns_correct_size_set():
