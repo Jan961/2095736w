@@ -1,6 +1,6 @@
 
 #compiled
-/high_dimensional_data_visualisation_project/out/
+out/
 *.pyc
 
 # Editors
