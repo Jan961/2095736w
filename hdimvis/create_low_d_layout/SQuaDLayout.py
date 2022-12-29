@@ -6,8 +6,8 @@ from ..algorithms import BaseAlgorithm
 from ..algorithms.stochastic_quartet_algo.SQuaD import SQuaD
 
 class SQuaDLayout(LowDLayoutBase):
-    def __init__(self, algorithm: SQuaD, data: np.ndarray, labels: np.ndarray,):
-        super().__init__(algorithm, data, labels)
+    def __init__(self, algorithm: SQuaD, data: np.ndarray, labels: np.ndarray, metric_collection: dict[str: int] = None ):
+        super().__init__(algorithm, data, labels, metric_collection)
 
         assert isinstance(self.algorithm, SQuaD)
 
