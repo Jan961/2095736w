@@ -44,7 +44,6 @@ class Chalmers96(SpringForceBase):
                 self._set_velocity(self.nodes[i], self.nodes[j], alpha, cache_distance=True)
             self._update_neighbours(i, samples=sample_set)
         self._apply_velocities()
-        self.iteration_no += 1
 
 
 

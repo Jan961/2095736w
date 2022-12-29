@@ -9,7 +9,7 @@ from ...distance_measures.relative_rbf_dists import relative_rbf_dists
 
 
 class SQuaD(BaseAlgorithm):
-    def __init__(self, dataset: np.ndarray, initial_layout: np.ndarray,
+    def __init__(self, dataset: np.ndarray, initial_layout: np.ndarray = None,
                  distance_fn: Callable[[np.ndarray, np.ndarray], float] = relative_rbf_dists):  #on other dist measure implemented yet for this algo
         super().__init__(dataset, initial_layout, distance_fn)
 
@@ -17,8 +17,7 @@ class SQuaD(BaseAlgorithm):
         self.perms = np.arange(self.N)
         self.batch_indices = np.arange((self.N - self.N % 4)).reshape((-1, 4))  # will point towards the indices for each random batch
         self.grad_acc = np.ones((self.N, 2))
-        self.low_d_positions = initial_layout
-
+        self.low_d_positions = self.initial_layout
 
 
 
@@ -32,7 +31,7 @@ class SQuaD(BaseAlgorithm):
     def get_metrics(self, **kwargs) -> dict:
         pass
 
-    def one_iteration(self, exaggerate_dist: bool, LR:float):
+    def one_iteration(self, exaggerate_dist: bool = False, LR:float = 550.0):
 
         np.random.shuffle(self.perms)
 

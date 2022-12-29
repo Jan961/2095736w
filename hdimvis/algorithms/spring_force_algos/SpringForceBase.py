@@ -38,11 +38,6 @@ class SpringForceBase(BaseAlgorithm):
         pass
 
 
-    def get_iteration_no(self):
-
-        return self.iteration_no
-
-
     def build_nodes(self, dataset: np.ndarray, initial_layout: np.ndarray) -> List[Node]:
         """
         Construct a Node for each datapoint

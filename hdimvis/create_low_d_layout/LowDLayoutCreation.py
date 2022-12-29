@@ -20,6 +20,11 @@ class LowDLayoutCreation:
         elif isinstance(algorithm, SQuaD):
             layout = SQuaDLayout(algorithm, data, labels)
 
+        if np.all(np.where(algorithm.initial_layout==0, 1,0)):
+            print("Warning: the initial 2D positions are all set to 0. \n"
+                  " You might want to use the \"initial layout\" parameter \n"
+                  "to specify a different initialisation")
         # print all the info here
+
         layout.run(metric_collection, **kwargs)
         return layout

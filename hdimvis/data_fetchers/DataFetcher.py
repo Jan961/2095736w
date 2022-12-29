@@ -9,23 +9,25 @@ from hdimvis.data_fetchers.low_lvl_fetchers.WineQualityFetcher import WineQualit
 
 
 class DataFetcher:
+    def __init__(self):
+        self.low_lvl_data_fetcher = None
 
     def fetch_data(self, dataset_name='poker', **kwargs):
 
         if dataset_name == 'poker':
-            low_lvl_data_fetcher = PokerFetcher()
+            self.low_lvl_data_fetcher = PokerFetcher()
         elif dataset_name == 'bonds':
-            low_lvl_data_fetcher = BondsFetcher()
+            self.low_lvl_data_fetcher = BondsFetcher()
         elif dataset_name == 'coil20':
-            low_lvl_data_fetcher = COIL20Fetcher()
+            self.low_lvl_data_fetcher = COIL20Fetcher()
         elif dataset_name == 'rna N3k':
-            low_lvl_data_fetcher = RNA_N3kFetcher()
+            self.low_lvl_data_fetcher = RNA_N3kFetcher()
         elif dataset_name == 'airfoil':
-            low_lvl_data_fetcher = AirfoilNoiseFetcher()
+            self.low_lvl_data_fetcher = AirfoilNoiseFetcher()
         elif dataset_name == 'wine quality':
-            low_lvl_data_fetcher = WineQualityFetcher()
+            self.low_lvl_data_fetcher = WineQualityFetcher()
 
 
-        (data, labels) = low_lvl_data_fetcher.load_dataset()
+        (data, labels) = self.low_lvl_data_fetcher.load_dataset()
 
         return data, labels

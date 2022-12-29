@@ -33,3 +33,6 @@
 
 ### 28 Dec 2022
 * *6 hours* mostly struggling with setting up a CI pipeline and the " ModuleNotFoundError: No module named 'hdimvis"" error
+
+### 29 Dec 2022
+* *2 hours* CI/CD pipeline finally fixed

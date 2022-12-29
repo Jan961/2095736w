@@ -14,9 +14,11 @@ class LowDLayoutBase:
         self.data = data                                # the generation of the layout
         self.labels = labels
         self.metric_collection = metric_collection
+        self.iteration_number = 0 # current number of iterations performed
 
 
     # method to create the layout - it repeatedly calls "collect_metrics" as it runs
+    # and increments self.iteration_number after each call to the one_iteration method of self.algorithm
     @abstractmethod
     def run(self):
         pass

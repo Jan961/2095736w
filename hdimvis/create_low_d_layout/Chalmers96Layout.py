@@ -28,13 +28,14 @@ class Chalmers96Layout(LowDLayoutBase):
 
         while True:
             # Return calculated positions for datapoints
-            if no_iters is not None and self.algorithm.get_iteration_no() >= no_iters:
+            if no_iters is not None and self.iteration_number >= no_iters:
                 return
             average_speed = self.algorithm.get_metrics('average speed')
             if target_node_speed >0 and target_node_speed >= average_speed:
                 return
 
             self.algorithm.one_iteration()
+            self.iteration_number += 1
             self.final_positions = self.algorithm.get_positions()
 
 

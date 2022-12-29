@@ -28,5 +28,6 @@ class SQuaDLayout(LowDLayoutBase):
                 exaggerate_D = False
 
             self.algorithm.one_iteration(exaggerate_D, LR)
+            self.iteration_number += 1
             self.final_positions = self.algorithm.get_positions()
 
