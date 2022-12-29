@@ -12,7 +12,7 @@ class PokerFetcher(LowLevelDataFetcherBase):
         return self._load_file(f'{size}.csv', np.int16), None
 
     def _load_file(self, name, dtype):
-        with open(os.path.join(DATA_ROOT, f'poker\poker{name}'), encoding='utf8') as data_file:
+        with open(os.path.join(DATA_ROOT, 'poker', f'poker{name}'), encoding='utf8') as data_file:
             return np.loadtxt(
                 data_file,
                 skiprows=1,
