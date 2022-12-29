@@ -28,7 +28,7 @@ class SQuaD(BaseAlgorithm):
 
     def get_memory(self) ->int:
         pass
-    def get_metrics(self, **kwargs) -> dict:
+    def get_stress(self) -> dict:
         pass
 
     def one_iteration(self, exaggerate_dist: bool = False, LR:float = 550.0):
