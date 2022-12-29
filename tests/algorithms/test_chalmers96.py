@@ -101,14 +101,6 @@ def test_calling_distance_doesnt_cache_result_when_cache_disabled():
     assert not hasattr(algorithm, 'distances')
 
 
-def test_spring_layout_return_after_performs_correct_number_of_iterations():
-    algorithm = Chalmers96(dataset=dataset)
-
-    for i in range(2, 10, 2):
-        [algorithm.one_iteration() for i in range(2)]
-        assert algorithm.get_iteration_no() == i
-
-
 
 def test_spring_force_builds_nodes_correctly():
     spring_force = Chalmers96(dataset=dataset)
