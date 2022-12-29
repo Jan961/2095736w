@@ -32,3 +32,5 @@
 
 <p class = not_read> https://www.nature.com/articles/s41592-018-0308-4 - FIt - SNE
 </p>
+
+<p class="done">https://pip.pypa.io/en/stable/topics/local-project-installs/</p>
