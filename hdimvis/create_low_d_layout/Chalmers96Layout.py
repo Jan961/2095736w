@@ -30,7 +30,7 @@ class Chalmers96Layout(LowDLayoutBase):
             # Return calculated positions for datapoints
             if no_iters is not None and self.iteration_number >= no_iters:
                 return
-            average_speed = self.algorithm.get_metrics('average speed')
+            average_speed = self.algorithm.get_average_speed()
             if target_node_speed >0 and target_node_speed >= average_speed:
                 return
 
