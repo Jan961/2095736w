@@ -23,6 +23,7 @@ class SpringForceBase(BaseAlgorithm):
         self._average_speeds: List[float] = list()
         self.enable_cache: bool = enable_cache
         self.alpha = alpha
+        self.available_metrics = ['stress', 'average speed']
         if enable_cache:
             self.distances: Dict[FrozenSet[Node], float] = dict()
         else:
@@ -47,14 +48,6 @@ class SpringForceBase(BaseAlgorithm):
         conc = np.concatenate((dataset, initial_layout), axis=1)
 
         return list(np.apply_along_axis(Node, axis=1, arr= conc))
-
-    def get_metrics(self, *args) -> float:
-        assert 'average speed' in args or 'stress' in args
-
-        if 'average speed' in args:
-            return self.get_average_speed()
-        if 'stress' in  args:
-            return self.get_stress()
 
 
     def get_positions(self) -> np.ndarray:

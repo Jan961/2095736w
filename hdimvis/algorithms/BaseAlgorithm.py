@@ -16,7 +16,7 @@ class BaseAlgorithm(ABC):
     def get_positions(self) -> np.ndarray:
         pass
     @abstractmethod
-    def get_metrics(self, **kwargs) -> dict:
+    def get_stress(self, **kwargs) -> dict:
         pass
     # @abstractmethod
     # def get_time_per_iter(self) -> int:
