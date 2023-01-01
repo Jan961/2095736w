@@ -19,10 +19,10 @@ fetchers = [PokerFetcher, BondsFetcher, COIL20Fetcher, RNA_N3kFetcher, AirfoilNo
 def test_data_fetched_correctly():
     for i, dataset in enumerate(datasets):
         fetcher = DataFetcher()
-        data, labels = fetcher.fetch_data(dataset)
+        dataset = fetcher.fetch_data(dataset)
         assert isinstance(fetcher.low_lvl_data_fetcher, fetchers[i])
-        assert isinstance(data, np.ndarray)
-        assert isinstance(labels, np.ndarray) or labels is None
+        assert isinstance(dataset.data, np.ndarray)
+        assert isinstance(dataset.labels, np.ndarray) or dataset.labels is None
 
 
 

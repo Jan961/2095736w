@@ -104,8 +104,8 @@ def test_calling_distance_doesnt_cache_result_when_cache_disabled():
 
 def test_spring_force_builds_nodes_correctly():
     spring_force = Chalmers96(dataset=dataset)
-    assert np.array_equal(spring_force.nodes[0].datapoint, dataset[0, :])
-    assert np.array_equal(spring_force.nodes[1].datapoint, dataset[1, :])
+    assert np.array_equal(spring_force.nodes[0].datapoint, dataset.data[0, :])
+    assert np.array_equal(spring_force.nodes[1].datapoint, dataset.data[1, :])
 
 
 def test_knnd_index_created_and_neighbours_retrieved_correctly():
