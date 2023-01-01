@@ -5,6 +5,7 @@ from hdimvis.data_fetchers.low_lvl_fetchers.COIL20Fetcher import COIL20Fetcher
 from hdimvis.data_fetchers.low_lvl_fetchers.AirfoilNoiseFetcher import AirfoilNoiseFetcher
 from hdimvis.data_fetchers.low_lvl_fetchers.RNA_N3kFetcher import RNA_N3kFetcher
 from hdimvis.data_fetchers.low_lvl_fetchers.WineQualityFetcher import WineQualityFetcher
+from .Dataset import Dataset
 
 
 
@@ -26,8 +27,9 @@ class DataFetcher:
             self.low_lvl_data_fetcher = AirfoilNoiseFetcher()
         elif dataset_name == 'wine quality':
             self.low_lvl_data_fetcher = WineQualityFetcher()
+        else:
+            print("Dataset name not recognised")
 
+        data, labels = self.low_lvl_data_fetcher.load_dataset()
 
-        (data, labels) = self.low_lvl_data_fetcher.load_dataset()
-
-        return data, labels
+        return Dataset(data, labels, dataset_name)

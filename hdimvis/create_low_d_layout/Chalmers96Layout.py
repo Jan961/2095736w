@@ -1,4 +1,6 @@
 from typing import List, Tuple
+from ..data_fetchers.Dataset import Dataset
+
 
 from .LowDLayoutBase import LowDLayoutBase
 from ..algorithms.BaseAlgorithm import BaseAlgorithm
@@ -8,8 +10,8 @@ import matplotlib.pyplot as plt
 
 class Chalmers96Layout(LowDLayoutBase):
 
-    def __init__(self, algorithm: Chalmers96, data: np.ndarray, labels: np.ndarray, metric_collection: dict[str: int] = None ):
-        super().__init__(algorithm, data, labels, metric_collection)
+    def __init__(self, algorithm: Chalmers96, dataset: Dataset, metric_collection: dict[str: int] = None ):
+        super().__init__(algorithm, dataset, metric_collection)
         assert isinstance(self.algorithm, Chalmers96)
 
 
@@ -21,21 +23,32 @@ class Chalmers96Layout(LowDLayoutBase):
         times. Subsequent calls to create will continue from the previous number of
         iterations.
         """
+
+
         if no_iters is not None:
             assert no_iters >= 0
         assert target_node_speed >= 0
         assert no_iters is not None or target_node_speed > 0
 
         while True:
-            # Return calculated positions for datapoints
             if no_iters is not None and self.iteration_number >= no_iters:
                 return
             average_speed = self.algorithm.get_average_speed()
             if target_node_speed >0 and target_node_speed >= average_speed:
                 return
 
+            if self.metric_collection is not None:
+                self.collect_metrics()
+
             self.algorithm.one_iteration()
             self.iteration_number += 1
             self.final_positions = self.algorithm.get_positions()
+            # stress_og = self.algorithm.get_stress()
+            # stress_new = self.algorithm.get_euclidian_stress()
+            # print(f"stress og: {stress_og}")
+            # print(f"stres new: {stress_new}")
+
+
+
 
 

@@ -4,18 +4,37 @@ from hdimvis.algorithms.spring_force_algos.chalmers96_algo.Chalmers96 import Cha
 from hdimvis.algorithms.stochastic_quartet_algo.SQuaD import SQuaD
 from hdimvis.create_low_d_layout.Chalmers96Layout import Chalmers96Layout
 from hdimvis.create_low_d_layout.SQuaDLayout import SQuaDLayout
+from hdimvis.data_fetchers.Dataset import Dataset
+import numpy as np
 
-
-data, labels = DataFetcher().fetch_data('rna N3k')
-algorithms = [Chalmers96(data), SQuaD(data)]
+mock_data = np.random.randint(0,10, (40,3))
+dataset = Dataset(mock_data, None, 'mock data')
+algorithms = [Chalmers96(dataset), SQuaD(dataset)]
 layout_classes = [Chalmers96Layout, SQuaDLayout]
 
 
+
 # noinspection PyTypeHints
-def test_correct_low_lvl_layout_created():
-    for i, algo in enumerate(algorithms):
-        layout = LowDLayoutCreation().create_layout(algo, data, labels, no_iters=1)
-        assert isinstance(layout, layout_classes[i])
+def test_low_lvl_layout_created_correctly_for_chalmers96():
+        algo =algorithms[0]
+        layout_class = layout_classes[0]
+        layout = LowDLayoutCreation().create_layout(algo, dataset, {'stress': 2, 'average speed': 1}, no_iters=4)
+        assert isinstance(layout, layout_class)
+        assert layout.metric_collection['stress'] == 2
+        assert layout.metric_collection['average speed'] == 1
+
+
+
+
+def test_stress_collected_correctly():
+
+    for algo in algorithms:
+        for i in [1,2]:
+            layout = LowDLayoutCreation().create_layout(algo, dataset, {'stress': i}, no_iters=4)
+            assert len(layout.collected_metrics['stress'][0]) == 4//i
+            assert len(layout.collected_metrics['stress'][1]) == 4 // i
+
+
 
 
 

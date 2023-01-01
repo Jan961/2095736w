@@ -1,5 +1,6 @@
+from itertools import combinations
 from typing import Callable
-
+from ...data_fetchers.Dataset import Dataset
 import numpy as np
 from numpy import sqrt
 from .gradients import compute_quartet_grads
@@ -9,15 +10,17 @@ from ...distance_measures.relative_rbf_dists import relative_rbf_dists
 
 
 class SQuaD(BaseAlgorithm):
-    def __init__(self, dataset: np.ndarray, initial_layout: np.ndarray = None,
+    def __init__(self, dataset: Dataset, initial_layout: np.ndarray = None,
                  distance_fn: Callable[[np.ndarray, np.ndarray], float] = relative_rbf_dists):  #on other dist measure implemented yet for this algo
-        super().__init__(dataset, initial_layout, distance_fn)
+        super().__init__(dataset, initial_layout, distance_fn) #the base class extracts data from the Dataset object
 
         self. N, M = self.dataset.shape
         self.perms = np.arange(self.N)
         self.batch_indices = np.arange((self.N - self.N % 4)).reshape((-1, 4))  # will point towards the indices for each random batch
         self.grad_acc = np.ones((self.N, 2))
         self.low_d_positions = self.initial_layout
+        self.available_metrics = ['stress']
+        self.name = 'Stochastic Quartet Descent MDS'
 
 
 
@@ -28,8 +31,10 @@ class SQuaD(BaseAlgorithm):
 
     def get_memory(self) ->int:
         pass
-    def get_stress(self) -> dict:
-        pass
+
+    def get_stress(self) -> float:
+        # alternative stress metrics can be added here
+        return self.get_euclidian_stress()
 
     def one_iteration(self, exaggerate_dist: bool = False, LR:float = 550.0):
 

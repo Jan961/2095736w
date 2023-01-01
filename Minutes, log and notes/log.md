@@ -27,7 +27,7 @@
 
 ### 23 Dec 2022
 * *1.5 hours* starting to adapt squad, 2019 change code to include initialisation
-* 
+
 ### 26 Dec 2022
 * *5.5 hours* squad adaptation almost finished, bugs, data fetchers
 

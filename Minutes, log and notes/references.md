@@ -22,7 +22,7 @@
 </p>
 
 
-<p class="done"> A Method For Solving The Convex Programming Problem With Convergence Rate O(1/k^2) - nesterov momentum original refernce - no to read.
+<p class="done"> A Method For Solving The Convex Programming Problem With Convergence Rate O(1/k^2) - nesterov momentum original refernce - not to read.
 </p>  
 
 <p class="not_fully_read"> On the importance of initialization and momentum in deep learning - Nesterov momentum here </p>  

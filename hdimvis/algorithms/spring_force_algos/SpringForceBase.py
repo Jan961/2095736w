@@ -1,7 +1,10 @@
+import pynndescent
+
 from hdimvis.algorithms.BaseAlgorithm import BaseAlgorithm
 from hdimvis.algorithms.spring_force_algos.Node import Node
 from hdimvis.algorithms.spring_force_algos.utils import jiggle, get_size, mean
 from hdimvis.distance_measures.euclidian_and_manhattan import euclidean
+from ...data_fetchers.Dataset import Dataset
 from itertools import combinations
 from typing import Callable, Tuple, List, Dict, FrozenSet
 from abc import abstractmethod
@@ -9,46 +12,46 @@ import numpy as np
 import math
 
 
-
 class SpringForceBase(BaseAlgorithm):
-    def __init__(self, dataset: np.ndarray, initial_layout: np.ndarray = None,
+    def __init__(self, dataset: Dataset, initial_layout: np.ndarray = None,
                  distance_fn: Callable[[np.ndarray, np.ndarray], float] = euclidean, nodes: List[Node] = None,
-                 enable_cache: bool = True, alpha: float = 1) -> None:
+                 enable_cache: bool = True, alpha: float = 1, use_knnd: bool = False,
+                 knnd_parameters: Dict = None) -> None:
 
-        super().__init__(dataset, initial_layout, distance_fn)
+        super().__init__(dataset, initial_layout, distance_fn)  # the base class extracts data from the Dataset object
         assert dataset is not None or nodes is not None, "must provide either dataset or nodes"
 
-        self.nodes: List[Node] = nodes if nodes is not None else self.build_nodes(self.dataset, self.initial_layout)
+        self.nodes: List[Node] = nodes if nodes is not None else self.build_nodes(self.dataset,
+                                                                                  self.initial_layout)
         self.data_size_factor: float = 1
         self._average_speeds: List[float] = list()
         self.enable_cache: bool = enable_cache
         self.alpha = alpha
         self.available_metrics = ['stress', 'average speed']
+        self.use_knnd = use_knnd
+        self.knnd_parameters = knnd_parameters
         if enable_cache:
             self.distances: Dict[FrozenSet[Node], float] = dict()
         else:
             # Change the distance function
             self.distance = self.distance_no_cache
 
-
     @abstractmethod
     def one_iteration(self, alpha: float) -> None:
         """
-        Perform one iteration of the spring layout
+        Perform one iteration of the algorithm
         """
         pass
-
 
     def build_nodes(self, dataset: np.ndarray, initial_layout: np.ndarray) -> List[Node]:
         """
         Construct a Node for each datapoint
         """
-        #contactenate the datapoints with the initial positions for low-d mappings
-        #for the apply_along_axis fn
+        # contactenate the datapoints with the initial positions for low-d mappings
+        # for the apply_along_axis fn
         conc = np.concatenate((dataset, initial_layout), axis=1)
 
-        return list(np.apply_along_axis(Node, axis=1, arr= conc))
-
+        return list(np.apply_along_axis(Node, axis=1, arr=conc))
 
     def get_positions(self) -> np.ndarray:
         return np.array([(n.x, n.y) for n in self.nodes])
@@ -58,16 +61,20 @@ class SpringForceBase(BaseAlgorithm):
             node.x, node.y = pos
 
     def get_stress(self) -> float:
-        distance_diff: float = 0.0
-        actual_distance: float = 0.0
+        numerator: float = 0.0
+        denominator: float = 0.0
+
+        # numpy vectorisation for euclidian distance
+        # if self.distance_fn == euclidean:
+
         for source, target in combinations(self.nodes, 2):
             high_d_distance = self.distance(source, target, cache=False)
             low_d_distance = math.sqrt((target.x - source.x) ** 2 + (target.y - source.y) ** 2)
-            distance_diff += (high_d_distance - low_d_distance) ** 2
-            actual_distance += low_d_distance ** 2
-        if actual_distance == 0:
+            numerator += (high_d_distance - low_d_distance) ** 2
+            denominator += low_d_distance ** 2
+        if denominator == 0:
             return math.inf
-        return math.sqrt(distance_diff / actual_distance)
+        return numerator / denominator
 
     def get_memory(self) -> int:
         return get_size(self)
@@ -75,7 +82,6 @@ class SpringForceBase(BaseAlgorithm):
     def get_average_speed(self) -> float:
         """ Return the 5-running mean of the average node speeds """
         return mean(self._average_speeds[-5:]) if len(self._average_speeds) > 0 else np.inf
-
 
     def distance_no_cache(self, source: Node, target: Node, cache: bool = False) -> float:
         """ Distance function to use when self.disable_cache = True """
@@ -93,7 +99,6 @@ class SpringForceBase(BaseAlgorithm):
         if cache:
             self.distances[pair] = distance
         return distance
-
 
     def _force(self, current_distance, real_distance, alpha: float = 1) -> float:
         return (current_distance - real_distance) * alpha * self.data_size_factor / current_distance
@@ -143,5 +148,3 @@ class SpringForceBase(BaseAlgorithm):
             node.apply_velocity()
         total /= len(self.nodes)
         self._average_speeds.append(total)
-
-

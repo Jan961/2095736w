@@ -108,4 +108,7 @@ def test_spring_force_builds_nodes_correctly():
     assert np.array_equal(spring_force.nodes[1].datapoint, dataset[1, :])
 
 
-
+def test_knnd_index_created_and_neighbours_retrieved_correctly():
+    algo = Chalmers96(dataset, neighbour_set_size=2, use_knnd=True, knnd_parameters={'metric': 'manhattan','n_trees': 100})
+    assert len(algo._get_neighbours(3)) == 2
+    assert algo._get_neighbours(4) == algo.knnd_index.neighbor_graph[0][4].tolist()
