@@ -1,9 +1,8 @@
 from typing import List, Tuple
 from ..data_fetchers.Dataset import Dataset
-
+from progress.bar import IncrementalBar
 
 from .LowDLayoutBase import LowDLayoutBase
-from ..algorithms.BaseAlgorithm import BaseAlgorithm
 from ..algorithms.spring_force_algos.chalmers96_algo.Chalmers96 import Chalmers96
 import numpy as np
 import matplotlib.pyplot as plt
@@ -23,10 +22,13 @@ class Chalmers96Layout(LowDLayoutBase):
         times. Subsequent calls to create will continue from the previous number of
         iterations.
         """
-
+        bar = None
 
         if no_iters is not None:
             assert no_iters >= 0
+            if target_node_speed == 0:
+                bar = IncrementalBar(max=no_iters)
+
         assert target_node_speed >= 0
         assert no_iters is not None or target_node_speed > 0
 
@@ -43,6 +45,8 @@ class Chalmers96Layout(LowDLayoutBase):
             self.algorithm.one_iteration()
             self.iteration_number += 1
             self.final_positions = self.algorithm.get_positions()
+            if bar:
+                bar.next()
             # stress_og = self.algorithm.get_stress()
             # stress_new = self.algorithm.get_euclidian_stress()
             # print(f"stress og: {stress_og}")

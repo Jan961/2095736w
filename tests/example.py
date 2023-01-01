@@ -8,9 +8,9 @@ from sklearn.decomposition import PCA
 import numpy as np
 
 
-metric_collection = {'stress': 100, 'average speed': 100}
+metric_collection = {'stress': 50, 'average speed': 50}
 
-dataset = DataFetcher().fetch_data('mnist')
+dataset = DataFetcher().fetch_data('fashion mnist')
 Xld = PCA(n_components=2, whiten=False, copy=True).fit_transform(dataset.data).astype(np.float64)
 # Xld *= 10/np.std(Xld)
 
@@ -18,7 +18,7 @@ Xld = PCA(n_components=2, whiten=False, copy=True).fit_transform(dataset.data).a
 algo96 = Chalmers96(dataset=dataset, initial_layout=Xld, alpha=0.7, distance_fn=euclidean)
 
 
-layout = LowDLayoutCreation().create_layout(algo96, dataset, metric_collection=metric_collection, no_iters=500)
+layout = LowDLayoutCreation().create_layout(algo96, dataset, metric_collection=metric_collection, no_iters=200)
 
 
 print(f"iterations stress: {layout.collected_metrics['stress'][0]} \n")
