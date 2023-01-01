@@ -37,3 +37,7 @@
 ### 29 Dec 2022
 * *2 hours* CI/CD pipeline finally fixed
 * *4 hours* writing test and data collection started
+
+### 1 Jan 2023
+* *7 hours* getting more data etc
+
