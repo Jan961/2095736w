@@ -3,6 +3,10 @@
 out/
 *.pyc
 
+
+#large data files
+hdimvis/data
+
 # Editors
 .vscode/
 .idea/

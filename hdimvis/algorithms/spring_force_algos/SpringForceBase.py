@@ -61,11 +61,13 @@ class SpringForceBase(BaseAlgorithm):
             node.x, node.y = pos
 
     def get_stress(self) -> float:
-        numerator: float = 0.0
-        denominator: float = 0.0
 
         # numpy vectorisation for euclidian distance
-        # if self.distance_fn == euclidean:
+        if self.distance_fn == euclidean:
+            return self.get_euclidian_stress()
+
+        numerator: float = 0.0
+        denominator: float = 0.0
 
         for source, target in combinations(self.nodes, 2):
             high_d_distance = self.distance(source, target, cache=False)

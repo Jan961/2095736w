@@ -5,6 +5,10 @@ from hdimvis.data_fetchers.low_lvl_fetchers.COIL20Fetcher import COIL20Fetcher
 from hdimvis.data_fetchers.low_lvl_fetchers.AirfoilNoiseFetcher import AirfoilNoiseFetcher
 from hdimvis.data_fetchers.low_lvl_fetchers.RNA_N3kFetcher import RNA_N3kFetcher
 from hdimvis.data_fetchers.low_lvl_fetchers.WineQualityFetcher import WineQualityFetcher
+from hdimvis.data_fetchers.low_lvl_fetchers.FmnistFetcher import FmnistFetcher
+from hdimvis.data_fetchers.low_lvl_fetchers.ShuttleFetcher import ShuttleFetcher
+from hdimvis.data_fetchers.low_lvl_fetchers.FlowCytometryFetcher import FlowCytometryFetcher
+from hdimvis.data_fetchers.low_lvl_fetchers.MnistFetcher import MnistFetcher
 from .Dataset import Dataset
 
 
@@ -14,6 +18,8 @@ class DataFetcher:
         self.low_lvl_data_fetcher = None
 
     def fetch_data(self, dataset_name='poker', **kwargs):
+
+        dataset_name = dataset_name.strip()
 
         if dataset_name == 'poker':
             self.low_lvl_data_fetcher = PokerFetcher()
@@ -27,9 +33,20 @@ class DataFetcher:
             self.low_lvl_data_fetcher = AirfoilNoiseFetcher()
         elif dataset_name == 'wine quality':
             self.low_lvl_data_fetcher = WineQualityFetcher()
+        elif dataset_name == 'fashion mnist':
+            self.low_lvl_data_fetcher = FmnistFetcher()
+        elif dataset_name == 'shuttle':
+            self.low_lvl_data_fetcher = ShuttleFetcher()
+        elif dataset_name == 'flow cytometry':
+            self.low_lvl_data_fetcher = FlowCytometryFetcher()
+        elif dataset_name == 'flow cytometry':
+            self.low_lvl_data_fetcher = FlowCytometryFetcher()
+        elif dataset_name == 'mnist':
+            self.low_lvl_data_fetcher = MnistFetcher()
         else:
             print("Dataset name not recognised")
 
-        data, labels = self.low_lvl_data_fetcher.load_dataset()
+
+        data, labels = self.low_lvl_data_fetcher.load_dataset(**kwargs)
 
         return Dataset(data, labels, dataset_name)

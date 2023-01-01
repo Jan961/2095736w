@@ -8,10 +8,10 @@ from hdimvis.visualise_low_d_layout.plot import show_layout, show_generation_met
 from hdimvis.distance_measures.relative_rbf_dists import relative_rbf_dists
 
 metric_collection = {'stress': 100}
-dataset = DataFetcher().fetch_data('rna N3k')
+dataset = DataFetcher().fetch_data('mnist')
 
-Xld = PCA(n_components=2, whiten=True, copy=True).fit_transform(dataset.data).astype(np.float64)
-Xld *= 10/np.std(Xld)
+Xld = PCA(n_components=2, whiten=False, copy=True).fit_transform(dataset.data).astype(np.float64)
+# Xld *= 10/np.std(Xld)
 
 squad = SQuaD(dataset=dataset, initial_layout=Xld, distance_fn= relative_rbf_dists)
 layout = LowDLayoutCreation().create_layout(squad, dataset, metric_collection=metric_collection, no_iters=1000)
