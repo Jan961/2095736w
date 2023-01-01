@@ -6,7 +6,7 @@ from hdimvis.distance_measures.poker_distance import poker_distance
 import matplotlib.pyplot as plt
 import numpy as np
 
-dataset, labels = DataFetcher().fetch_data('poker', size=500)
+dataset = DataFetcher().fetch_data('poker', size=500)
 
 def test_get_neighbours_returns_correct_size_set():
     algorithm = Chalmers96(dataset=dataset, neighbour_set_size=5)
