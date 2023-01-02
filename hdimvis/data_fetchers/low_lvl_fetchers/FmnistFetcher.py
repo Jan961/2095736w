@@ -30,13 +30,14 @@ class FmnistFetcher(LowLevelDataFetcherBase):
             data = sample[:,1:]/ 255.0
 
         else:
-            os.system('git clone https://github.com/zalandoresearch/fashion-mnist.git fashion_mnist')
-            import fashion_mnist.utils.mnist_reader as mnist_reader
+            os.system('pip install tensorflow')
+            from tensorflow.keras.datasets import fashion_mnist
 
-            train, train_labels = mnist_reader.load_mnist('fashion-mnist/data/fashion', kind='train')
+            (X_train, Y_train), (X_test, Y_test) = fashion_mnist.load_data()
             sample_indx = rng.choice(60000, size=size, replace=False)
-            data = np.array(np.vstack(train), dtype=np.float64, order='C')[sample_indx] / 255.0
-            labels = np.array(np.hstack(train_labels))[sample_indx]
+            data = X_train[sample_indx]
+            labels = Y_train[sample_indx]
+
 
         return data, labels
 
