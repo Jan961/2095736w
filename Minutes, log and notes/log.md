@@ -41,3 +41,6 @@
 ### 1 Jan 2023
 * *7 hours* getting more data etc
 
+### 2 Jan 2023
+* *9 hours* research on possible improvements, data to use etc
+
