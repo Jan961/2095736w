@@ -5,7 +5,7 @@ out/
 
 
 #large data files
-hdimvis/data
+hdimvis/data/fashion-mnist_train.csv
 
 # Editors
 .vscode/
