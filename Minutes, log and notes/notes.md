@@ -36,4 +36,5 @@ but it's in R
 * also more ideas in: dimensionality reduction for visualizing single-cell data using umap
 <br/>
 <br/>
-* FIt SNE is p(small number) N 
+* FIt SNE is p(small number) N but takes a lot of memory apparently
+* UMAP can be used to reduce dimensions t-SNe -> only 2D

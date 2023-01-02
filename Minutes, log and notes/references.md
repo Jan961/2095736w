@@ -18,7 +18,7 @@
 <p class="to_use"> UMAP: Uniform Manifold Approximation and Projection for Dimension Reduction
 </p>
 
-<p class="to_use">UMAP does not preserve global structure any better than t-SNE when using the same initialization - nature
+<p class="not_fully_read">UMAP does not preserve global structure any better than t-SNE when using the same initialization - nature
 </p>
 
 
