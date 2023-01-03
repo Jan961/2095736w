@@ -37,4 +37,6 @@ but it's in R
 <br/>
 <br/>
 * FIt SNE is p(small number) N but takes a lot of memory apparently
-* UMAP can be used to reduce dimensions t-SNe -> only 2D
+* UMAP can be used to reduce dimensions t-SNE - more apparently not computationally feasible to do the same on large datasets
+* memory-mapped files to reduce memory use?
+* special data structures?

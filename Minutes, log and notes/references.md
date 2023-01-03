@@ -65,3 +65,5 @@ http://ieeexplore.ieee.org/document/1173161/
 
 <p class="not_read"> https://www.singlecellcourse.org/introduction-to-single-cell-rna-seq.html</p>
 
+<p class="done"> https://pythonspeed.com/articles/measuring-memory-python/   - it's tricky</p>
+
