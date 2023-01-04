@@ -67,3 +67,5 @@ http://ieeexplore.ieee.org/document/1173161/
 
 <p class="done"> https://pythonspeed.com/articles/measuring-memory-python/   - it's tricky</p>
 
+<p class="done">https://pythonspeed.com/articles/memory-profiler-data-scientists/
+</p> 

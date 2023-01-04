@@ -40,3 +40,6 @@ but it's in R
 * UMAP can be used to reduce dimensions t-SNE - more apparently not computationally feasible to do the same on large datasets
 * memory-mapped files to reduce memory use?
 * special data structures?
+* rss -resident set size mem- can be misleading bc does not include mem "swapped" to the hard drive
+* vms - can be misleading because it includes all memory used by the process including shared libs and can become larger that the total aval memory on the machine
+* tracemalloc only works for code written in pytho

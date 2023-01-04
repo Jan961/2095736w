@@ -44,3 +44,9 @@
 ### 2 Jan 2023
 * *9 hours* research on possible improvements, data to use etc
 
+### 3 Jan 2023
+* *1 hours* research on measuring memory usage
+
+### 4 Jan 2023
+* *0.5 hours* research on measuring memory usage
+
