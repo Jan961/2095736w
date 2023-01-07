@@ -14,10 +14,13 @@ from .Dataset import Dataset
 
 
 class DataFetcher:
+
+    all_datasets_list = ['poker', 'mnist', 'bonds', 'coil20', 'rna N3k', 'airfoil', 'wine quality', 'fashion mnist'
+                         'shuttle', 'flow cytometry', 'flow cytometry']
     def __init__(self):
         self.low_lvl_data_fetcher = None
 
-    def fetch_data(self, dataset_name='poker', **kwargs):
+    def fetch_data(self, dataset_name='poker', for_bhtsne: bool = False, **kwargs):
 
         dataset_name = dataset_name.strip()
 
@@ -47,6 +50,8 @@ class DataFetcher:
             print("Dataset name not recognised")
 
 
-        data, labels = self.low_lvl_data_fetcher.load_dataset(**kwargs)
+        data, labels = self.low_lvl_data_fetcher.load_dataset( **kwargs)
 
-        return Dataset(data, labels, dataset_name)
+        if not for_bhtsne:
+            return Dataset(data, labels, dataset_name)
+        else

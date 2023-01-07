@@ -21,7 +21,7 @@ class Chalmers96(SpringForceBase):
         super().__init__(dataset, initial_layout, distance_fn, nodes, enable_cache, alpha, use_knnd, knnd_parameters)
         # the base class extracts data from the Dataset object
 
-        assert neighbour_set_size > 0, "neighbour_set_size must be > 0"
+        assert neighbour_set_size >= 0, "neighbour_set_size must be > 0"
         assert sample_set_size > 0, "sample_set_size must be > 0"
 
         self.neighbour_set_size: int = neighbour_set_size
@@ -49,12 +49,15 @@ class Chalmers96(SpringForceBase):
         n = len(self.nodes)
         for i in range(n):
             sample_set = self._get_sample_set(i)
-            neighbour_set = self._get_neighbours(i)
+
             for j in sample_set:
                 self._set_velocity(self.nodes[i], self.nodes[j], alpha)
-            for j in neighbour_set:
-                self._set_velocity(self.nodes[i], self.nodes[j], alpha, cache_distance=True)
-            if not self.use_knnd:
+            if self.neighbour_set_size:
+                neighbour_set = self._get_neighbours(i)
+                for j in neighbour_set:
+                    self._set_velocity(self.nodes[i], self.nodes[j], alpha, cache_distance=True)
+
+            if not self.use_knnd and self.neighbour_set_size:
                 self._update_neighbours(i, samples=sample_set)
         self._apply_velocities()
 
