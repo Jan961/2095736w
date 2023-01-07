@@ -50,3 +50,6 @@
 ### 4 Jan 2023
 * *0.5 hours* research on measuring memory usage
 
+### 7 Jan 2023
+* *2 hours* started to add bhtsne
+
