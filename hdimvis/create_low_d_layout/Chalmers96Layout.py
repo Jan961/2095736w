@@ -1,7 +1,6 @@
 from typing import List, Tuple
 from ..data_fetchers.Dataset import Dataset
 from progress.bar import IncrementalBar
-
 from .LowDLayoutBase import LowDLayoutBase
 from ..algorithms.spring_force_algos.chalmers96_algo.Chalmers96 import Chalmers96
 import numpy as np
@@ -27,13 +26,15 @@ class Chalmers96Layout(LowDLayoutBase):
         if no_iters is not None:
             assert no_iters >= 0
             if target_node_speed == 0:
-                bar = IncrementalBar(max=no_iters)
+                bar = IncrementalBar("Creating layout", max=no_iters)
+
 
         assert target_node_speed >= 0
         assert no_iters is not None or target_node_speed > 0
 
         while True:
             if no_iters is not None and self.iteration_number >= no_iters:
+                bar.finish()
                 return
             average_speed = self.algorithm.get_average_speed()
             if target_node_speed >0 and target_node_speed >= average_speed:
@@ -51,6 +52,8 @@ class Chalmers96Layout(LowDLayoutBase):
             # stress_new = self.algorithm.get_euclidian_stress()
             # print(f"stress og: {stress_og}")
             # print(f"stres new: {stress_new}")
+
+
 
 
 

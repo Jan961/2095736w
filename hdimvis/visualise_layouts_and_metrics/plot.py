@@ -34,8 +34,11 @@ def show_layouts(*layouts: LowDLayoutBase, use_labels: bool = False, alpha: floa
 
     # Get positions of nodes
 
-    for layout in layouts:
+    idx_r = 0
+    idx_c = 0
+    for i, layout in enumerate(layouts):
         pos: np.ndarray = layout.get_final_positions()
+
         x = pos[:, 0]
         y = pos[:, 1]
 
@@ -49,21 +52,28 @@ def show_layouts(*layouts: LowDLayoutBase, use_labels: bool = False, alpha: floa
             colors = np.apply_along_axis(color_by, axis=1, arr=layout.data)
             cmap = plt.cm.get_cmap(color_map)
 
+        if no_layouts == 1:
+            axis = axes
+        else:
+            if idx_c == c-1:
+                idx_r += 1
+            axis = axes[idx_r, idx_c]
+            idx_c += 1
 
-        # Draw plot
+        axis.scatter(x, y, alpha=alpha, s=size, c=colors, cmap=cmap)
 
-        ax.scatter(x, y, alpha=alpha, s=size, c=colors, cmap=cmap)
-        if title:
-            plt.title(title)
-        plt.axis('off')
+        if sub_titles is not None and len(sub_titles) >= i+1:
+            axis.title.set_text(sub_titles[i])
 
-    print(f"default size{fig.get_size_inches()}")
+    if title:
+        plt.title(title)
+
+    plt.axis('off')
     plt.show()
 
 
-def show_generation_metrics(*layouts: LowDLayoutBase, stress: bool = True, average_speed: bool = False,
+def show_generation_metrics(layout, stress: bool = True, average_speed: bool = False,
                             title: str = None):
-    assert len(layouts) > 0
 
     fig, ax1 = plt.subplots()
 

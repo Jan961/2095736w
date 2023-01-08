@@ -23,6 +23,8 @@ class DataFetcher:
     def fetch_data(self, dataset_name='poker', for_bhtsne: bool = False, **kwargs):
 
         dataset_name = dataset_name.strip()
+        print("#"*20)
+        print(f"Fetching the \"{dataset_name}\" dataset")
 
         if dataset_name == 'poker':
             self.low_lvl_data_fetcher = PokerFetcher()
@@ -51,6 +53,7 @@ class DataFetcher:
 
 
         data, labels = self.low_lvl_data_fetcher.load_dataset( **kwargs)
-
+        print("#" * 20)
+        print("Dataset loaded")
         return Dataset(data, labels, dataset_name)
 

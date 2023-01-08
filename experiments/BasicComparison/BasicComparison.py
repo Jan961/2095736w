@@ -33,8 +33,6 @@ class BasicComparison(Experiment):
 
 
 
-
-
     def one_experiment(self, dataset: Dataset, algorithm: BaseAlgorithm ):
 
         distance_fn = poker_distance if dataset.name == 'poker' and isinstance(algorithm, Chalmers96 ) else euclidean

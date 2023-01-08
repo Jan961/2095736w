@@ -1,5 +1,5 @@
 from typing import List, Tuple
-
+from progress.bar import IncrementalBar
 import numpy as np
 from .LowDLayoutBase import LowDLayoutBase
 from ..algorithms import BaseAlgorithm
@@ -13,13 +13,11 @@ class SQuaDLayout(LowDLayoutBase):
         assert isinstance(self.algorithm, SQuaD)
 
 
-
     def run(self, metric_collection: List[Tuple] =None, no_iters: int = 10,
             exaggerate_D: bool = False, stop_exaggeration: float = 0.6,
                  decay: float = None, LR: float = 550.0):
 
-
-
+        bar = IncrementalBar("Creating layout", max=no_iters)
         decay = decay if decay is not None else np.exp(np.log(1e-3) / no_iters)
         if exaggerate_D:  # exaggeration of HD distances by taking them squared
             stop_d_exa = int(no_iters * stop_exaggeration)  # iteration when we stop the exaggeration
@@ -38,5 +36,7 @@ class SQuaDLayout(LowDLayoutBase):
 
             self.algorithm.one_iteration(exaggerate_D, LR)
             self.iteration_number += 1
+            bar.next()
             self.final_positions = self.algorithm.get_positions()
 
+        bar.finish()
