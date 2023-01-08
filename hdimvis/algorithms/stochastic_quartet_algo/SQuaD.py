@@ -26,6 +26,9 @@ class SQuaD(BaseAlgorithm):
 
  # aim for an end LR of 1e-3 , if not initialised with a std of 10 (not recommended), then this value should be changed as well
 
+    def get_name(self):
+        return self.name
+
     def get_positions(self):
         return self.low_d_positions
 

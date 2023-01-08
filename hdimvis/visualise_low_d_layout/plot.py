@@ -1,47 +1,70 @@
-from typing import Tuple, Optional, Callable
+from typing import Tuple, Optional, Callable, List
 from ..create_low_d_layout.LowDLayoutBase import LowDLayoutBase
 import numpy as np
 import  matplotlib.pyplot as plt
+import math
 
 
-def show_layout(layout:LowDLayoutBase, use_labels: bool=False, alpha: float = None, color_by: Callable[[np.ndarray],
-            float] = None, color_map: str = 'viridis', size: float = 1) -> None:
+def show_layouts(*layouts: LowDLayoutBase, use_labels: bool = False, alpha: float = None,
+                color_by: Callable[[np.ndarray],float] = None,
+                color_map: str = 'viridis', size: float = 1, title: str = None,
+                sub_titles: List[str] = None) -> None:
+
+
     """
 
-
     Draw the spring layout graph.
-    dataset: this can be used to colour the datapoints on the layout by for example
-        one of the dimensions of the original
-    high-d dataset
     alpha: float in range 0 - 1 for the opacity of points
     color_by: function to represent a node as a single float which will be used to color it
+    this can be used to colour the datapoints on the layout by for example
+    one of the dimensions of the original high-d dataset
     color_map: string name of matplotlib.pyplot.cm to take colors from when coloring
                using color_by
     """
+
+    no_layouts = len(layouts)
+    assert no_layouts > 0
+
+    if no_layouts == 1:
+        fig, axes = plt.subplots()
+    else:
+        r = math.floor(no_layouts/2)
+        c = math.ceil(no_layouts/2)
+        fig, axes = plt.subplots(r,c)
+
     # Get positions of nodes
-    pos: np.ndarray = layout.get_final_positions()
-    x = pos[:, 0]
-    y = pos[:, 1]
 
-    # Color nodes
-    colors = 'b'
-    cmap = None
+    for layout in layouts:
+        pos: np.ndarray = layout.get_final_positions()
+        x = pos[:, 0]
+        y = pos[:, 1]
 
-    if use_labels:
-        colors = layout.labels
-    elif color_by is not None and layout.data is not None:
-        colors = np.apply_along_axis(color_by, axis=1, arr=layout.data)
-        cmap = plt.cm.get_cmap(color_map)
+        # Color nodes
+        colors = 'b'
+        cmap = None
+
+        if use_labels:
+            colors = layout.labels
+        elif color_by is not None and layout.data is not None:
+            colors = np.apply_along_axis(color_by, axis=1, arr=layout.data)
+            cmap = plt.cm.get_cmap(color_map)
 
 
-    # Draw plot
-    fig, ax = plt.subplots()
-    ax.scatter(x, y, alpha=alpha, s=1, c=colors, cmap=cmap)
-    plt.axis('off')
+        # Draw plot
+
+        ax.scatter(x, y, alpha=alpha, s=size, c=colors, cmap=cmap)
+        if title:
+            plt.title(title)
+        plt.axis('off')
+
+    print(f"default size{fig.get_size_inches()}")
     plt.show()
 
 
-def show_generation_metrics(layout:LowDLayoutBase, stress: bool = True, average_speed: bool =False):
+def show_generation_metrics(*layouts: LowDLayoutBase, stress: bool = True, average_speed: bool = False,
+                            title: str = None):
+    assert len(layouts) > 0
+
     fig, ax1 = plt.subplots()
 
     line1, line2, line3 = [], [], []
@@ -54,7 +77,6 @@ def show_generation_metrics(layout:LowDLayoutBase, stress: bool = True, average_
         ax1.set_ylabel("Stress")
         print(line1)
 
-
     if average_speed:
         ax2 = ax1.twinx()
         x2 = layout.collected_metrics['average speed'][0]
@@ -65,6 +87,8 @@ def show_generation_metrics(layout:LowDLayoutBase, stress: bool = True, average_
 
     lines = line1 + line2 + line3
     labels = [l.get_label() for l in lines]
+    if title:
+        plt.title(title)
     ax1.legend(lines,labels)
     plt.show()
 

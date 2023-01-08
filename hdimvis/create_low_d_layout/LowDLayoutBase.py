@@ -12,6 +12,8 @@ class LowDLayoutBase:
         self.algorithm = algorithm
         self.final_positions = None
         self.metric_collection = metric_collection # a dict specifying what metrics to collect
+        # the below is a dict where each value - a tuple- contains a list of iteration numbers at pos 0
+        # and a list of collected values of a metric measured at the corresponding iteration number
         self.collected_metrics = {metric : ([],[]) for metric in self.algorithm.available_metrics }
         self.data = dataset.data
         self.labels = dataset.labels

@@ -69,3 +69,5 @@ http://ieeexplore.ieee.org/document/1173161/
 
 <p class="done">https://pythonspeed.com/articles/memory-profiler-data-scientists/
 </p> 
+
+<p class="done">https://docs.python.org/3/library/tracemalloc.html </p>

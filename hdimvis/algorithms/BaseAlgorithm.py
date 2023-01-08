@@ -15,6 +15,11 @@ class BaseAlgorithm:
         self.distance_fn = distance_fn
         self.available_metrics = ['stress']
 
+
+    @abstractmethod
+    def get_name(self):
+        pass
+
     @abstractmethod
     def get_positions(self) -> np.ndarray:
         pass

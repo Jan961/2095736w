@@ -52,6 +52,5 @@ class DataFetcher:
 
         data, labels = self.low_lvl_data_fetcher.load_dataset( **kwargs)
 
-        if not for_bhtsne:
-            return Dataset(data, labels, dataset_name)
-        else
+        return Dataset(data, labels, dataset_name)
+
