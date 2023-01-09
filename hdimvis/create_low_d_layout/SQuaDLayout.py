@@ -39,4 +39,6 @@ class SQuaDLayout(LowDLayoutBase):
             bar.next()
             self.final_positions = self.algorithm.get_positions()
 
+        if self.metric_collection is not None:
+            self.collect_metrics(final=True)
         bar.finish()

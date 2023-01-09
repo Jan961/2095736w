@@ -1,6 +1,26 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+from hdimvis.algorithms.spring_force_algos.chalmers96_algo.Chalmers96 import Chalmers96
+from hdimvis.create_low_d_layout.LowDLayoutCreation import LowDLayoutCreation
+from hdimvis.data_fetchers.DataFetcher import DataFetcher
+from hdimvis.distance_measures.euclidian_and_manhattan import euclidean
+import math
+
+all_datasets_list = ['poker', 'mnist', 'bonds', 'coil20', 'rna N3k', 'airfoil', 'wine quality', 'fashion mnist'
+                                                                                                'shuttle',
+                     'flow cytometry', 'flow cytometry']
+
+dataset = DataFetcher().fetch_data('coil20')
+
+
+r= dataset.shape[0]
+sample_indx = np.random.randint(0,r, size=math.floor(math.sqrt(r)))
+sample = dataset[sample_indx]
+
+algo96 = Chalmers96(dataset=sample, alpha=0.7, distance_fn=euclidean, use_knnd=False)
+layout = LowDLayoutCreation().create_layout(algo96, dataset, metric_collection=None, no_iters=50)
+
 grid_size = 30
 x = np.arange(grid_size)
 y = np.arange(grid_size)

@@ -10,17 +10,17 @@ def load_object(filename):
     except Exception as ex:
         print("Error during unpickling object (Possibly unsupported):", ex)
 
-class Experiment:
+class ExperimentBase:
 
     all_datasets_list = ('poker', 'mnist', 'bonds', 'coil20', 'rna N3k', 'airfoil', 'wine quality', 'fashion mnist'
                          'shuttle', 'flow cytometry', 'flow cytometry')
 
     def __init__(self, experiment_name: str, dataset_names : List[str] = all_datasets_list,
-                 metric_collection: Dict[str:int] = None, repeat: int = 3):
+                 metric_collection: Dict[str:int] = None, num_repeats: int = 3):
         self.dataset_names = dataset_names
         self.experiment_name = experiment_name
         self.metric_collection = metric_collection
-        self.repeat = repeat
+        self.num_repeats = num_repeats
         self.printout_list = []
 
     def create_output_directory(self):

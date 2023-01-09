@@ -21,6 +21,7 @@ class LowDLayoutBase:
 
     # method to create the layout - it repeatedly calls "collect_metrics" as it runs
     # and increments self.iteration_number after each call to the one_iteration method of self.algorithm
+    # it should call collect_final_metrics at the end of its run
     @abstractmethod
     def run(self):
         pass
@@ -29,19 +30,23 @@ class LowDLayoutBase:
         return self.final_positions
 
     # collect various metrics as specified by self.metric_collection dict
-    def collect_metrics(self):
+    def collect_metrics(self, final=False):
         if 'stress' in self.metric_collection:
-            if self.iteration_number % self.metric_collection['stress'] == 0 :
+            if final or self.check_collection_interval('stress'):
                 self.collected_metrics['stress'][0].append(self.iteration_number)
                 self.collected_metrics['stress'][1].append(self.algorithm.get_stress())
 
         if 'average speed' in self.metric_collection:
-            if self.iteration_number % self.metric_collection['average speed'] == 0:
+            if final or self.check_collection_interval('average speed'):
                 self.collected_metrics['average speed'][0].append(self.iteration_number)
                 self.collected_metrics['average speed'][1].append(self.algorithm.get_average_speed())
 
 
-
+    def check_collection_interval(self, metric: str):
+        if self.iteration_number % self.metric_collection[metric] == 0:
+            return True
+        else:
+            return False
 
 
     def save(self):

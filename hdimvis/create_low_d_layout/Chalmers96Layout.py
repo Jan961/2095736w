@@ -35,9 +35,14 @@ class Chalmers96Layout(LowDLayoutBase):
         while True:
             if no_iters is not None and self.iteration_number >= no_iters:
                 bar.finish()
+                if self.metric_collection is not None:
+                    self.collect_metrics(final=True)
                 return
+
             average_speed = self.algorithm.get_average_speed()
             if target_node_speed >0 and target_node_speed >= average_speed:
+                if self.metric_collection is not None:
+                    self.collect_metrics(final=True)
                 return
 
             if self.metric_collection is not None:

@@ -4,6 +4,7 @@ from hdimvis.create_low_d_layout.LowDLayoutCreation import LowDLayoutCreation
 from hdimvis.distance_measures.euclidian_and_manhattan import euclidean, manhattan
 from hdimvis.distance_measures.poker_distance import poker_distance
 import matplotlib.pyplot as plt
+from sklearn.decomposition import PCA
 import numpy as np
 
 dataset = DataFetcher().fetch_data('poker', size=500)
@@ -112,3 +113,11 @@ def test_knnd_index_created_and_neighbours_retrieved_correctly():
     algo = Chalmers96(dataset, neighbour_set_size=2, use_knnd=True, knnd_parameters={'metric': 'manhattan','n_trees': 100})
     assert len(algo._get_neighbours(3)) == 2
     assert algo._get_neighbours(4) == algo.knnd_index.neighbor_graph[0][4][1:].tolist()
+
+
+def test_initial_layout():
+    Xld = PCA(n_components=2, whiten=False, copy=True).fit_transform(dataset.data).astype(np.float64)
+    algorithm = Chalmers96(dataset=dataset, initial_layout=Xld, neighbour_set_size=5)
+    for i in range(3,7):
+        assert algorithm.nodes[i].x == Xld[i][0]
+        assert algorithm.nodes[i].y == Xld[i][1]
