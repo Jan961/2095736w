@@ -7,11 +7,10 @@ from ..algorithms.stochastic_quartet_algo.SQuaD import SQuaD
 from ..data_fetchers.Dataset import Dataset
 
 class SQuaDLayout(LowDLayoutBase):
-    def __init__(self, algorithm: SQuaD, dataset:Dataset , metric_collection: dict[str: int] = None ):
-        super().__init__(algorithm, dataset, metric_collection)
+    def __init__(self, algorithm: SQuaD, dataset:Dataset, optional_metric_collection: dict[str: int] = None):
+        super().__init__(algorithm, dataset, optional_metric_collection)
 
         assert isinstance(self.algorithm, SQuaD)
-
 
     def run(self, metric_collection: List[Tuple] =None, no_iters: int = 10,
             exaggerate_D: bool = False, stop_exaggeration: float = 0.6,
@@ -24,10 +23,8 @@ class SQuaDLayout(LowDLayoutBase):
         else:
             stop_d_exa = 0
 
-
         for i in range(no_iters):
-
-            if self.metric_collection is not None:
+            if self.optional_metric_collection is not None:
                 self.collect_metrics()
 
             if i == stop_d_exa:
@@ -39,6 +36,6 @@ class SQuaDLayout(LowDLayoutBase):
             bar.next()
             self.final_positions = self.algorithm.get_positions()
 
-        if self.metric_collection is not None:
+        if self.optional_metric_collection is not None:
             self.collect_metrics(final=True)
         bar.finish()

@@ -8,8 +8,8 @@ import matplotlib.pyplot as plt
 
 class Chalmers96Layout(LowDLayoutBase):
 
-    def __init__(self, algorithm: Chalmers96, dataset: Dataset, metric_collection: dict[str: int] = None ):
-        super().__init__(algorithm, dataset, metric_collection)
+    def __init__(self, algorithm: Chalmers96, dataset: Dataset, optional_metric_collection: dict[str: int] = None):
+        super().__init__(algorithm, dataset, optional_metric_collection)
         assert isinstance(self.algorithm, Chalmers96)
 
 
@@ -28,24 +28,23 @@ class Chalmers96Layout(LowDLayoutBase):
             if target_node_speed == 0:
                 bar = IncrementalBar("Creating layout", max=no_iters)
 
-
         assert target_node_speed >= 0
         assert no_iters is not None or target_node_speed > 0
 
         while True:
             if no_iters is not None and self.iteration_number >= no_iters:
-                bar.finish()
-                if self.metric_collection is not None:
+                if self.optional_metric_collection is not None:
                     self.collect_metrics(final=True)
+                bar.finish()
                 return
 
             average_speed = self.algorithm.get_average_speed()
             if target_node_speed >0 and target_node_speed >= average_speed:
-                if self.metric_collection is not None:
+                if self.optional_metric_collection is not None:
                     self.collect_metrics(final=True)
                 return
 
-            if self.metric_collection is not None:
+            if self.optional_metric_collection is not None:
                 self.collect_metrics()
 
             self.algorithm.one_iteration()

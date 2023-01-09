@@ -19,7 +19,7 @@ tracemalloc.start()
 algo96 = Chalmers96(dataset=dataset, alpha=0.7, distance_fn=euclidean, use_knnd=False)
 
 
-layout = LowDLayoutCreation().create_layout(algo96, dataset, metric_collection=metric_collection, no_iters=100)
+layout = LowDLayoutCreation().create_layout(algo96, dataset, optional_metric_collection=metric_collection, no_iters=100)
 print(tracemalloc.get_traced_memory())
 tracemalloc.stop()
 

@@ -14,7 +14,7 @@ Xld = PCA(n_components=2, whiten=False, copy=True).fit_transform(dataset.data).a
 # Xld *= 10/np.std(Xld)
 
 squad = SQuaD(dataset=dataset, initial_layout=Xld, distance_fn= relative_rbf_dists)
-layout = LowDLayoutCreation().create_layout(squad, dataset, metric_collection=metric_collection, no_iters=100)
+layout = LowDLayoutCreation().create_layout(squad, dataset, optional_metric_collection=metric_collection, no_iters=100)
 
 show_layouts(layout, use_labels=True)
 show_generation_metrics(layout)

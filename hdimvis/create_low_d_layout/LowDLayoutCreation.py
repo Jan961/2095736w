@@ -13,9 +13,9 @@ from ..data_fetchers.Dataset import Dataset
 class LowDLayoutCreation:
 
     def create_layout(self, algorithm: BaseAlgorithm, dataset: Dataset,
-                      metric_collection: dict[str: int] = None, **kwargs):
+                      optional_metric_collection: dict[str: int] = None, **kwargs):
 
-        parameters = [algorithm, dataset, metric_collection]
+        parameters = [algorithm, dataset, optional_metric_collection]
 
         print("#" * 20)
         print(f"A 2D layout of the \"{dataset.name}\" dataset will be created \n"
@@ -28,15 +28,14 @@ class LowDLayoutCreation:
         elif isinstance(algorithm, SQuaD):
             layout = SQuaDLayout(*parameters)
 
-
-        if metric_collection is None:
+        if optional_metric_collection is None:
             print("#" * 20)
             print("No metrics will be collected during layout creation. \n"
                   "To change this use the \'metric collection\' parameter of the layout " )
             print("#" * 20)
 
         else:
-            for metric, freq in metric_collection.items():
+            for metric, freq in optional_metric_collection.items():
                 assert freq > 0, f"Frequency of metric collection has to be > 0, got: {freq} "
                 assert metric in algorithm.available_metrics, f"{metric} not available for this algorithm"
                 print(f"\"{metric.capitalize()}\" wil be measured every {freq} iterations")
@@ -51,4 +50,5 @@ class LowDLayoutCreation:
         # print all the info here
 
         layout.run(**kwargs)
+        layout.calculate_final_metrics()
         return layout

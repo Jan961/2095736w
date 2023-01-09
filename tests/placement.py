@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from.generate_placement_data import get_data
 
 from hdimvis.algorithms.spring_force_algos.chalmers96_algo.Chalmers96 import Chalmers96
 from hdimvis.create_low_d_layout.LowDLayoutCreation import LowDLayoutCreation
@@ -7,33 +8,26 @@ from hdimvis.data_fetchers.DataFetcher import DataFetcher
 from hdimvis.distance_measures.euclidian_and_manhattan import euclidean
 import math
 
-all_datasets_list = ['poker', 'mnist', 'bonds', 'coil20', 'rna N3k', 'airfoil', 'wine quality', 'fashion mnist'
-                                                                                                'shuttle',
-                     'flow cytometry', 'flow cytometry']
+all_datasets_list = ['poker', 'mnist', 'bonds', 'coil20', 'rna N3k', 'airfoil', 'wine quality', 'fashion mnist',
+                     'shuttle','flow cytometry']
 
-dataset = DataFetcher().fetch_data('coil20')
+parents, parent_hd_distances, sample_ld_pos, r, dims = get_data('coil20')
 
-
-r= dataset.shape[0]
-sample_indx = np.random.randint(0,r, size=math.floor(math.sqrt(r)))
-sample = dataset[sample_indx]
-
-algo96 = Chalmers96(dataset=sample, alpha=0.7, distance_fn=euclidean, use_knnd=False)
-layout = LowDLayoutCreation().create_layout(algo96, dataset, metric_collection=None, no_iters=50)
-
+grid_start = 0
+grid_stop = 0
 grid_size = 30
 x = np.arange(grid_size)
 y = np.arange(grid_size)
 
 # hdpoints = np.random.randint(0, 40, size=(20, 6))
-hdpoints = np.full(shape=(20,10), fill_value=np.random.randint(0, 40))
-ldpoints = np.random.randint(0, 6, size=(20, 2))
+# hdpoints = np.full(shape=(20,10), fill_value=np.random.randint(0, 40))
+# ldpoints = np.random.randint(0, 6, size=(20, 2))
 # ldpoints = np.array([[19,19], [0,1], [2,1], [1,2] ,[0,3 ],
 #                      [0,18], [2,19], [10, 19], [4,17], [3,20],
 #                     [19,5], [18,10], [10,10], [10, 20], [10,12],
 #                      [19,17,], [16,15], [14, 0], [12, 5], [16,4]])
 
-hdpoint = np.random.randint(80, 100, size=(1, 10))
+# hdpoint = np.random.randint(80, 100, size=(1, 10))
 xv, yx = np.meshgrid(x, y)
 
 hd_dist= np.linalg.norm(hdpoints- hdpoint, axis=1)

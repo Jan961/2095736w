@@ -16,7 +16,7 @@ from .Dataset import Dataset
 class DataFetcher:
 
     all_datasets_list = ['poker', 'mnist', 'bonds', 'coil20', 'rna N3k', 'airfoil', 'wine quality', 'fashion mnist'
-                         'shuttle', 'flow cytometry', 'flow cytometry']
+                         'shuttle', 'flow cytometry']
     def __init__(self):
         self.low_lvl_data_fetcher = None
 
@@ -44,13 +44,10 @@ class DataFetcher:
             self.low_lvl_data_fetcher = ShuttleFetcher()
         elif dataset_name == 'flow cytometry':
             self.low_lvl_data_fetcher = FlowCytometryFetcher()
-        elif dataset_name == 'flow cytometry':
-            self.low_lvl_data_fetcher = FlowCytometryFetcher()
         elif dataset_name == 'mnist':
             self.low_lvl_data_fetcher = MnistFetcher()
         else:
             print("Dataset name not recognised")
-
 
         data, labels = self.low_lvl_data_fetcher.load_dataset( **kwargs)
         print("#" * 20)
