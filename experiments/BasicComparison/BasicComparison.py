@@ -25,7 +25,7 @@ class BasicComparison(ExperimentBase):
             self.h()
             self.pr(f'Dataset: {dataset_name} \n')
             dataset = DataFetcher().fetch_data(dataset_name)
-            final_metrics
+
 
             for i in range(self.num_repeats):
                 pass
@@ -41,13 +41,13 @@ class BasicComparison(ExperimentBase):
         t1 = perf_counter()
         layout = LowDLayoutCreation().create_layout(algorithm, dataset, optional_metric_collection=self.metric_collection,
                                                     no_iters=200)
-        time = perf_counter() - t1
-        curr, peak = tracemalloc.get_tracemalloc_memory()
 
-        stress =
-
-
+        basic_metrics['time'] = perf_counter() - t1
+        basic_metrics['current memory'], basic_metrics['peak memory'] = tracemalloc.get_tracemalloc_memory()
+        tracemalloc.stop()
         basic_metrics['final stress'] = layout.get_final_stress()
+
+
 
         if isinstance(algorithm, Chalmers96):
 

@@ -3,6 +3,7 @@ from typing import List, Tuple
 import numpy as np
 
 from ..algorithms.BaseAlgorithm import BaseAlgorithm
+from ..algorithms.spring_force_algos.SpringForceBase import SpringForceBase
 from ..algorithms.spring_force_algos.chalmers96_algo.Chalmers96 import Chalmers96
 from .Chalmers96Layout import Chalmers96Layout
 from ..algorithms.stochastic_quartet_algo.SQuaD import SQuaD
@@ -49,6 +50,9 @@ class LowDLayoutCreation:
             print("#" * 20)
         # print all the info here
 
+        #the nodes are created here so that this operation is easier to include in memory and time measurements
+        if isinstance(layout.algorithm, SpringForceBase):
+            layout.algorithm.build_nodes()
+
         layout.run(**kwargs)
-        layout.calculate_final_metrics()
         return layout

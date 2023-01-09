@@ -29,9 +29,14 @@ class LowDLayoutBase:
         return self.final_positions
 
     def get_final_stress(self):
-        return self.collected_metrics['stress'][1][-1]
+        if self.optional_metric_collection is None:
+            return self.collected_metrics['stress'][1].append(self.algorithm.get_stress())
+        else:
+            return self.collected_metrics['stress'][1][-1]
 
     # collect various metrics as specified by self.metric_collection dict
+    # the "final" parameter is used to allow for collection of the final measurements
+    # regardless of the collection interval specified by self.metric-collection
     def collect_metrics(self, final = False):
         if 'stress' in self.optional_metric_collection:
             if final != self._check_collection_interval('stress'):#xor
@@ -43,12 +48,8 @@ class LowDLayoutBase:
                 self.collected_metrics['average speed'][0].append(self.iteration_number)
                 self.collected_metrics['average speed'][1].append(self.algorithm.get_average_speed())
 
-
-    def calculate_final_metrics(self):
-        if self.optional_metric_collection is None and 'stress' in self.algorithm.available_metrics:
-            self.collected_metrics['stress'][0].append(self.iteration_number)
-            self.collected_metrics['stress'][1].append(self.algorithm.get_stress())
-
+    # this is separated from metric collection to allow the calculation of metrics not to influence memory
+    # usage, speed etc measurements
 
     def save(self):
         try:
@@ -63,8 +64,7 @@ class LowDLayoutBase:
         else:
             return False
 
-    #this is separated from metric collection to allow the calculation of metrics not to influence memory
-    # usage, speed etc measurements
+
 
 
 

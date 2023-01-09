@@ -56,3 +56,9 @@
 ### 8 Jan 2023
 * *9 hours* first experiment almost done
 
+# Semester 2
+# Week1
+
+### 9 Jan 2023
+* *7 hours* further additions to testing etc, exploring placement 
+
