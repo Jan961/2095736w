@@ -53,3 +53,6 @@
 ### 7 Jan 2023
 * *2 hours* started to add bhtsne
 
+### 8 Jan 2023
+* *9 hours* first experiment almost done
+
