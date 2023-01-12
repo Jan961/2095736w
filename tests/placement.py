@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from.generate_placement_data import get_data
+from generate_placement_data import get_data
 
 from hdimvis.algorithms.spring_force_algos.chalmers96_algo.Chalmers96 import Chalmers96
 from hdimvis.create_low_d_layout.LowDLayoutCreation import LowDLayoutCreation
@@ -11,41 +11,45 @@ import math
 all_datasets_list = ['poker', 'mnist', 'bonds', 'coil20', 'rna N3k', 'airfoil', 'wine quality', 'fashion mnist',
                      'shuttle','flow cytometry']
 
-parents, parent_hd_distances, sample_ld_pos, r, dims = get_data('coil20')
+parents, parent_hd_distances, sample_ld_pos, r, dims, data, sample, sample_indx = get_data('coil20')
 
-grid_start = 0
-grid_stop = 0
-grid_size = 30
-x = np.arange(grid_size)
-y = np.arange(grid_size)
+point_idx = np.random.randint(0, r)
+the_point_hd = data[point_idx]
+the_parent_indx = parents[point_idx]
+print(f"dims: {dims}")
 
-# hdpoints = np.random.randint(0, 40, size=(20, 6))
-# hdpoints = np.full(shape=(20,10), fill_value=np.random.randint(0, 40))
-# ldpoints = np.random.randint(0, 6, size=(20, 2))
-# ldpoints = np.array([[19,19], [0,1], [2,1], [1,2] ,[0,3 ],
-#                      [0,18], [2,19], [10, 19], [4,17], [3,20],
-#                     [19,5], [18,10], [10,10], [10, 20], [10,12],
-#                      [19,17,], [16,15], [14, 0], [12, 5], [16,4]])
+print(f"the point: {the_point_hd}")
 
-# hdpoint = np.random.randint(80, 100, size=(1, 10))
-xv, yx = np.meshgrid(x, y)
+radius = parent_hd_distances[point_idx]
+the_parent = sample_ld_pos[the_parent_indx]
 
-hd_dist= np.linalg.norm(hdpoints- hdpoint, axis=1)
 
-ld_dist = np.zeros((grid_size,grid_size, ldpoints.shape[0]))
+extra_space = 0
+x = np.arange( the_parent[0] - radius - extra_space, the_parent[0] + radius + extra_space)
+y = np.arange( the_parent[1] - radius - extra_space, the_parent[1] + radius + extra_space)
+grid_size = x.size
+print(f"x: {x}")
+print(f"y: {y}")
+xv, yv = np.meshgrid(x, y)
 
-for i in range(20):
-    xy =  np.dstack((xv - ldpoints[i, 0], yx - ldpoints[i, 1]))
+hd_dist= np.linalg.norm(sample- the_point_hd, axis=1)
+
+ld_dist = np.zeros((grid_size,grid_size, sample.shape[0]))
+
+for i in range(sample_ld_pos.shape[0]):
+    xy =  np.dstack((xv - sample_ld_pos[i, 0], yv - sample_ld_pos[i, 1]))
     distance_one_p = np.linalg.norm(xy, axis=2)
     ld_dist[... ,i] = distance_one_p
 
-diffs = np.abs(ld_dist - hd_dist)
-error = np.sum((diffs/hd_dist), axis=2)
+diffs = (ld_dist - hd_dist[None, None,:])**2
+error = np.sum((diffs), axis=2)
 
+print(f"hd distances : {hd_dist}")
 
+print(f"parent: {the_parent}")
 
-
-h = plt.contourf(x, y, error)
+plt.pcolor(x, y, error)
+plt.plot(the_parent[0], the_parent[1], 'ro')
 plt.axis('scaled')
 plt.colorbar()
 plt.show()

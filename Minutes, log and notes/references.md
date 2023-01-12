@@ -71,3 +71,4 @@ http://ieeexplore.ieee.org/document/1173161/
 </p> 
 
 <p class="done">https://docs.python.org/3/library/tracemalloc.html </p>
+<p class="done">Accelerating Barnes-Hut t-SNE Algorithm by Efficient Parallelization on Multi-Core CPUs Narendra Chaudhary, Alexander Pivovar, Pavel Yakovlev, Andrey Gorshkov, Sanchit Misra</p>

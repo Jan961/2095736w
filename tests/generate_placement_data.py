@@ -31,4 +31,7 @@ def get_data(dataset_name):
     parent_hd_distances = np.min(np.linalg.norm(diffs, axis=1), axis=1)
     sample_ld_pos = layout.get_final_positions()
 
-    return parents, parent_hd_distances, sample_ld_pos,r, dims
+    return parents, parent_hd_distances, sample_ld_pos, r, dims, dataset.data, sample.data, sample_indx
+
+
+
