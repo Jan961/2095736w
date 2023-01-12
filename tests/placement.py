@@ -42,13 +42,13 @@ for i in range(sample_ld_pos.shape[0]):
     ld_dist[... ,i] = distance_one_p
 
 diffs = (ld_dist - hd_dist[None, None,:])**2
-error = np.sum((diffs), axis=2)
+error = np.sum((diffs**2), axis=2)
 
 print(f"hd distances : {hd_dist}")
 
 print(f"parent: {the_parent}")
 
-plt.pcolor(x, y, error)
+plt.contour(x, y, error, levels= 50)
 plt.plot(the_parent[0], the_parent[1], 'ro')
 plt.axis('scaled')
 plt.colorbar()
