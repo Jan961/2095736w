@@ -34,6 +34,7 @@ class BaseAlgorithm:
         pass
 
     def get_euclidian_stress(self):
+        print("calculating euclidian stress")
         data = self.dataset
         hd_dist = np.sqrt(((data[:,:,None] - data[:,:,None].T)**2).sum(axis=1)/2)
         ld_dist = np.sqrt(((self.get_positions()[:,:,None] - self.get_positions()[:,:,None].T)**2).sum(axis=1)/2)

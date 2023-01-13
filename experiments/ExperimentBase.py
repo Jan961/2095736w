@@ -17,7 +17,7 @@ class ExperimentBase:
                          'flow cytometry', 'flow cytometry')
 
     def __init__(self, experiment_name: str, dataset_names: List[str] = all_datasets_list,
-                 metric_collection: Dict[str:int] = None, num_repeats: int = 3, record_memory=False,
+                 metric_collection: Dict[str,int] = None, num_repeats: int = 3, record_memory=False,
                  iterations: int = 100):
         self.dataset_names = dataset_names
         self.experiment_name = experiment_name

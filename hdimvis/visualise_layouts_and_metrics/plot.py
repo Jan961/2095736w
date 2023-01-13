@@ -68,7 +68,7 @@ def show_layouts(*layouts: LowDLayoutBase, use_labels: bool = False, alpha: floa
     if title:
         plt.title(title)
 
-    plt.axis('off')
+
     plt.show()
 
 

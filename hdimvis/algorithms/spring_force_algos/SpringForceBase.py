@@ -21,7 +21,7 @@ class SpringForceBase(BaseAlgorithm):
         super().__init__(dataset, initial_layout, distance_fn)  # the base class extracts data from the Dataset object
         assert dataset is not None or nodes is not None, "must provide dataset or nodes"
 
-        self.nodes: List[Node] = nodes
+        self.nodes: List[Node] = nodes if nodes is not None else self.build_nodes()
         self.data_size_factor: float = 1
         self._average_speeds: List[float] = list()
         self.enable_cache: bool = enable_cache
@@ -42,7 +42,7 @@ class SpringForceBase(BaseAlgorithm):
         """
         pass
 
-    def build_nodes(self) -> None:
+    def build_nodes(self) -> List[Node]:
         """
         Construct a Node for each datapoint
         """
@@ -50,7 +50,7 @@ class SpringForceBase(BaseAlgorithm):
         # for the apply_along_axis fn
         conc = np.concatenate((self.dataset.data, self.initial_layout), axis=1)
 
-        self.nodes = list(np.apply_along_axis(Node, axis=1, arr=conc))
+        return list(np.apply_along_axis(Node, axis=1, arr=conc))
 
     def get_positions(self) -> np.ndarray:
         return np.array([(n.x, n.y) for n in self.nodes])

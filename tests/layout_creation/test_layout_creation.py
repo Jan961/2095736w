@@ -20,8 +20,8 @@ def test_low_lvl_layout_created_correctly_for_chalmers96():
         layout_class = layout_classes[0]
         layout = LowDLayoutCreation().create_layout(algo, dataset, {'stress': 2, 'average speed': 1}, no_iters=4)
         assert isinstance(layout, layout_class)
-        assert layout.metric_collection['stress'] == 2
-        assert layout.metric_collection['average speed'] == 1
+        assert layout.optional_metric_collection['stress'] == 2
+        assert layout.optional_metric_collection['average speed'] == 1
 
 
 

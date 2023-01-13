@@ -12,7 +12,7 @@ class SQuaDLayout(LowDLayoutBase):
 
         assert isinstance(self.algorithm, SQuaD)
 
-    def run(self, metric_collection: List[Tuple] =None, no_iters: int = 10,
+    def run(self, metric_collection: List[Tuple] = None, no_iters: int = 10,
             exaggerate_D: bool = False, stop_exaggeration: float = 0.6,
                  decay: float = None, LR: float = 550.0):
 
