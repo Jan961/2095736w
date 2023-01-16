@@ -63,7 +63,7 @@ class SpringForceBase(BaseAlgorithm):
 
         # numpy vectorisation for euclidian distance
         if self.distance_fn == euclidean:
-            return self.get_euclidian_stress()
+            return self.get_vectorised_stress()
 
         numerator: float = 0.0
         denominator: float = 0.0

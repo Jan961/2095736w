@@ -37,7 +37,7 @@ class SQuaD(BaseAlgorithm):
 
     def get_stress(self) -> float:
         # alternative stress metrics can be added here
-        return self.get_euclidian_stress()
+        return self.get_vectorised_stress()
 
     def one_iteration(self, exaggerate_dist: bool = False, LR:float = 550.0):
 
