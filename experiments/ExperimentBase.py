@@ -12,9 +12,8 @@ def load_object(filename):
 
 
 class ExperimentBase:
-    all_datasets_list = ('poker', 'mnist', 'bonds', 'coil20', 'rna N3k', 'airfoil', 'wine quality', 'fashion mnist'
-                                                                                                    'shuttle',
-                         'flow cytometry', 'flow cytometry')
+    all_datasets_list = ('poker', 'mnist', 'bonds', 'coil20', 'rna N3k', 'airfoil', 'wine quality',
+                         'fashion mnist', 'shuttle', 'flow cytometry')
 
     def __init__(self, experiment_name: str, dataset_names: List[str] = all_datasets_list,
                  metric_collection: Dict[str,int] = None, num_repeats: int = 3, record_memory=False,

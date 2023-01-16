@@ -45,15 +45,15 @@ class Chalmers96Layout(LowDLayoutBase):
                 return
 
 
-
+            if self.optional_metric_collection is not None:
+                self.collect_metrics()
             self.algorithm.one_iteration()
             self.iteration_number += 1
             self.final_positions = self.algorithm.get_positions()
             if bar:
                 bar.next()
 
-            if self.optional_metric_collection is not None:
-                self.collect_metrics()
+
             # stress_og = self.algorithm.get_stress()
             # stress_new = self.algorithm.get_euclidian_stress()
             # print(f"stress og: {stress_og}")

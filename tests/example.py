@@ -15,7 +15,7 @@ all_datasets_list = ['poker', 'mnist', 'bonds', 'coil20', 'rna N3k', 'airfoil', 
 
 metric_collection = {'stress': 20, 'average speed': 20}
 
-dataset = DataFetcher().fetch_data('coil20')
+dataset = DataFetcher().fetch_data('rna N3k')
 # Xld = PCA(n_components=2, whiten=False, copy=True).fit_transform(dataset.data).astype(np.float64)
 # Xld *= 10/np.std(Xld)
 
@@ -23,7 +23,7 @@ dataset = DataFetcher().fetch_data('coil20')
 algo96 = Chalmers96(dataset=dataset, alpha=0.7,  distance_fn=euclidean, use_knnd=False, sample_set_size=4, neighbour_set_size=0)
 
 
-layout = LowDLayoutCreation().create_layout(algo96, dataset, optional_metric_collection=metric_collection, no_iters=200)
+layout = LowDLayoutCreation().create_layout(algo96, dataset, optional_metric_collection=None, no_iters=200)
 # print(tracemalloc.get_traced_memory())
 # tracemalloc.stop()
 

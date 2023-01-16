@@ -13,7 +13,32 @@ def test_basic_comparison():
     algo1 = Chalmers96(dataset=dataset, neighbour_set_size=1, sample_set_size=2)
     algo2 = SQuaD(dataset=dataset)
 
-    metric_collection = {'stress': 10, 'average speed': 10}
+    metric_collection = {'stress': 2, 'average speed': 1}
 
-    expr = BasicComparison("test experiment", algo1, algo2, iterations=2, num_repeats=2,
-                           metric_collection=metric_collection)
+    expr = BasicComparison( algo1, algo2, experiment_name="test experiment", iterations=3, num_repeats=2,
+                           metric_collection = metric_collection)
+    expr.run()
+
+    print(expr.optional_generation_metrics)
+    #test basic metrics
+    assert len(expr.basic_metrics) == 2
+    assert expr.basic_metrics[0].shape[0] == 2
+    assert expr.basic_metrics[0].shape[1] == 4
+
+    assert len(expr.optional_generation_metrics) == 2  # no algorithms
+
+    #test generation metric collection for chalmers' 96
+    assert expr.optional_generation_metrics[0]['stress'].shape[0] == 2 #no repeats
+    assert expr.optional_generation_metrics[0]['stress'].shape[1] == 3 # no stress measurements during one run
+
+    assert expr.optional_generation_metrics[0]['average speed'].shape[0] == 2  # no repeats
+    assert expr.optional_generation_metrics[0]['average speed'].shape[1] == 4  # as for stress
+
+    # test generation metric collection for Squad
+    assert len(expr.optional_generation_metrics[1]) == 1
+    assert expr.optional_generation_metrics[1]['stress'].shape[0] == 2  # no repeats
+    assert expr.optional_generation_metrics[1]['stress'].shape[1] == 3  # no stress measurements during one run
+
+
+
+

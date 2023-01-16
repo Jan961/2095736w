@@ -18,7 +18,7 @@ def get_data(dataset_name):
     output_dict = dict()
     N = dataset.data.shape[0]
     dims = dataset.data.shape[1]
-    sample_indx = np.random.randint(0, N, size=math.floor(math.sqrt(r)))
+    sample_indx = np.random.randint(0, N, size=math.floor(math.sqrt(N)))
     sample = Dataset(dataset.data[sample_indx], None, "sample")
 
     algo96 = Chalmers96(dataset=sample, alpha=0.7, distance_fn=euclidean, use_knnd=False)

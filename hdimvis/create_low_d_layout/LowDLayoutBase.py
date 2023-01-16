@@ -39,12 +39,12 @@ class LowDLayoutBase:
     # regardless of the collection interval specified by self.metric-collection
     def collect_metrics(self, final = False):
         if 'stress' in self.optional_metric_collection:
-            if final != self._check_collection_interval('stress'):#xor
+            if final or self._check_collection_interval('stress'):
                 self.collected_metrics['stress'][0].append(self.iteration_number)
                 self.collected_metrics['stress'][1].append(self.algorithm.get_stress())
 
         if 'average speed' in self.optional_metric_collection:
-            if final != self._check_collection_interval('average speed'): #xor
+            if final or self._check_collection_interval('average speed'):
                 self.collected_metrics['average speed'][0].append(self.iteration_number)
                 self.collected_metrics['average speed'][1].append(self.algorithm.get_average_speed())
 
