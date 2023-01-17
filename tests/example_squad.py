@@ -7,14 +7,14 @@ from hdimvis.data_fetchers.DataFetcher import DataFetcher
 from hdimvis.visualise_layouts_and_metrics.plot import show_layouts, show_generation_metrics
 from hdimvis.distance_measures.relative_rbf_dists import relative_rbf_dists
 
-metric_collection = {'stress': 20}
+metric_collection = { 'stress': 10, 'average quartet stress': 10}
 dataset = DataFetcher().fetch_data('coil20')
 
-# Xld = PCA(n_components=2, whiten=False, copy=True).fit_transform(dataset.data).astype(np.float64)
-# Xld *= 10/np.std(Xld)
+Xld = PCA(n_components=2, whiten=False, copy=True).fit_transform(dataset.data).astype(np.float64)
+Xld *= 10/np.std(Xld)
 
-squad = SQuaD(dataset=dataset, distance_fn= relative_rbf_dists)
-layout = LowDLayoutCreation().create_layout(squad, dataset, optional_metric_collection=metric_collection, no_iters=200)
-
+squad = SQuaD(dataset=dataset, initial_layout=Xld)
+layout = LowDLayoutCreation().create_layout(squad, dataset, optional_metric_collection=metric_collection, no_iters=100)
+print(layout.collected_metrics)
 show_layouts(layout, use_labels=True)
-show_generation_metrics(layout)
+show_generation_metrics(layout, quartet_stress=True)

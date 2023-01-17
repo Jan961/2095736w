@@ -51,7 +51,7 @@ class LowDLayoutBase:
         if 'average quartet stress' in self.optional_metric_collection:
             if final or self._check_collection_interval('average quartet stress'):
                 self.collected_metrics['average quartet stress'][0].append(self.iteration_number)
-                self.collected_metrics['average quartet stress'][1].append(self.algorithm.get_average_speed())
+                self.collected_metrics['average quartet stress'][1].append(self.algorithm.get_average_quartet_stress())
 
 
     # this is separated from metric collection to allow the calculation of metrics not to influence memory

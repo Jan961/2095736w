@@ -12,7 +12,7 @@ class SQuaDLayout(LowDLayoutBase):
 
         assert isinstance(self.algorithm, SQuaD)
 
-    def run(self, metric_collection: List[Tuple] = None, no_iters: int = 10,
+    def run(self, metric_collection: List[Tuple] = None, no_iters: int = 50,
             exaggerate_D: bool = False, stop_exaggeration: float = 0.6,
                  decay: float = None, LR: float = 550.0):
 
@@ -40,6 +40,8 @@ class SQuaDLayout(LowDLayoutBase):
 
             self.algorithm.one_iteration(exaggerate_D, LR, calculate_quartet_stress)
             self.iteration_number += 1
+            if self.optional_metric_collection is not None:
+                self.collect_metrics()
             bar.next()
             self.final_positions = self.algorithm.get_positions()
 

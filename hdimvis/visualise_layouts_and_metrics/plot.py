@@ -85,23 +85,26 @@ def show_generation_metrics(layout, stress: bool = True, average_speed: bool = F
         line1 = ax1.plot(x1, y1, c='r', label="Stress")
         ax1.set_xlabel("Iteration number")
         ax1.set_ylabel("Stress")
-        print(line1)
 
-    if average_speed:
-        ax2 = ax1.twinx()
-        x2 = layout.collected_metrics['average speed'][0]
-        y2 = layout.collected_metrics['average speed'][1]
-        line2 = ax2.plot(x2, y2, c='b', label="Average Speed")
-        ax2.set_ylabel("Average Speed")
-        print(line2)
+        if average_speed or quartet_stress:
+            if average_speed:
+                label = 'average speed'
+            else:
+                label = 'average quartet stress'
 
-    elif average_speed:
-        ax2 = ax1.twinx()
-        x2 = layout.collected_metrics['average quartet stress'][0]
-        y2 = layout.collected_metrics['average quartet stress'][1]
-        line2 = ax2.plot(x2, y2, c='b', label="Average quartet stress")
-        ax2.set_ylabel("average quartet stress")
-        print(line2)
+            ax2 = ax1.twinx()
+            x2 = layout.collected_metrics[label][0]
+            y2 = layout.collected_metrics[label][1]
+            line2 = ax2.plot(x2, y2, c='b', label=label)
+            ax2.set_ylabel(label)
+
+    elif quartet_stress:
+        x1 = layout.collected_metrics['average quartet stress'][0]
+        y1 = layout.collected_metrics['average quartet stress'][1]
+        line1 = ax1.plot(x1, y1, c='r', label="Average quartet stress")
+        ax1.set_xlabel("Iteration number")
+        ax1.set_ylabel("Average quartet stress")
+
 
     lines = line1 + line2 + line3
     labels = [l.get_label() for l in lines]
