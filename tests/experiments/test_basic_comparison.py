@@ -20,25 +20,25 @@ def test_basic_comparison():
     expr.run()
 
 
-    print(expr.ogm)
+    print(expr.results)
     #test basic metrics
-    assert len(expr.bm) == 2
-    assert expr.bm[0].shape[0] == 2
-    assert expr.bm[0].shape[1] == 4
+    assert len(expr.results['mock data'][0]) == 2
+    assert expr.results['mock data'][0][0].shape[0] == 2
+    assert expr.results['mock data'][0][0].shape[1] == 4
 
-    assert len(expr.ogm) == 2  # no algorithms
+    assert len(expr.results['mock data'][1]) == 2  # no algorithms
 
     #test generation metric collection for chalmers' 96
-    assert expr.ogm[0]['stress'].shape[0] == 2 #no repeats
-    assert expr.ogm[0]['stress'].shape[1] == 3 # no stress measurements during one run
+    assert expr.results['mock data'][1][0]['stress'].shape[0] == 2 #no repeats
+    assert expr.results['mock data'][1][0]['stress'].shape[1] == 3 # no stress measurements during one run
 
-    assert expr.ogm[0]['average speed'].shape[0] == 2  # no repeats
-    assert expr.ogm[0]['average speed'].shape[1] == 4  # as for stress
+    assert expr.results['mock data'][1][0]['average speed'].shape[0] == 2  # no repeats
+    assert expr.results['mock data'][1][0]['average speed'].shape[1] == 4  # as for stress
 
     # test generation metric collection for Squad
-    assert len(expr.ogm[1]) == 1
-    assert expr.ogm[1]['stress'].shape[0] == 2  # no repeats
-    assert expr.ogm[1]['stress'].shape[1] == 3  # no stress measurements during one run
+    assert len(expr.results['mock data'][1][1]) == 1
+    assert expr.results['mock data'][1][1]['stress'].shape[0] == 2  # no repeats
+    assert expr.results['mock data'][1][1]['stress'].shape[1] == 3  # no stress measurements during one run
 
 
 

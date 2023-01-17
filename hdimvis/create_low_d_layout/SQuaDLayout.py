@@ -16,6 +16,7 @@ class SQuaDLayout(LowDLayoutBase):
             exaggerate_D: bool = False, stop_exaggeration: float = 0.6,
                  decay: float = None, LR: float = 550.0):
 
+        calculate_quartet_stress = False
         bar = IncrementalBar("Creating layout", max=no_iters)
         decay = decay if decay is not None else np.exp(np.log(1e-3) / no_iters)
         if exaggerate_D:  # exaggeration of HD distances by taking them squared
@@ -26,12 +27,18 @@ class SQuaDLayout(LowDLayoutBase):
         for i in range(no_iters):
             if self.optional_metric_collection is not None:
                 self.collect_metrics()
+                if self.iteration_number == no_iters:
+                    calculate_quartet_stress = True
+
+                if self.optional_metric_collection.get('average quartet stress') and \
+                        self.iteration_number % self.optional_metric_collection['average quartet stress'] == 0 :
+                    calculate_quartet_stress = True
 
             if i == stop_d_exa:
                 LR *= decay
                 exaggerate_D = False
 
-            self.algorithm.one_iteration(exaggerate_D, LR)
+            self.algorithm.one_iteration(exaggerate_D, LR, calculate_quartet_stress)
             self.iteration_number += 1
             bar.next()
             self.final_positions = self.algorithm.get_positions()
@@ -39,3 +46,4 @@ class SQuaDLayout(LowDLayoutBase):
         if self.optional_metric_collection is not None:
             self.collect_metrics(final=True)
         bar.finish()
+

@@ -29,9 +29,6 @@ class BaseAlgorithm:
     # @abstractmethod
     # def get_time_per_iter(self) -> int:
     #     pass
-    @abstractmethod
-    def get_memory(self) ->int:
-        pass
 
     def get_vectorised_stress(self):
         print("calculating euclidian stress")

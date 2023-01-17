@@ -9,6 +9,7 @@ from hdimvis.data_fetchers.low_lvl_fetchers.FmnistFetcher import FmnistFetcher
 from hdimvis.data_fetchers.low_lvl_fetchers.ShuttleFetcher import ShuttleFetcher
 from hdimvis.data_fetchers.low_lvl_fetchers.FlowCytometryFetcher import FlowCytometryFetcher
 from hdimvis.data_fetchers.low_lvl_fetchers.MnistFetcher import MnistFetcher
+from hdimvis.data_fetchers.low_lvl_fetchers.MockDataFetcher import MockDataFetcher
 from .Dataset import Dataset
 
 
@@ -46,6 +47,8 @@ class DataFetcher:
             self.low_lvl_data_fetcher = FlowCytometryFetcher()
         elif dataset_name == 'mnist':
             self.low_lvl_data_fetcher = MnistFetcher()
+        elif dataset_name == 'mock data':
+            self.low_lvl_data_fetcher = MockDataFetcher()
         else:
             print("Dataset name not recognised")
 

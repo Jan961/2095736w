@@ -31,20 +31,14 @@ def ABCD_grad(xa, ya, xb, yb, xc, yc, xd, yd, dab, dac, dad, dbc, dbd, dcd, pab)
 # the points are named a,b,c and d internally to keep track of who is who
 # points shape: (4, 2)
 # Dhd shape   : (6,)
-def compute_quartet_grads(points, Dhd):
+def compute_quartet_grads(points, Dhd, Dld):
     xa, ya = points[0]
     xb, yb = points[1]
     xc, yc = points[2]
     xd, yd = points[3]
 
     # LD distances, add a small number just in case
-    d_ab = np.sqrt((xa - xb) ** 2 + (ya - yb) ** 2) + 1e-12
-    d_ac = np.sqrt((xa - xc) ** 2 + (ya - yc) ** 2) + 1e-12
-    d_ad = np.sqrt((xa - xd) ** 2 + (ya - yd) ** 2) + 1e-12
-    d_bc = np.sqrt((xb - xc) ** 2 + (yb - yc) ** 2) + 1e-12
-    d_bd = np.sqrt((xb - xd) ** 2 + (yb - yd) ** 2) + 1e-12
-    d_cd = np.sqrt((xc - xd) ** 2 + (yc - yd) ** 2) + 1e-12
-
+    d_ab, d_ac, d_ad, d_bc, d_bd, d_cd = Dld[0], Dld[1], Dld[2], Dld[3], Dld[4], Dld[5]
     # HD distances
     pab, pac, pad, pbc, pbd, pcd = Dhd[0], Dhd[1], Dhd[2], Dhd[3], Dhd[4], Dhd[5]
 

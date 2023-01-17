@@ -2,19 +2,15 @@ from typing import Dict, List
 
 import numpy as np
 
-from hdimvis.algorithms.spring_force_algos.chalmers96_algo.Chalmers96 import Chalmers96
 from hdimvis.create_low_d_layout.LowDLayoutCreation import LowDLayoutCreation
 from hdimvis.data_fetchers.DataFetcher import DataFetcher
-from hdimvis.distance_measures.poker_distance import poker_distance
-from hdimvis.distance_measures.euclidian_and_manhattan import euclidean
 from hdimvis.algorithms.BaseAlgorithm import BaseAlgorithm
-from hdimvis.algorithms.spring_force_algos.chalmers96_algo.Chalmers96 import Chalmers96
-from hdimvis.algorithms.stochastic_quartet_algo.SQuaD import SQuaD
 from hdimvis.data_fetchers.Dataset import Dataset
-from ..ExperimentBase import ExperimentBase
+from experiments.basic_comparison.ComparisonBase import ExperimentBase
 from time import perf_counter
 import tracemalloc
 
+# this is all very messy code
 
 class BasicComparison(ExperimentBase):
 
@@ -24,16 +20,16 @@ class BasicComparison(ExperimentBase):
         assert len(algorithms) >= 2
         self.algorithms = algorithms
         self.results = { dataset:[] for dataset in self.dataset_names }
+        self.layouts = { dataset:{} for dataset in self.dataset_names }
 
     def run(self):
         for dataset_name in self.dataset_names:
 
-            self.h()
-            self.h()
-            self.pr(f'Dataset: {dataset_name} \n')
+            # self.h()
+            # self.h()
+            # self.pr(f'Dataset: {dataset_name} \n')
             dataset = DataFetcher().fetch_data(dataset_name)
-            self.pr(f"{self.num_repeats} repeats of every algorithm run")
-
+            # self.pr(f"{self.num_repeats} repeats of every algorithm run")
             # basci metrics which will be added to self.result
             bm = [np.zeros((self.num_repeats, 4)) for algo in self.algorithms]
             # 4 columns for memory; time; final normal stress; and (optional) final special squad stress
@@ -42,6 +38,8 @@ class BasicComparison(ExperimentBase):
             ogm = []
 
             for i, algorithm in enumerate(self.algorithms):
+                self.layouts[dataset_name][algorithm.name] = []
+
                 if self.metric_collection is not None:
                     ogm.append(dict())
                     filtered_metric_collection = {metric: freq for metric, freq in self.metric_collection.items()
@@ -54,7 +52,7 @@ class BasicComparison(ExperimentBase):
                     filtered_metric_collection = None
 
                 for j in range(self.num_repeats):
-                    basic_metrics, generation_metrics = self.one_experiment(dataset, algorithm,
+                    basic_metrics, generation_metrics, layout = self.one_experiment(dataset, algorithm,
                                                                                      filtered_metric_collection)
 
                     bm[i][j][0] = basic_metrics.get('peak memory', np.NAN)
@@ -66,8 +64,14 @@ class BasicComparison(ExperimentBase):
                             ogm[i][metric][j] = \
                                 np.array(generation_metrics[metric][1])
 
+
+                    self.layouts[dataset_name][algorithm.name].append(layout)
+
+
+
             self.results[dataset_name].append(bm)
             self.results[dataset_name].append(ogm)
+
 
     def one_experiment(self, dataset: Dataset, algorithm: BaseAlgorithm, filtered_metric_collection: Dict[str,int]):
 
@@ -91,7 +95,7 @@ class BasicComparison(ExperimentBase):
         basic_metrics['final stress'] = layout.get_final_stress()
         optional_generation_metrics = layout.collected_metrics
 
-        return basic_metrics, optional_generation_metrics
+        return basic_metrics, optional_generation_metrics, layout
 
     def initialise_dict_for_optional_metrics(self, algorithm_index: int, filtered_metric_collection: Dict,
                                              algorithms_optional_generation_metrics: List[Dict]):

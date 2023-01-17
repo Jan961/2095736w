@@ -31,8 +31,8 @@ def test_stress_collected_correctly():
     for algo in algorithms:
         for i in [1,2]:
             layout = LowDLayoutCreation().create_layout(algo, dataset, {'stress': i}, no_iters=4)
-            assert len(layout.collected_metrics['stress'][0]) == 4//i
-            assert len(layout.collected_metrics['stress'][1]) == 4 // i
+            assert len(layout.collected_metrics['stress'][0]) == 4//i + 1
+            assert len(layout.collected_metrics['stress'][1]) == 4 // i + 1
 
 
 

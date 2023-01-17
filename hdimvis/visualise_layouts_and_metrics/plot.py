@@ -71,12 +71,13 @@ def show_layouts(*layouts: LowDLayoutBase, use_labels: bool = False, alpha: floa
     plt.show()
 
 
-def show_generation_metrics(layout, stress: bool = True, average_speed: bool = False,
+def show_generation_metrics(layout, stress: bool = True, average_speed: bool = False, quartet_stress: bool =True,
                             title: str = None):
-
+    assert not average_speed or not quartet_stress
     fig, ax1 = plt.subplots()
 
     line1, line2, line3 = [], [], []
+
 
     if stress:
         x1 = layout.collected_metrics['stress'][0]
@@ -92,6 +93,14 @@ def show_generation_metrics(layout, stress: bool = True, average_speed: bool = F
         y2 = layout.collected_metrics['average speed'][1]
         line2 = ax2.plot(x2, y2, c='b', label="Average Speed")
         ax2.set_ylabel("Average Speed")
+        print(line2)
+
+    elif average_speed:
+        ax2 = ax1.twinx()
+        x2 = layout.collected_metrics['average quartet stress'][0]
+        y2 = layout.collected_metrics['average quartet stress'][1]
+        line2 = ax2.plot(x2, y2, c='b', label="Average quartet stress")
+        ax2.set_ylabel("average quartet stress")
         print(line2)
 
     lines = line1 + line2 + line3

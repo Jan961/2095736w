@@ -24,24 +24,19 @@ class ExperimentBase:
         self.num_repeats = num_repeats
         self.record_memory = record_memory
         self.iterations = iterations
-        self.printout_list = []
 
     def create_output_directory(self):
         # exception catching bc we don't want to have to re-run the experiment
         try:
-            path = os.path.realpath(os.path.join(os.path.dirname(__file__), '.', self.experiment_name))
+            path = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', self.experiment_name))
             os.mkdir(path)
         except FileExistsError:
-            path = os.path.realpath(os.path.join(os.path.dirname(__file__), '.', self.experiment_name + "(1)"))
+            path = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', self.experiment_name + "(1)"))
             os.mkdir(path)
 
         return path
 
-    def h(self):
-        h = '#' * 20
-        self.printout_list.append(h)
-        print(h)
+    def save(self):
+        with open(f"{self.experiment_name}.pickle", 'wb') as pickle_out:
+            pickle.dump(self, pickle_out)
 
-    def pr(self, line_to_print: str):
-        self.printout_list.append(line_to_print)
-        print(line_to_print)
