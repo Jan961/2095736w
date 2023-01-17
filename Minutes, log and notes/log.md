@@ -62,3 +62,14 @@
 ### 9 Jan 2023
 * *7 hours* further additions to testing etc, exploring placement 
 
+### 12 Jan 2023
+* *8 hours*  basic comparison and hybrid placement
+
+### 13 Jan 2023
+* *3 hours*   placement visualisation
+
+### 16 Jan 2023
+* *5 hours*   placement and basic experiment
+
+### 17 Jan 2023
+* *6 hours*   squad quartet stress
