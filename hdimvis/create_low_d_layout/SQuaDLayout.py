@@ -26,7 +26,6 @@ class SQuaDLayout(LowDLayoutBase):
 
         for i in range(no_iters):
             if self.optional_metric_collection is not None:
-                self.collect_metrics()
                 if self.iteration_number == no_iters:
                     calculate_quartet_stress = True
 
