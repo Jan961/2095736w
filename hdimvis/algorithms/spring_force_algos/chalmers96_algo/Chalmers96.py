@@ -12,23 +12,25 @@ class Chalmers96(SpringForceBase):
     """
     An implementation of Chalmers' 1996 Neighbour and Sampling algorithm.
     Using random sampling to find the closest neighbours from the data set.
+
     """
-    def __init__(self, dataset: Dataset, initial_layout: np.ndarray = None,
-                 distance_fn: Callable[[np.ndarray, np.ndarray], float] = euclidean, nodes: List[Node] = None,
-                 enable_cache: bool = True, alpha: float = 1,
-                 neighbour_set_size: int = 5, sample_set_size: int = 10, use_knnd: bool = False,
-                 knnd_parameters: Dict = None):
-        super().__init__(dataset, initial_layout, distance_fn, nodes, enable_cache, alpha, use_knnd, knnd_parameters)
+
+    name = 'Chalmers\' 1996'
+
+    def __init__(self, neighbour_set_size: int = 5, sample_set_size: int = 10, use_knnd: bool = False,
+                 knnd_parameters: Dict = None, **kwargs):
+
         # the base class extracts data from the Dataset object
 
+        super().__init__( **kwargs)
         assert neighbour_set_size > 0 or sample_set_size > 0, "Sample set and Neighbour set cannot be both zero"
 
         self.neighbour_set_size: int = neighbour_set_size
         self.sample_set_size:    int = sample_set_size
         self.neighbours: Dict[int, List[int]] = dict() # dictionary used when no knnd index is supplied
         self.data_size_factor: float = 0.5 / (neighbour_set_size + sample_set_size)
-        self.alpha : float = alpha
-        self.name = 'Chalmers\' 1996'
+        self.knnd_parameters = knnd_parameters
+        self.use_knnd = use_knnd
         if self.use_knnd:
             if self.knnd_parameters is not None:
                 self.knnd_index = pynndescent.NNDescent(self.dataset, n_neighbors=self.neighbour_set_size + 1,
@@ -46,6 +48,8 @@ class Chalmers96(SpringForceBase):
         """
         Perform one iteration of the spring layout
         """
+        assert self.dataset is not None or self.nodes is not None, "must provide dataset or nodes"
+
         n = len(self.nodes)
         for i in range(n):
             if self.sample_set_size:

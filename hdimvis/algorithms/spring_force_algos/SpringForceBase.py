@@ -13,22 +13,18 @@ import math
 
 
 class SpringForceBase(BaseAlgorithm):
-    def __init__(self, dataset: Dataset, initial_layout: np.ndarray = None,
-                 distance_fn: Callable[[np.ndarray, np.ndarray], float] = euclidean, nodes: List[Node] = None,
-                 enable_cache: bool = True, alpha: float = 1, use_knnd: bool = False,
-                 knnd_parameters: Dict = None) -> None:
 
-        super().__init__(dataset, initial_layout, distance_fn)  # the base class extracts data from the Dataset object
-        assert dataset is not None or nodes is not None, "must provide dataset or nodes"
+    available_metrics = ['stress', 'average speed']
+
+    def __init__(self, nodes: List[Node] = None, enable_cache: bool = True, alpha: float = 1, **kwargs) -> None:
+        # the base class extracts data from the Dataset object
+        super().__init__(**kwargs)
 
         self.nodes: List[Node] = nodes if nodes is not None else self.build_nodes()
         self.data_size_factor: float = 1
         self._average_speeds: List[float] = list()
         self.enable_cache: bool = enable_cache
         self.alpha = alpha
-        self.available_metrics = ['stress', 'average speed']
-        self.use_knnd = use_knnd
-        self.knnd_parameters = knnd_parameters
         if enable_cache:
             self.distances: Dict[FrozenSet[Node], float] = dict()
         else:
@@ -42,18 +38,23 @@ class SpringForceBase(BaseAlgorithm):
         """
         pass
 
-    def build_nodes(self) -> List[Node]:
+    def build_nodes(self) -> List[Node] | None:
         """
         Construct a Node for each datapoint
         """
-        # contactenate the datapoints with the initial positions for low-d mappings
-        # for the apply_along_axis fn
-        conc = np.concatenate((self.dataset.data, self.initial_layout), axis=1)
-
-        return list(np.apply_along_axis(Node, axis=1, arr=conc))
+        if self.dataset is not None:
+            # concatenate the datapoints with the initial positions for low-d mappings
+            # for the apply_along_axis fn
+            conc = np.concatenate((self.dataset, self.initial_layout), axis=1)
+            return list(np.apply_along_axis(Node, axis=1, arr=conc))
+        else:
+            return None
 
     def get_positions(self) -> np.ndarray:
         return np.array([(n.x, n.y) for n in self.nodes])
+
+    # def get_available_metrics(self):
+    #     return self._available_metrics
 
     def set_positions(self, positions: np.ndarray) -> None:
         for pos, node in zip(positions, self.nodes):
@@ -63,6 +64,7 @@ class SpringForceBase(BaseAlgorithm):
 
         # numpy vectorisation for euclidian distance
         if self.distance_fn == euclidean:
+            print("choosing vectorised stress")
             return self.get_vectorised_stress()
 
         numerator: float = 0.0

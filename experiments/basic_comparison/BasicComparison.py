@@ -5,6 +5,8 @@ import numpy as np
 from hdimvis.create_low_d_layout.LowDLayoutCreation import LowDLayoutCreation
 from hdimvis.data_fetchers.DataFetcher import DataFetcher
 from hdimvis.algorithms.BaseAlgorithm import BaseAlgorithm
+from hdimvis.algorithms.spring_force_algos.SpringForceBase import SpringForceBase
+from hdimvis.algorithms.stochastic_quartet_algo.SQuaD import SQuaD
 from hdimvis.data_fetchers.Dataset import Dataset
 from experiments.basic_comparison.ComparisonBase import ExperimentBase
 from time import perf_counter
@@ -25,11 +27,8 @@ class BasicComparison(ExperimentBase):
     def run(self):
         for dataset_name in self.dataset_names:
 
-            # self.h()
-            # self.h()
-            # self.pr(f'Dataset: {dataset_name} \n')
             dataset = DataFetcher().fetch_data(dataset_name)
-            # self.pr(f"{self.num_repeats} repeats of every algorithm run")
+
             # basci metrics which will be added to self.result
             bm = [np.zeros((self.num_repeats, 4)) for algo in self.algorithms]
             # 4 columns for memory; time; final normal stress; and (optional) final special squad stress
@@ -38,6 +37,12 @@ class BasicComparison(ExperimentBase):
             ogm = []
 
             for i, algorithm in enumerate(self.algorithms):
+
+                # since we want to reuse the same alog with different datasets
+                # given the earlier implementation now many initialisations have to be done manually:
+                self._complete_algorithm_initialisation(algorithm, dataset)
+
+                # initialise datastructures used for collecting measurements:
                 self.layouts[dataset_name][algorithm.name] = []
 
                 if self.metric_collection is not None:
@@ -45,16 +50,14 @@ class BasicComparison(ExperimentBase):
                     filtered_metric_collection = {metric: freq for metric, freq in self.metric_collection.items()
                                                   if metric in algorithm.available_metrics}
 
-                    self.initialise_dict_for_optional_metrics(i, filtered_metric_collection,
-                                                              ogm)
-
+                    self._initialise_dict_for_optional_metrics(i, filtered_metric_collection,
+                                                               ogm)
                 else:
                     filtered_metric_collection = None
 
                 for j in range(self.num_repeats):
                     basic_metrics, generation_metrics, layout = self.one_experiment(dataset, algorithm,
                                                                                      filtered_metric_collection)
-
                     bm[i][j][0] = basic_metrics.get('peak memory', np.NAN)
                     bm[i][j][1] = basic_metrics.get('time', np.NAN)
                     bm[i][j][2] = basic_metrics.get('final stress', np.NAN)
@@ -64,10 +67,7 @@ class BasicComparison(ExperimentBase):
                             ogm[i][metric][j] = \
                                 np.array(generation_metrics[metric][1])
 
-
                     self.layouts[dataset_name][algorithm.name].append(layout)
-
-
 
             self.results[dataset_name].append(bm)
             self.results[dataset_name].append(ogm)
@@ -97,8 +97,8 @@ class BasicComparison(ExperimentBase):
 
         return basic_metrics, optional_generation_metrics, layout
 
-    def initialise_dict_for_optional_metrics(self, algorithm_index: int, filtered_metric_collection: Dict,
-                                             algorithms_optional_generation_metrics: List[Dict]):
+    def _initialise_dict_for_optional_metrics(self, algorithm_index: int, filtered_metric_collection: Dict,
+                                              algorithms_optional_generation_metrics: List[Dict]):
         for metric, freq in filtered_metric_collection.items():
             if self.iterations % freq == 0:
                 algorithms_optional_generation_metrics[algorithm_index][metric] = \
@@ -106,3 +106,16 @@ class BasicComparison(ExperimentBase):
             else:
                 algorithms_optional_generation_metrics[algorithm_index][metric] = \
                     np.zeros((self.num_repeats, (self.iterations // freq) + 2))
+
+    def _complete_algorithm_initialisation(self, algorithm: BaseAlgorithm, dataset: Dataset ):
+        algorithm.dataset = dataset.data
+        if algorithm.initial_layout is None:
+            algorithm.initial_layout = 20*np.random.rand(algorithm.dataset.shape[0], 2)
+        if isinstance(algorithm, SpringForceBase):
+            algorithm.nodes = algorithm.build_nodes()
+        if isinstance(algorithm, SQuaD):
+            algorithm.N, M = dataset.data.shape
+            algorithm.perms = np.arange(algorithm.N)
+            algorithm.batch_indices = np.arange((algorithm.N - algorithm.N % 4)).reshape((-1, 4))
+            algorithm.grad_acc = np.ones((algorithm.N, 2))
+            algorithm.low_d_positions = algorithm.initial_layout

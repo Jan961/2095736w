@@ -38,10 +38,10 @@ class SQuaDLayout(LowDLayoutBase):
                 exaggerate_D = False
 
             self.algorithm.one_iteration(exaggerate_D, LR, calculate_quartet_stress)
-            self.iteration_number += 1
             if self.optional_metric_collection is not None:
                 self.collect_metrics()
             bar.next()
+            self.iteration_number += 1
             self.final_positions = self.algorithm.get_positions()
 
         if self.optional_metric_collection is not None:

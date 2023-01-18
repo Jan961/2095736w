@@ -49,6 +49,8 @@ def show_layouts(*layouts: LowDLayoutBase, use_labels: bool = False, alpha: floa
             colors = layout.labels
         elif color_by is not None and layout.data is not None:
             colors = np.apply_along_axis(color_by, axis=1, arr=layout.data)
+
+        if color_map is not None:
             cmap = plt.cm.get_cmap(color_map)
 
         if no_layouts == 1:
@@ -64,14 +66,16 @@ def show_layouts(*layouts: LowDLayoutBase, use_labels: bool = False, alpha: floa
         if sub_titles is not None and len(sub_titles) >= i+1:
             axis.title.set_text(sub_titles[i])
 
-    if title:
-        plt.title(title)
+    if title is None:
+        title =
 
+
+    plt.title(title)
     plt.axis('off')
     plt.show()
 
 
-def show_generation_metrics(layout, stress: bool = True, average_speed: bool = False, quartet_stress: bool =True,
+def show_generation_metrics(layout, stress: bool = True, average_speed: bool = False, quartet_stress: bool = False,
                             title: str = None):
     assert not average_speed or not quartet_stress
     fig, ax1 = plt.subplots()

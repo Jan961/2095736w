@@ -10,13 +10,13 @@ dataset = Dataset(mock_data, np.array([0,1,2,3]), 'mock data')
 
 
 def test_basic_comparison():
-    algo1 = Chalmers96(dataset=dataset, neighbour_set_size=1, sample_set_size=2)
-    algo2 = SQuaD(dataset=dataset)
+    algo1 = Chalmers96(neighbour_set_size=1, sample_set_size=2)
+    algo2 = SQuaD()
 
     metric_collection = {'stress': 2, 'average speed': 1}
 
     expr = BasicComparison( algo1, algo2, experiment_name="test experiment", iterations=3, num_repeats=2,
-                            dataset_names=['mock data'], metric_collection = metric_collection)
+                            dataset_names=['mock data', 'mock data'], metric_collection = metric_collection)
     expr.run()
 
 

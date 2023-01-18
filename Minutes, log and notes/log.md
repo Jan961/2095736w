@@ -73,3 +73,7 @@
 
 ### 17 Jan 2023
 * *6 hours*   squad quartet stress
+
+### 17 Jan 2023
+* *6 hours*   comparison debugging, squad vectorisation 
+

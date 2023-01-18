@@ -85,4 +85,4 @@ def compute_quartet_grads(points, Dhd, Dld):
     gxD = gxD + gxD2 + gxD3 + gxD4 + gxD5 + gxD6
     gyD = gyD + gyD2 + gyD3 + gyD4 + gyD5 + gyD6
 
-    return gxA, gyA, gxB, gyB, gxC, gyC, gxD, gyD
+    return np.array([gxA, gyA, gxB, gyB, gxC, gyC, gxD, gyD])
