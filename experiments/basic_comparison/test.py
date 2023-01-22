@@ -3,5 +3,6 @@ from hdimvis.algorithms.spring_force_algos.chalmers96_algo.Chalmers96 import Cha
 
 
 algo1 = Chalmers96(use_knnd=True)
+algo2 = Chalmers96(use_knnd=True)
 
 datasets = ['mnist', 'coil20', 'rna N3k', 'airfoil']

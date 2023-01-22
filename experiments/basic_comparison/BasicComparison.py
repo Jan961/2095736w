@@ -21,7 +21,7 @@ class BasicComparison(ExperimentBase):
         super().__init__(**kwargs)
         assert len(algorithms) >= 2
         self.algorithms = algorithms
-        self.results = { dataset:[] for dataset in self.dataset_names }
+        self.results = { dataset:{} for dataset in self.dataset_names }
         self.layouts = { dataset:{} for dataset in self.dataset_names }
 
     def run(self):
@@ -30,11 +30,8 @@ class BasicComparison(ExperimentBase):
             dataset = DataFetcher().fetch_data(dataset_name)
 
             # basci metrics which will be added to self.result
-            bm = [np.zeros((self.num_repeats, 4)) for algo in self.algorithms]
+            bm = np.zeros((self.num_repeats, 4))
             # 4 columns for memory; time; final normal stress; and (optional) final special squad stress
-
-            # optional generation metrics which will be added to self.result
-            ogm = []
 
             for i, algorithm in enumerate(self.algorithms):
 
@@ -46,26 +43,17 @@ class BasicComparison(ExperimentBase):
                 self.layouts[dataset_name][algorithm.name] = []
 
                 if self.metric_collection is not None:
-                    ogm.append(dict())
                     filtered_metric_collection = {metric: freq for metric, freq in self.metric_collection.items()
                                                   if metric in algorithm.available_metrics}
-
-                    self._initialise_dict_for_optional_metrics(i, filtered_metric_collection,
-                                                               ogm)
                 else:
                     filtered_metric_collection = None
 
                 for j in range(self.num_repeats):
-                    basic_metrics, generation_metrics, layout = self.one_experiment(dataset, algorithm,
+                    basic_metrics, layout = self.one_experiment(dataset, algorithm,
                                                                                      filtered_metric_collection)
                     bm[i][j][0] = basic_metrics.get('peak memory', np.NAN)
                     bm[i][j][1] = basic_metrics.get('time', np.NAN)
                     bm[i][j][2] = basic_metrics.get('final stress', np.NAN)
-
-                    if len(generation_metrics) > 0:
-                        for metric in ogm[i]:
-                            ogm[i][metric][j] = \
-                                np.array(generation_metrics[metric][1])
 
                     self.layouts[dataset_name][algorithm.name].append(layout)
 
@@ -93,9 +81,8 @@ class BasicComparison(ExperimentBase):
             basic_metrics['time'] = perf_counter() - t1
 
         basic_metrics['final stress'] = layout.get_final_stress()
-        optional_generation_metrics = layout.collected_metrics
 
-        return basic_metrics, optional_generation_metrics, layout
+        return basic_metrics, layout
 
     def _initialise_dict_for_optional_metrics(self, algorithm_index: int, filtered_metric_collection: Dict,
                                               algorithms_optional_generation_metrics: List[Dict]):

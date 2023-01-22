@@ -55,5 +55,6 @@ class DataFetcher:
         data, labels = self.low_lvl_data_fetcher.load_dataset( **kwargs)
         print("#" * 20)
         print("Dataset loaded")
+        print(f"dataset shape :{data.shape[0], data.shape[1]}")
         return Dataset(data, labels, dataset_name)
 

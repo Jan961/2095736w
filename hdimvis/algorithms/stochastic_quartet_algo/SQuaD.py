@@ -15,9 +15,9 @@ class SQuaD(BaseAlgorithm):
     name = 'Stochastic Quartet Descent MDS'
 
     def __init__(self, ntet_size: int = 4, vectorised: bool = True, **kwargs):
-        super().__init__(**kwargs)
+        super().__init__( **kwargs)
 
-        self. N, M = self.dataset.shape if self.dataset is not None else None,None
+        self. N, M = self.dataset.shape if self.dataset is not None else (None, None)
         self.perms = np.arange(self.N) if self.N is not None else None
         # will point towards the indices for each random batch
         self.batch_indices = np.arange((self.N - self.N % 4)).reshape((-1, 4)) if self.N is not None else None
@@ -26,6 +26,7 @@ class SQuaD(BaseAlgorithm):
         self.last_average_quartet_stress_measurement = 0
         self.ntet_size = ntet_size
         self.vectorised = vectorised
+
 
 
 
@@ -67,13 +68,13 @@ class SQuaD(BaseAlgorithm):
             if exaggerate_dist:  # during exaggeration: don't take the square root of the distances
                 Dhd_distances_matrix = np.sum(
                     (self.dataset[quartet][:, :, None] - self.dataset[quartet][:, :, None].T) ** 2, axis=1)
-                Dhd_quartet = Dhd_distances_matrix[np.nonzero(np.triu(Dhd_distances_matrix))]
-                # Dhd_quartet[0] = np.sum((self.dataset[quartet[0]] - self.dataset[quartet[1]]) ** 2)
-                # Dhd_quartet[1] = np.sum((self.dataset[quartet[0]] - self.dataset[quartet[2]]) ** 2)
-                # Dhd_quartet[2] = np.sum((self.dataset[quartet[0]] - self.dataset[quartet[3]]) ** 2)
-                # Dhd_quartet[3] = np.sum((self.dataset[quartet[1]] - self.dataset[quartet[2]]) ** 2)
-                # Dhd_quartet[4] = np.sum((self.dataset[quartet[1]] - self.dataset[quartet[3]]) ** 2)
-                # Dhd_quartet[5] = np.sum((self.dataset[quartet[2]] - self.dataset[quartet[3]]) ** 2)
+                Dhd_quartet_alt = Dhd_distances_matrix[np.nonzero(np.triu(Dhd_distances_matrix))]
+                Dhd_quartet[0] = np.sum((self.dataset[quartet[0]] - self.dataset[quartet[1]]) ** 2)
+                Dhd_quartet[1] = np.sum((self.dataset[quartet[0]] - self.dataset[quartet[2]]) ** 2)
+                Dhd_quartet[2] = np.sum((self.dataset[quartet[0]] - self.dataset[quartet[3]]) ** 2)
+                Dhd_quartet[3] = np.sum((self.dataset[quartet[1]] - self.dataset[quartet[2]]) ** 2)
+                Dhd_quartet[4] = np.sum((self.dataset[quartet[1]] - self.dataset[quartet[3]]) ** 2)
+                Dhd_quartet[5] = np.sum((self.dataset[quartet[2]] - self.dataset[quartet[3]]) ** 2)
             else:
                 Dhd_distances_matrix = np.sqrt(np.sum(
                     (self.dataset[quartet][:, :, None] - self.dataset[quartet][:, :, None].T) ** 2, axis=1))
@@ -86,9 +87,10 @@ class SQuaD(BaseAlgorithm):
                 # Dhd_quartet[4] = sqrt(np.sum((self.dataset[quartet[1]] - self.dataset[quartet[3]]) ** 2))
                 # Dhd_quartet[5] = sqrt(np.sum((self.dataset[quartet[2]] - self.dataset[quartet[3]]) ** 2))
 
+            # print(f"HD quartet: {np.allclose(Dhd_quartet, Dhd_quartet_alt)}")
             # LD distances, add a small number just in case
-            Dld_distances_matrix = np.sum(
-                (LD_points[:, :, None] - LD_points[:, :, None].T) ** 2, axis=1)
+            Dld_distances_matrix = np.sqrt(np.sum(
+                (LD_points[:, :, None] - LD_points[:, :, None].T) ** 2, axis=1))
             Dld_quartet = Dld_distances_matrix[np.nonzero(np.triu(Dld_distances_matrix))] + 1e-12
 
             # Dld_quartet[0] = np.sqrt((xa - xb) ** 2 + (ya - yb) ** 2) + 1e-12
@@ -98,6 +100,8 @@ class SQuaD(BaseAlgorithm):
             # Dld_quartet[4] = np.sqrt((xb - xd) ** 2 + (yb - yd) ** 2) + 1e-12
             # Dld_quartet[5] = np.sqrt((xc - xd) ** 2 + (yc - yd) ** 2) + 1e-12
 
+
+            # print(f"LD quartet: {np.allclose(Dld_quartet_alt, Dld_quartet)}")
             if self.distance_fn == relative_rbf_dists:
                 quartet_grads = compute_quartet_grads(LD_points, relative_rbf_dists(Dhd_quartet), Dld_quartet)
             else:

@@ -3,6 +3,8 @@ from ..LowLevelDataFetcherBase import LowLevelDataFetcherBase
 from ..config import DATA_ROOT
 import os
 
+#(1440, 1024)
+
 
 class COIL20Fetcher(LowLevelDataFetcherBase):
 

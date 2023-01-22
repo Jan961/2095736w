@@ -66,8 +66,7 @@ def show_layouts(*layouts: LowDLayoutBase, use_labels: bool = False, alpha: floa
         if sub_titles is not None and len(sub_titles) >= i+1:
             axis.title.set_text(sub_titles[i])
 
-    if title is None:
-        title =
+
 
 
     plt.title(title)
