@@ -14,6 +14,8 @@ class SQuaD(BaseAlgorithm):
     available_metrics = ['Stress', 'Average quartet stress']
     name = 'Stochastic Quartet Descent MDS'
 
+
+ # numpy.core._exceptions._ArrayMemoryError -  stress
     def __init__(self, ntet_size: int = 4, vectorised: bool = True, **kwargs):
         super().__init__( **kwargs)
 

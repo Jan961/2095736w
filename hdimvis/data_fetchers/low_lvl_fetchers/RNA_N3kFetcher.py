@@ -3,7 +3,8 @@ from ..LowLevelDataFetcherBase import LowLevelDataFetcherBase
 from ..config import DATA_ROOT
 import os
 
-
+#(3000, 50)
+#stress works normally
 class RNA_N3kFetcher(LowLevelDataFetcherBase):
 
     def load_dataset(self):
