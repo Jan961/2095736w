@@ -8,7 +8,7 @@ from hdimvis.visualise_layouts_and_metrics.plot import show_layouts, show_genera
 from hdimvis.distance_measures.relative_rbf_dists import relative_rbf_dists
 
 metric_collection = {'Average quartet stress': 50, 'Stress': 200}
-dataset = DataFetcher().fetch_data('rna N3k')
+dataset = DataFetcher().fetch_data('flow cytometry')
 
 Xld = PCA(n_components=2, whiten=False, copy=True).fit_transform(dataset.data).astype(np.float64)
 Xld *= 10/np.std(Xld)

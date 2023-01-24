@@ -5,6 +5,10 @@ import numpy as np
 from hdimvis.data_fetchers.config import DATA_ROOT
 #code from https://github.com/lmcinnes/umap_paper_notebooks/blob/master/UMAP%20Flow%20cytometry%20embedding.ipynb
 
+
+#(10000, 17)
+# normal stress increasing
+
 class FlowCytometryFetcher(LowLevelDataFetcherBase):
 
     def load_dataset(self, **kwargs) -> (np.ndarray, np.ndarray):

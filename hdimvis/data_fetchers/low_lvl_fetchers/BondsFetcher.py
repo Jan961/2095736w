@@ -3,7 +3,7 @@ import numpy as np
 from hdimvis.data_fetchers.config import DATA_ROOT
 import os
 
-
+# not useful data
 class BondsFetcher(LowLevelDataFetcherBase):
     def __init__(self):
         self.indices = [1,1,1,1]

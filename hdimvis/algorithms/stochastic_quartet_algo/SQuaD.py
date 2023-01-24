@@ -73,6 +73,7 @@ class SQuaD(BaseAlgorithm):
                 Dhd_distances_matrix = np.sum(
                     (self.data[quartet][:, :, None] - self.data[quartet][:, :, None].T) ** 2, axis=1)
                 Dhd_quartet = Dhd_distances_matrix[np.nonzero(np.triu(Dhd_distances_matrix))]
+
                 # Dhd_quartet[0] = np.sum((self.data[quartet[0]] - self.data[quartet[1]]) ** 2)
                 # Dhd_quartet[1] = np.sum((self.data[quartet[0]] - self.data[quartet[2]]) ** 2)
                 # Dhd_quartet[2] = np.sum((self.data[quartet[0]] - self.data[quartet[3]]) ** 2)
@@ -82,6 +83,8 @@ class SQuaD(BaseAlgorithm):
             else:
                 Dhd_distances_matrix = np.sqrt(np.sum(
                     (self.data[quartet][:, :, None] - self.data[quartet][:, :, None].T) ** 2, axis=1))
+                Dhd_distances_matrix += 1e-12             #for some datasets 0 distance is also apparently an issue
+                np.fill_diagonal(Dhd_distances_matrix, 0)      # for hd dist - hence the small number
                 Dhd_quartet = Dhd_distances_matrix[np.nonzero(np.triu(Dhd_distances_matrix))]
 
                 # Dhd_quartet[0] = sqrt(np.sum((self.dataset[quartet[0]] - self.dataset[quartet[1]]) ** 2))
