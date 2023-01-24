@@ -24,7 +24,8 @@ class SQuaD(BaseAlgorithm):
         self.ntet_size = ntet_size
         self.perms = np.arange(self.N) if self.N is not None else None
         # will point towards the indices for each random batch
-        self.batch_indices = np.arange((self.N - self.N % self.ntet_size)).reshape((-1, self.ntet_size)) if self.N is not None else None
+        self.batch_indices = np.arange((self.N - self.N % self.ntet_size)).reshape((-1, self.ntet_size)) \
+            if self.N is not None else None
         self.grad_acc = np.ones((self.N, 2)) if self.N is not None else None
         self.low_d_positions = self.initial_layout
         self.last_average_quartet_stress_measurement = 0
@@ -94,7 +95,9 @@ class SQuaD(BaseAlgorithm):
             # LD distances, add a small number just in case
             Dld_distances_matrix = np.sqrt(np.sum(
                 (LD_points[:, :, None] - LD_points[:, :, None].T) ** 2, axis=1))
-            Dld_quartet = Dld_distances_matrix[np.nonzero(np.triu(Dld_distances_matrix))] + 1e-12
+            Dld_distances_matrix += 1e-12
+            np.fill_diagonal(Dld_distances_matrix, 0)
+            Dld_quartet = Dld_distances_matrix[np.nonzero(np.triu(Dld_distances_matrix))]
 
             # Dld_quartet[0] = np.sqrt((xa - xb) ** 2 + (ya - yb) ** 2) + 1e-12
             # Dld_quartet[1] = np.sqrt((xa - xc) ** 2 + (ya - yc) ** 2) + 1e-12
