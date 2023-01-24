@@ -8,20 +8,20 @@ def ABCD_grad(xa, ya, xb, yb, xc, yc, xd, yd, dab, dac, dad, dbc, dbd, dcd, pab)
 
     dr_ab = (dab / sum_dist)
 
-    gxA = 2 * ((pab - dr_ab) / sum_dist) * (
-                (dab / sum_dist) * ((xa - xb) / dab + (xa - xc) / dac + (xa - xd) / dad) - (xa - xb) / dab)
-    gyA = 2 * ((pab - dr_ab) / sum_dist) * (
-                (dab / sum_dist) * ((ya - yb) / dab + (ya - yc) / dac + (ya - yd) / dad) - (ya - yb) / dab)
+    gxA = 2 * ((pab - dr_ab) / sum_dist) * ( (dab / sum_dist) * ((xa - xb) / dab + (xa - xc) / dac + (xa - xd) / dad) - (xa - xb) / dab)
 
-    gxB = 2 * ((pab - dr_ab) / sum_dist) * (
-                (dab / sum_dist) * ((xb - xa) / dab + (xb - xc) / dbc + (xb - xd) / dbd) - (xb - xa) / dab)
-    gyB = 2 * ((pab - dr_ab) / sum_dist) * (
-                (dab / sum_dist) * ((yb - ya) / dab + (yb - yc) / dbc + (yb - yd) / dbd) - (yb - ya) / dab)
+    gyA = 2 * ((pab - dr_ab) / sum_dist) * ((dab / sum_dist) * ((ya - yb) / dab + (ya - yc) / dac + (ya - yd) / dad) - (ya - yb) / dab)
+
+    gxB = 2 * ((pab - dr_ab) / sum_dist) * ( (dab / sum_dist) * ((xb - xa) / dab + (xb - xc) / dbc + (xb - xd) / dbd) - (xb - xa) / dab)
+
+    gyB = 2 * ((pab - dr_ab) / sum_dist) * ((dab / sum_dist) * ((yb - ya) / dab + (yb - yc) / dbc + (yb - yd) / dbd) - (yb - ya) / dab)
 
     gxC = 2 * ((pab - dr_ab) / sum_dist) * ((dab / sum_dist) * ((xc - xa) / dac + (xc - xb) / dbc + (xc - xd) / dcd))
+
     gyC = 2 * ((pab - dr_ab) / sum_dist) * ((dab / sum_dist) * ((yc - ya) / dac + (yc - yb) / dbc + (yc - yd) / dcd))
 
     gxD = 2 * ((pab - dr_ab) / sum_dist) * ((dab / sum_dist) * ((xd - xa) / dad + (xd - xb) / dbd + (xd - xc) / dcd))
+
     gyD = 2 * ((pab - dr_ab) / sum_dist) * ((dab / sum_dist) * ((yd - ya) / dad + (yd - yb) / dbd + (yd - yc) / dcd))
 
     return gxA, gyA, gxB, gyB, gxC, gyC, gxD, gyD

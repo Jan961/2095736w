@@ -9,9 +9,12 @@ import numpy as np
 
 mock_data = np.random.randint(0,10, (40,3))
 dataset = Dataset(mock_data, None, 'mock data')
-algorithms = [Chalmers96(dataset), SQuaD(dataset)]
+algorithms = [Chalmers96(dataset=dataset), SQuaD(dataset=dataset)]
 layout_classes = [Chalmers96Layout, SQuaDLayout]
 
+mock_data_2= np.array([[0,0],[0,1],[1,1],[1,0]], dtype='float64')
+initial_positions = np.array([[0,0],[0,1],[1,1],[1,0]], dtype='float64')
+mock_dataset_2 = Dataset(mock_data, None, "mock data")
 
 
 # noinspection PyTypeHints
@@ -35,7 +38,9 @@ def test_stress_collected_correctly():
             assert len(layout.collected_metrics['stress'][1]) == 4 // i + 1
 
 
-
+def test_low_lvl_layout_created_correctly_for_squad():
+    algo = SQuaD(dataset=mock_dataset_2, initial_layout=initial_positions)
+    layout = LowDLayoutCreation().create_layout(algo, i)
 
 
 

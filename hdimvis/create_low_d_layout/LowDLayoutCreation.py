@@ -13,10 +13,10 @@ from ..data_fetchers.Dataset import Dataset
 
 class LowDLayoutCreation:
 
-    def create_layout(self, algorithm: BaseAlgorithm, dataset: Dataset,
-                      optional_metric_collection: dict[str: int] = None, **kwargs):
+    def create_layout(self, algorithm: BaseAlgorithm, dataset: Dataset, no_iters: int,
+                      optional_metric_collection: dict[str: int] = None, **additional_parameters):
 
-        parameters = [algorithm, dataset, optional_metric_collection]
+        basic_layout_creation_parameters = [algorithm, dataset, optional_metric_collection, no_iters]
 
         print("#" * 20)
         print(f"A 2D layout of the \"{dataset.name}\" dataset will be created \n"
@@ -24,10 +24,10 @@ class LowDLayoutCreation:
         print("#" * 20)
 
         if isinstance(algorithm, Chalmers96):
-            layout = Chalmers96Layout(*parameters)
+            layout = Chalmers96Layout(*basic_layout_creation_parameters)
 
         elif isinstance(algorithm, SQuaD):
-            layout = SQuaDLayout(*parameters)
+            layout = SQuaDLayout(*basic_layout_creation_parameters)
 
         if optional_metric_collection is None:
             print("#" * 20)
@@ -54,5 +54,5 @@ class LowDLayoutCreation:
         if isinstance(layout.algorithm, SpringForceBase):
             layout.algorithm.build_nodes()
 
-        layout.run(**kwargs)
+        layout.run(**additional_parameters)
         return layout

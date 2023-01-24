@@ -18,13 +18,13 @@ class SQuaD(BaseAlgorithm):
         super().__init__( **kwargs)
 
         self. N, M = self.dataset.shape if self.dataset is not None else (None, None)
+        self.ntet_size = ntet_size
         self.perms = np.arange(self.N) if self.N is not None else None
         # will point towards the indices for each random batch
-        self.batch_indices = np.arange((self.N - self.N % 4)).reshape((-1, 4)) if self.N is not None else None
+        self.batch_indices = np.arange((self.N - self.N % self.ntet_size)).reshape((-1, self.ntet_size)) if self.N is not None else None
         self.grad_acc = np.ones((self.N, 2)) if self.N is not None else None
         self.low_d_positions = self.initial_layout
         self.last_average_quartet_stress_measurement = 0
-        self.ntet_size = ntet_size
         self.vectorised = vectorised
 
 

@@ -8,8 +8,8 @@ import matplotlib.pyplot as plt
 
 class Chalmers96Layout(LowDLayoutBase):
 
-    def __init__(self, algorithm: Chalmers96, dataset: Dataset, optional_metric_collection: dict[str: int] = None):
-        super().__init__(algorithm, dataset, optional_metric_collection)
+    def __init__(self, no_iters: int = 50, *basic_layout_creation_parameters):
+        super().__init__(no_iters, *basic_layout_creation_parameters)
         assert isinstance(self.algorithm, Chalmers96)
 
 
