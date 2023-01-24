@@ -13,13 +13,13 @@ from ..data_fetchers.Dataset import Dataset
 
 class LowDLayoutCreation:
 
-    def create_layout(self, algorithm: BaseAlgorithm, dataset: Dataset, no_iters: int,
-                      optional_metric_collection: dict[str: int] = None, **additional_parameters):
+    def create_layout(self, algorithm: BaseAlgorithm, no_iters: int, optional_metric_collection: dict[str: int] = None,
+                       **additional_parameters):
 
-        basic_layout_creation_parameters = [algorithm, dataset, optional_metric_collection, no_iters]
+        basic_layout_creation_parameters = [algorithm, optional_metric_collection, no_iters]
 
         print("#" * 20)
-        print(f"A 2D layout of the \"{dataset.name}\" dataset will be created \n"
+        print(f"A 2D layout of the \"{algorithm.dataset.name}\" dataset will be created \n"
               f"using the {algorithm.get_name()} algorithm")
         print("#" * 20)
 
@@ -39,7 +39,7 @@ class LowDLayoutCreation:
             for metric, freq in optional_metric_collection.items():
                 assert freq > 0, f"Frequency of metric collection has to be > 0, got: {freq} "
                 assert metric in algorithm.available_metrics, f"{metric} not available for this algorithm"
-                print(f"\"{metric.capitalize()}\" wil be measured every {freq} iterations")
+                print(f"\"{metric.capitalize()}\" will be measured every {freq} iterations")
                 print("#" * 20)
 
         if np.all(np.where(algorithm.initial_layout==0, 1,0)):

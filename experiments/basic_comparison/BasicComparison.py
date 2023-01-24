@@ -96,8 +96,6 @@ class BasicComparison(ExperimentBase):
 
     def _complete_algorithm_initialisation(self, algorithm: BaseAlgorithm, dataset: Dataset ):
         algorithm.dataset = dataset.data
-        if algorithm.initial_layout is None:
-            algorithm.initial_layout = 20*np.random.rand(algorithm.dataset.shape[0], 2)
         if isinstance(algorithm, SpringForceBase):
             algorithm.nodes = algorithm.build_nodes()
         if isinstance(algorithm, SQuaD):

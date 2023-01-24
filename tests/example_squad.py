@@ -7,14 +7,14 @@ from hdimvis.data_fetchers.DataFetcher import DataFetcher
 from hdimvis.visualise_layouts_and_metrics.plot import show_layouts, show_generation_metrics
 from hdimvis.distance_measures.relative_rbf_dists import relative_rbf_dists
 
-metric_collection = {'average quartet stress': 10}
-dataset = DataFetcher().fetch_data('airfoil')
+metric_collection = {'Average quartet stress': 1, 'Stress': 3}
+dataset = DataFetcher().fetch_data('rna N3k')
 
 Xld = PCA(n_components=2, whiten=False, copy=True).fit_transform(dataset.data).astype(np.float64)
 Xld *= 10/np.std(Xld)
 
 squad = SQuaD(dataset=dataset, initial_layout=Xld)
-layout = LowDLayoutCreation().create_layout(squad, dataset, optional_metric_collection=metric_collection, no_iters=500)
+layout = LowDLayoutCreation().create_layout(squad, optional_metric_collection=metric_collection, no_iters=4)
 print(layout.collected_metrics)
 show_layouts(layout, use_labels=True, color_map='rainbow')
 show_generation_metrics(layout, quartet_stress=True)

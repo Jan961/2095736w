@@ -28,8 +28,8 @@ class SQuaDLayout(LowDLayoutBase):
                 if self.iteration_number == self.no_iters:
                     calculate_quartet_stress = True
 
-                if self.optional_metric_collection.get('average quartet stress') and \
-                        self.iteration_number % self.optional_metric_collection['average quartet stress'] == 0 :
+                if self.optional_metric_collection.get('Average quartet stress') and \
+                        self.iteration_number % self.optional_metric_collection['Average quartet stress'] == 0 :
                     calculate_quartet_stress = True
 
             if i == stop_d_exa:

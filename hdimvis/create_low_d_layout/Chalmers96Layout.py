@@ -8,12 +8,12 @@ import matplotlib.pyplot as plt
 
 class Chalmers96Layout(LowDLayoutBase):
 
-    def __init__(self, no_iters: int = 50, *basic_layout_creation_parameters):
+    def __init__(self, no_iters: int = 100, *basic_layout_creation_parameters):
         super().__init__(no_iters, *basic_layout_creation_parameters)
         assert isinstance(self.algorithm, Chalmers96)
 
 
-    def run(self, metric_collection: List[Tuple] =None, no_iters: int = 50, target_node_speed: float = 0.0, ) -> None:
+    def run(self, target_node_speed: float = 0.0, ) -> None:
         """
         Method to perform the main spring layout calculation, move the nodes iterations
         number of times unless return_after is given.
@@ -23,16 +23,16 @@ class Chalmers96Layout(LowDLayoutBase):
         """
         bar = None
 
-        if no_iters is not None:
-            assert no_iters >= 0
+        if self.no_iters is not None:
+            assert self.no_iters >= 0
             if target_node_speed == 0:
-                bar = IncrementalBar("Creating layout", max=no_iters)
+                bar = IncrementalBar("Creating layout", max=self.no_iters)
 
         assert target_node_speed >= 0
-        assert no_iters is not None or target_node_speed > 0
+        assert self.no_iters is not None or target_node_speed > 0
 
         while True:
-            if no_iters is not None and self.iteration_number >= no_iters:
+            if self.no_iters is not None and self.iteration_number >= self.no_iters:
                 if self.optional_metric_collection is not None:
                     self.collect_metrics(final=True)
                 bar.finish()

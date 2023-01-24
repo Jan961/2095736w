@@ -14,7 +14,7 @@ import math
 
 class SpringForceBase(BaseAlgorithm):
 
-    available_metrics = ['stress', 'average speed']
+    available_metrics = ['Stress', 'Average speed']
 
     def __init__(self, nodes: List[Node] = None, enable_cache: bool = True, alpha: float = 1, **kwargs) -> None:
         # the base class extracts data from the Dataset object
@@ -42,10 +42,10 @@ class SpringForceBase(BaseAlgorithm):
         """
         Construct a Node for each datapoint
         """
-        if self.dataset is not None:
+        if self.data is not None:
             # concatenate the datapoints with the initial positions for low-d mappings
             # for the apply_along_axis fn
-            conc = np.concatenate((self.dataset, self.initial_layout), axis=1)
+            conc = np.concatenate((self.data, self.initial_layout), axis=1)
             return list(np.apply_along_axis(Node, axis=1, arr=conc))
         else:
             return None
@@ -65,7 +65,7 @@ class SpringForceBase(BaseAlgorithm):
         # numpy vectorisation for euclidian distance
         if self.distance_fn == euclidean:
             print("choosing vectorised stress")
-            return self.get_vectorised_stress()
+            return self.get_vectorised_euclidian_stress()
 
         numerator: float = 0.0
         denominator: float = 0.0

@@ -6,8 +6,8 @@ from hdimvis.data_fetchers.Dataset import Dataset
 
 
 dataset = DataFetcher().fetch_data('coil20')
-mock_data= np.array([[0,0],[0,1],[1,1],[1,0]], dtype='float64')
-initial_positions = np.array([[0,0],[0,1],[1,1],[1,0]], dtype='float64')
+mock_data= np.array([[0,0],[0,10],[10,10],[10,0]], dtype='float64')
+initial_positions = np.array([[0,0],[0,10],[10,10],[10,0]], dtype='float64')
 mock_dataset = Dataset(mock_data, None, "mock data")
 def test_one_iteration_correctly_performed():
     algo = SQuaD(dataset=mock_dataset, initial_layout=initial_positions, distance_fn= relative_rbf_dists)
@@ -16,6 +16,6 @@ def test_one_iteration_correctly_performed():
     assert np.allclose(initial_positions, algo.get_positions())
     algo.one_iteration()
     assert np.allclose(initial_positions, algo.get_positions()) #tests if the correspondence between low D and high D
-                                                                 # maintained and the points are not shuffled
+    assert np.allclose(initial_positions, algo.data) # maintained and the points are not shuffled
 
 

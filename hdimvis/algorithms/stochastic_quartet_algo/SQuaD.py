@@ -11,13 +11,14 @@ from ...distance_measures.relative_rbf_dists import relative_rbf_dists
 
 class SQuaD(BaseAlgorithm):
 
-    available_metrics = ['stress', 'average quartet stress']
+    available_metrics = ['Stress', 'Average quartet stress']
     name = 'Stochastic Quartet Descent MDS'
 
     def __init__(self, ntet_size: int = 4, vectorised: bool = True, **kwargs):
         super().__init__( **kwargs)
 
-        self. N, M = self.dataset.shape if self.dataset is not None else (None, None)
+        # the optional "None" values are used to allow automatic data collection from many datasets
+        self. N, M = self.data.shape if self.data is not None else (None, None)
         self.ntet_size = ntet_size
         self.perms = np.arange(self.N) if self.N is not None else None
         # will point towards the indices for each random batch
@@ -39,20 +40,20 @@ class SQuaD(BaseAlgorithm):
         return self.low_d_positions
 
     def get_stress(self) -> float:
-        return self.get_vectorised_stress()
+        return self.get_vectorised_euclidian_stress()
 
     def get_average_quartet_stress(self):
         return self.last_average_quartet_stress_measurement
 
     def one_iteration(self, exaggerate_dist: bool = False, LR:float = 550.0, calculate_average_stress: bool = False):
 
-        assert self.dataset is not None
+        assert self.data is not None
 
         np.random.shuffle(self.perms)
 
         self.grad_acc.fill(0.)
-        Dhd_quartet = np.zeros((6,))
-        Dld_quartet = np.zeros((6,))
+        # Dhd_quartet = np.zeros((6,))
+        # Dld_quartet = np.zeros((6,))
 
         quartet_stress = 0
 
@@ -67,17 +68,17 @@ class SQuaD(BaseAlgorithm):
             # compute quartet's HD distances
             if exaggerate_dist:  # during exaggeration: don't take the square root of the distances
                 Dhd_distances_matrix = np.sum(
-                    (self.dataset[quartet][:, :, None] - self.dataset[quartet][:, :, None].T) ** 2, axis=1)
-                Dhd_quartet_alt = Dhd_distances_matrix[np.nonzero(np.triu(Dhd_distances_matrix))]
-                Dhd_quartet[0] = np.sum((self.dataset[quartet[0]] - self.dataset[quartet[1]]) ** 2)
-                Dhd_quartet[1] = np.sum((self.dataset[quartet[0]] - self.dataset[quartet[2]]) ** 2)
-                Dhd_quartet[2] = np.sum((self.dataset[quartet[0]] - self.dataset[quartet[3]]) ** 2)
-                Dhd_quartet[3] = np.sum((self.dataset[quartet[1]] - self.dataset[quartet[2]]) ** 2)
-                Dhd_quartet[4] = np.sum((self.dataset[quartet[1]] - self.dataset[quartet[3]]) ** 2)
-                Dhd_quartet[5] = np.sum((self.dataset[quartet[2]] - self.dataset[quartet[3]]) ** 2)
+                    (self.data[quartet][:, :, None] - self.data[quartet][:, :, None].T) ** 2, axis=1)
+                Dhd_quartet = Dhd_distances_matrix[np.nonzero(np.triu(Dhd_distances_matrix))]
+                # Dhd_quartet[0] = np.sum((self.data[quartet[0]] - self.data[quartet[1]]) ** 2)
+                # Dhd_quartet[1] = np.sum((self.data[quartet[0]] - self.data[quartet[2]]) ** 2)
+                # Dhd_quartet[2] = np.sum((self.data[quartet[0]] - self.data[quartet[3]]) ** 2)
+                # Dhd_quartet[3] = np.sum((self.data[quartet[1]] - self.data[quartet[2]]) ** 2)
+                # Dhd_quartet[4] = np.sum((self.data[quartet[1]] - self.data[quartet[3]]) ** 2)
+                # Dhd_quartet[5] = np.sum((self.data[quartet[2]] - self.data[quartet[3]]) ** 2)
             else:
                 Dhd_distances_matrix = np.sqrt(np.sum(
-                    (self.dataset[quartet][:, :, None] - self.dataset[quartet][:, :, None].T) ** 2, axis=1))
+                    (self.data[quartet][:, :, None] - self.data[quartet][:, :, None].T) ** 2, axis=1))
                 Dhd_quartet = Dhd_distances_matrix[np.nonzero(np.triu(Dhd_distances_matrix))]
 
                 # Dhd_quartet[0] = sqrt(np.sum((self.dataset[quartet[0]] - self.dataset[quartet[1]]) ** 2))
