@@ -16,7 +16,14 @@ import tracemalloc
 
 class BasicComparison(ExperimentBase):
 
-    def __init__(self, *algorithms: BaseAlgorithm, **kwargs):
+
+    def __init__(self, algorithms: dict, **kwargs):
+
+        # the algorithms to be analysed must be passed as a dict of algorithm: name pairs
+        # - the names will allow the algorithms to be distinguished in case both are of the same type
+        # and to access the results easily and intuitively
+        for algorithm, name in algorithms.items():
+            assert isinstance(algorithm, BaseAlgorithm) and isinstance(name, str)
 
         super().__init__(**kwargs)
         assert len(algorithms) >= 2
@@ -33,14 +40,15 @@ class BasicComparison(ExperimentBase):
             bm = np.zeros((self.num_repeats, 4))
             # 4 columns for memory; time; final normal stress; and (optional) final special squad stress
 
-            for i, algorithm in enumerate(self.algorithms):
+            for algorithm, name in self.algorithms.items():
 
                 # since we want to reuse the same alog with different datasets
                 # given the earlier implementation now many initialisations have to be done manually:
-                self._complete_algorithm_initialisation(algorithm, dataset)
+                self._complete_algorithm_initialisation(algorithm, name, dataset)
 
                 # initialise datastructures used for collecting measurements:
-                self.layouts[dataset_name][algorithm.name] = []
+                self.layouts[dataset_name][algorithm.get_name(only_additional=True)] = []
+                self.results[dataset_name][algorithm.get_name(only_additional=True)] = None
 
                 if self.metric_collection is not None:
                     filtered_metric_collection = {metric: freq for metric, freq in self.metric_collection.items()
@@ -51,14 +59,13 @@ class BasicComparison(ExperimentBase):
                 for j in range(self.num_repeats):
                     basic_metrics, layout = self.one_experiment(dataset, algorithm,
                                                                                      filtered_metric_collection)
-                    bm[i][j][0] = basic_metrics.get('peak memory', np.NAN)
-                    bm[i][j][1] = basic_metrics.get('time', np.NAN)
-                    bm[i][j][2] = basic_metrics.get('final stress', np.NAN)
+                    bm[j][0] = basic_metrics.get('peak memory', np.NAN)
+                    bm[j][1] = basic_metrics.get('time', np.NAN)
+                    bm[j][2] = basic_metrics.get('final stress', np.NAN)
 
-                    self.layouts[dataset_name][algorithm.name].append(layout)
+                    self.layouts[dataset_name][algorithm.get_name(only_additional=True)].append(layout)
 
-            self.results[dataset_name].append(bm)
-            self.results[dataset_name].append(ogm)
+                self.results[dataset_name][algorithm.get_name(only_additional=True)] = bm
 
 
     def one_experiment(self, dataset: Dataset, algorithm: BaseAlgorithm, filtered_metric_collection: Dict[str,int]):
@@ -70,7 +77,7 @@ class BasicComparison(ExperimentBase):
         else:
             t1 = perf_counter()
 
-        layout = LowDLayoutCreation().create_layout(algorithm, dataset,
+        layout = LowDLayoutCreation().create_layout(algorithm,
                                                     optional_metric_collection=filtered_metric_collection,
                                                     no_iters=self.iterations)
 
@@ -94,8 +101,11 @@ class BasicComparison(ExperimentBase):
                 algorithms_optional_generation_metrics[algorithm_index][metric] = \
                     np.zeros((self.num_repeats, (self.iterations // freq) + 2))
 
-    def _complete_algorithm_initialisation(self, algorithm: BaseAlgorithm, dataset: Dataset ):
-        algorithm.dataset = dataset.data
+    def _complete_algorithm_initialisation(self, algorithm: BaseAlgorithm, name:str, dataset: Dataset ):
+        algorithm.dataset = dataset
+        algorithm.data = dataset.data
+        algorithm.initial_layout = algorithm.initialise_layout()
+        algorithm.additional_name = name
         if isinstance(algorithm, SpringForceBase):
             algorithm.nodes = algorithm.build_nodes()
         if isinstance(algorithm, SQuaD):

@@ -77,3 +77,6 @@
 ### 17 Jan 2023
 * *6 hours*   comparison debugging, squad vectorisation 
 
+### 27 Jan 2023
+* *3 hours*   bug fixes 
+

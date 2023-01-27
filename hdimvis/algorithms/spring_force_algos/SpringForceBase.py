@@ -16,9 +16,9 @@ class SpringForceBase(BaseAlgorithm):
 
     available_metrics = ['Stress', 'Average speed']
 
-    def __init__(self, nodes: List[Node] = None, enable_cache: bool = True, alpha: float = 1, **kwargs) -> None:
+    def __init__(self, dataset: Dataset | None, nodes: List[Node] = None, enable_cache: bool = True, alpha: float = 1, **kwargs) -> None:
         # the base class extracts data from the Dataset object
-        super().__init__(**kwargs)
+        super().__init__(dataset, **kwargs)
 
         self.nodes: List[Node] = nodes if nodes is not None else self.build_nodes()
         self.data_size_factor: float = 1

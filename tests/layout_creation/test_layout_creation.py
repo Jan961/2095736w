@@ -21,7 +21,7 @@ mock_dataset_2 = Dataset(mock_data_2, None, "mock data")
 def test_low_lvl_layout_created_correctly_for_chalmers96():
         algo =algorithms[0]
         layout_class = layout_classes[0]
-        layout = LowDLayoutCreation().create_layout(algo, optional_metric_collection={'Stress': 2, 'Sverage speed': 1},
+        layout = LowDLayoutCreation().create_layout(algo, optional_metric_collection={'Stress': 2, 'Average speed': 1},
                                                     no_iters=4)
         assert isinstance(layout, layout_class)
         assert layout.optional_metric_collection['Stress'] == 2

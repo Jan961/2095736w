@@ -16,8 +16,8 @@ class SQuaD(BaseAlgorithm):
 
 
  # numpy.core._exceptions._ArrayMemoryError -  stress
-    def __init__(self, ntet_size: int = 4, vectorised: bool = True, **kwargs):
-        super().__init__( **kwargs)
+    def __init__(self, dataset: Dataset | None, ntet_size: int = 4, vectorised: bool = True, **kwargs):
+        super().__init__(dataset, **kwargs)
 
         # the optional "None" values are used to allow automatic data collection from many datasets
         self. N, M = self.data.shape if self.data is not None else (None, None)
@@ -35,9 +35,6 @@ class SQuaD(BaseAlgorithm):
 
 
  # aim for an end LR of 1e-3 , if not initialised with a std of 10 (not recommended), then this value should be changed as well
-
-    def get_name(self):
-        return self.name
 
     def get_positions(self):
         return self.low_d_positions
@@ -111,6 +108,7 @@ class SQuaD(BaseAlgorithm):
 
 
             # print(f"LD quartet: {np.allclose(Dld_quartet_alt, Dld_quartet)}")
+            # make the HD distances relative
             if self.distance_fn == relative_rbf_dists:
                 quartet_grads = compute_quartet_grads(LD_points, relative_rbf_dists(Dhd_quartet), Dld_quartet)
             else:

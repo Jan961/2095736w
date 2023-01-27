@@ -30,7 +30,7 @@ class LowDLayoutBase:
         return self.final_positions
 
     def get_final_stress(self):
-        if self.optional_metric_collection is None:
+        if 'Stress' not in self.optional_metric_collection:
             return self.collected_metrics['Stress'][1].append(self.algorithm.get_stress())
         else:
             return self.collected_metrics['Stress'][1][-1]
@@ -63,7 +63,7 @@ class LowDLayoutBase:
             with open("data.pickle", "wb") as f:
                 pickle.dump(self, f, protocol=pickle.HIGHEST_PROTOCOL)
         except Exception as ex:
-            print("Error during pickling object (Possibly unsupported):", ex)
+            print("Error during pickling object:", ex)
 
     def _check_collection_interval(self, metric: str):
         if self.iteration_number % self.optional_metric_collection[metric] == 0:

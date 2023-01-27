@@ -3,9 +3,19 @@ import numpy as np
 
 
 # gradients for one element of the loss function's sum, don't call this directly
+
+# points, Dld
 def ABCD_grad(xa, ya, xb, yb, xc, yc, xd, yd, dab, dac, dad, dbc, dbd, dcd, pab):
+
+    # sum_dist = np.sum(Dld)
+    # rel_dab = Dld[0]/sum_dist
+
+    # gradients_1 = 2 * (dhd_ab - rel_dab)/sum_dist * ((Dld[0]/sum_dist))
+
+
     sum_dist = dab + dac + dad + dbc + dbd + dcd
 
+    # relative ab distance
     dr_ab = (dab / sum_dist)
 
     gxA = 2 * ((pab - dr_ab) / sum_dist) * ( (dab / sum_dist) * ((xa - xb) / dab + (xa - xc) / dac + (xa - xd) / dad) - (xa - xb) / dab)
