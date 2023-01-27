@@ -71,11 +71,17 @@
 ### 16 Jan 2023
 * *5 hours*   placement and basic experiment
 
+
+# Week2
 ### 17 Jan 2023
 * *6 hours*   squad quartet stress
 
 ### 17 Jan 2023
 * *6 hours*   comparison debugging, squad vectorisation 
+* 
+# Week3
+### 24 Jan 2023
+* *6 hours*  various improvements 
 
 ### 27 Jan 2023
 * *3 hours*   bug fixes 
