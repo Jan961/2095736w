@@ -84,5 +84,5 @@
 * *6 hours*  various improvements 
 
 ### 27 Jan 2023
-* *3 hours*   bug fixes 
+* *5 hours*   bug fixes, hybrid placement
 
