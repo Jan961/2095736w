@@ -19,6 +19,9 @@ labels = """0 T-shirt/top
 
 rng = np.random.default_rng()
 
+# (60 000, 784)
+
+
 class FmnistFetcher(LowLevelDataFetcherBase):
 
     def load_dataset(self, size: int=1000):

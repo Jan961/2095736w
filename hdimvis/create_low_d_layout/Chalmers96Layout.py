@@ -11,9 +11,10 @@ class Chalmers96Layout(LowDLayoutBase):
     def __init__(self, no_iters: int = 100, *basic_layout_creation_parameters):
         super().__init__(no_iters, *basic_layout_creation_parameters)
         assert isinstance(self.algorithm, Chalmers96)
+        assert no_iters is not None, "For this algorithm the number of iterations must be specified"
 
 
-    def run(self, target_node_speed: float = 0.0, ) -> None:
+    def run(self, target_node_speed: float = 0.0) -> None:
         """
         Method to perform the main spring layout calculation, move the nodes iterations
         number of times unless return_after is given.

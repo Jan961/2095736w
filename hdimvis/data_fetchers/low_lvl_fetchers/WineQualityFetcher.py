@@ -4,7 +4,7 @@ import scipy
 from ..config import DATA_ROOT
 import os
 
-
+#(1599, 11)
 class WineQualityFetcher(LowLevelDataFetcherBase):
 
 

@@ -22,7 +22,7 @@ def get_data(dataset_name):
     sample = Dataset(dataset.data[sample_indx], None, "sample")
 
     algo96 = Chalmers96(dataset=sample, alpha=0.7, distance_fn=euclidean, use_knnd=False)
-    layout = LowDLayoutCreation().create_layout(algo96, sample, optional_metric_collection=None, no_iters=50)
+    layout = LowDLayoutCreation().create_layout(algo96, optional_metric_collection=None, no_iters=50)
 
     diffs = np.broadcast_to(dataset.data[:,:,None], shape=(dataset.data.shape[0], dataset.data.shape[1],
                                                  sample.data.shape[0])) - sample.data.T[None,:,:]

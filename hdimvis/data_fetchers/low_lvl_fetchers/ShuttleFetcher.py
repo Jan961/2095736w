@@ -3,7 +3,7 @@ import os
 from ..LowLevelDataFetcherBase import LowLevelDataFetcherBase
 from ..config import DATA_ROOT
 
-
+# (58000, 9)
 class ShuttleFetcher(LowLevelDataFetcherBase):
 
     def load_dataset(self, **kwargs) -> (np.ndarray, np.ndarray):
