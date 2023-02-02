@@ -18,7 +18,7 @@ class SQuaDLayout(LowDLayoutBase):
         calculate_quartet_stress = False
         bar = IncrementalBar("Creating layout", max=self.no_iters)
         decay = decay if decay is not None else np.exp(np.log(1e-3) / self.no_iters)
-        if exaggerate_D:  # exaggeration of HD distances by taking them squared
+        if exaggerate_D:  # exaggeration of HD distances by squaring
             stop_d_exa = int(self.no_iters * stop_exaggeration)  # iteration when we stop the exaggeration
         else:
             stop_d_exa = 0

@@ -32,7 +32,7 @@ class Chalmers96(SpringForceBase):
         assert self.data is not None or self.nodes is not None, "must provide dataset or nodes"
 
         n = len(self.nodes)
-        print(n)
+
         for i in range(n):
 
             if self.sample_set_size:

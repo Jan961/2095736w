@@ -1,4 +1,4 @@
-from BasicComparison import BasicComparison
+from SimpleComparison import SimpleComparison
 from hdimvis.algorithms.spring_force_algos.chalmers96_algo.Chalmers96 import Chalmers96
 
 
@@ -11,8 +11,8 @@ datasets = ['mock data']
 algos = {algo2: 'no knnd'}
 metric_collection = { "Average Speed": 3}
 
-experiment = BasicComparison(algos, experiment_name='test experiment', metric_collection=metric_collection,
-                             dataset_names=datasets, num_repeats=1, iterations=1)
+experiment = SimpleComparison(algos, experiment_name='test experiment', metric_collection=metric_collection,
+                              dataset_names=datasets, num_repeats=1, iterations=1)
 
 
 experiment.run()

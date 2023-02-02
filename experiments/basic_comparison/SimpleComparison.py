@@ -14,7 +14,7 @@ import tracemalloc
 
 # this is all very messy code
 
-class BasicComparison(ComparisonBase):
+class SimpleComparison(ComparisonBase):
 
 
     def __init__(self, algorithms: dict, **kwargs):
@@ -37,18 +37,18 @@ class BasicComparison(ComparisonBase):
 
             dataset = DataFetcher().fetch_data(dataset_name)
 
-            # basci metrics which will be added to self.result
-            bm = np.zeros((self.num_repeats, 4))
-            # 4 columns for memory; time; final normal stress; and (optional) final special squad stress
-
-
             for algorithm, name in self.algorithms.items():
 
-                # since we want to reuse the same alog with different datasets
+                # basic metrics which will be added to self.result
+                bm = {'time': [], 'final stress': [], 'memory': []}
+                if isinstance(algorithm, SQuaD):
+                    bm['final squad stress'] = []
+
+                # since we want to reuse the same algo with different datasets
                 # given the earlier implementation now many initialisations have to be done manually:
                 self._complete_algorithm_initialisation(algorithm, name, dataset)
 
-                # initialise datastructures used for collecting measurements:
+                # initialise data structures used for collecting measurements:
                 self.layouts[dataset_name][algorithm.get_name(only_additional=True)] = []
                 self.results[dataset_name][algorithm.get_name(only_additional=True)] = None
 
@@ -61,9 +61,11 @@ class BasicComparison(ComparisonBase):
                 for j in range(self.num_repeats):
                     basic_metrics, layout = self.one_experiment(dataset, algorithm,
                                                                                      filtered_metric_collection)
-                    bm[j][0] = basic_metrics.get('peak memory', np.NAN)
-                    bm[j][1] = basic_metrics.get('time', np.NAN)
-                    bm[j][2] = basic_metrics.get('final stress', np.NAN)
+                    bm['memory'].append(basic_metrics.get('peak memory', np.NAN))
+                    bm['time'].append(basic_metrics.get('time', np.NAN))
+                    bm['final stress'].append(basic_metrics.get('final stress', np.NAN))
+                    if isinstance(algorithm, SQuaD):
+                        bm['final squad stress'].append(basic_metrics.get('final squad stress', np.NAN))
 
                     self.layouts[dataset_name][algorithm.get_name(only_additional=True)].append(layout)
 
@@ -73,7 +75,6 @@ class BasicComparison(ComparisonBase):
     def one_experiment(self, dataset: Dataset, algorithm: BaseAlgorithm, filtered_metric_collection: Dict[str,int]):
 
         basic_metrics = dict()
-
         if self.record_memory:
             tracemalloc.start()
         else:
@@ -82,14 +83,14 @@ class BasicComparison(ComparisonBase):
         layout = LowDLayoutCreation().create_layout(algorithm,
                                                     optional_metric_collection=filtered_metric_collection,
                                                     no_iters=self.iterations)
-
         if self.record_memory:
             basic_metrics['current memory'], basic_metrics['peak memory'] = tracemalloc.get_tracemalloc_memory()
             tracemalloc.stop()
         else:
             basic_metrics['time'] = perf_counter() - t1
-
         basic_metrics['final stress'] = layout.get_final_stress()
+        if isinstance(algorithm,SQuaD):
+            basic_metrics['final squad stress'] = algorithm.get_average_quartet_stress()
 
         return basic_metrics, layout
 

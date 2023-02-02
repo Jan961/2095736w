@@ -1,14 +1,19 @@
 from sklearn.decomposition import PCA
-import numpy as np
-
 from hdimvis.algorithms.stochastic_quartet_algo.SQuaD import SQuaD
 from hdimvis.create_low_d_layout.LowDLayoutCreation import LowDLayoutCreation
 from hdimvis.data_fetchers.DataFetcher import DataFetcher
 from hdimvis.visualise_layouts_and_metrics.plot import show_layouts, show_generation_metrics
 from hdimvis.distance_measures.relative_rbf_dists import relative_rbf_dists
+import numpy as np
 
-metric_collection = {'Average quartet stress': 50, 'Stress': 200}
-dataset = DataFetcher().fetch_data('bonds')
+
+all_datasets_list = ['poker', 'mnist', 'bonds', 'coil20', 'rna N3k', 'airfoil', 'wine quality', 'fashion mnist'
+                                                                                                'shuttle',
+                     'flow cytometry']
+
+
+metric_collection = {'Average quartet stress': 200, 'Stress': 200}
+dataset = DataFetcher().fetch_data('rna N3k')
 
 Xld = PCA(n_components=2, whiten=False, copy=True).fit_transform(dataset.data).astype(np.float64)
 Xld *= 10/np.std(Xld)

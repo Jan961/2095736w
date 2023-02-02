@@ -27,13 +27,14 @@ class BaseAlgorithm:
     def get_unvectorised_euclidian_stress(self):
         pass
 
-    def get_stress(self, **kwargs) -> float:
+    def get_stress(self) -> float:
         try:
             stress = self.get_vectorised_euclidian_stress()
-        except MemoryError:
+        except np.core._exceptions._ArrayMemoryError:
             stress = self.get_unvectorised_euclidian_stress()
         finally:
             return stress
+
 
     # @abstractmethod
     # def get_available_metrics(self) -> List:
@@ -43,12 +44,14 @@ class BaseAlgorithm:
     #     pass
 
     def get_name(self, only_additional=False):
+        # only additional name as a key in result dictionaries - to make it easier to access them
         if self.additional_name is None:
             return self.name
         elif only_additional:
             return self.additional_name
         else:
             return self.name + ' - ' + self.additional_name
+
     def get_vectorised_euclidian_stress(self):
         print("vectorised euclidian stress")
         data = self.data

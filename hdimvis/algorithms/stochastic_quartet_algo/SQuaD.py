@@ -43,7 +43,7 @@ class SQuaD(BaseAlgorithm):
         denominator: float = 0.0
 
         for source, target in combinations(zip(self.data.tolist(), self.get_positions().tolist() ), 2):
-            high_d_distance = euclidean(source[0], target[0])
+            high_d_distance = euclidean(np.array(source[0]), np.array(target[0]))
             low_d_distance = math.sqrt((target[1][0] - source[1][0]) ** 2 + (target[1][1] - source[1][1]) ** 2)
             numerator += (high_d_distance - low_d_distance) ** 2
             denominator += low_d_distance ** 2

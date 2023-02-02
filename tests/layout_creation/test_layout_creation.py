@@ -5,6 +5,7 @@ from hdimvis.algorithms.stochastic_quartet_algo.SQuaD import SQuaD
 from hdimvis.create_low_d_layout.Chalmers96Layout import Chalmers96Layout
 from hdimvis.create_low_d_layout.SQuaDLayout import SQuaDLayout
 from hdimvis.data_fetchers.Dataset import Dataset
+from hdimvis.data_fetchers.DataFetcher import DataFetcher
 import numpy as np
 
 mock_data = np.random.randint(0,10, (40,3))
@@ -15,6 +16,8 @@ layout_classes = [Chalmers96Layout, SQuaDLayout]
 mock_data_2= np.array([[0,0],[0,10],[10,10],[10,0]], dtype='float64')
 initial_positions = np.array([[0,0],[0,10],[10,10],[10,0]], dtype='float64')
 mock_dataset_2 = Dataset(mock_data_2, None, "mock data")
+mock_dataset_3 = DataFetcher().fetch_data("mock data")
+
 
 
 # noinspection PyTypeHints
@@ -41,6 +44,7 @@ def test_stress_collected_correctly():
                 assert len(layout.collected_metrics['Stress'][0]) == 4 // i + 2
                 assert len(layout.collected_metrics['Stress'][1]) == 4 // i + 2
 
+            assert np.allclose(algo.get_vectorised_euclidian_stress(), algo.get_unvectorised_euclidian_stress())
 
 
 def test_low_lvl_layout_created_correctly_for_squad():
@@ -50,6 +54,17 @@ def test_low_lvl_layout_created_correctly_for_squad():
     assert np.allclose(initial_positions, layout.data)                                                          # maintained and the points are not shuffled
 
 
-
-
+#surprising result for stress
+def test_average_quartet_stress_decreases():
+    algo = SQuaD(dataset=mock_dataset_3, initial_layout=initial_positions)
+    stress_normal_1 = algo.get_vectorised_euclidian_stress()
+    measurements = {'Stress': 1, "Average quartet stress": 1}
+    layout1 = LowDLayoutCreation().create_layout(algo, optional_metric_collection=measurements, no_iters=1,)
+    stress_quartet_1 = algo.get_average_quartet_stress()
+    layout2 = LowDLayoutCreation().create_layout(algo, optional_metric_collection=measurements, no_iters=4, )
+    stress_quartet_2 = algo.get_average_quartet_stress()
+    stress_normal_2 = algo.get_vectorised_euclidian_stress()
+    print(layout2.collected_metrics)
+    assert stress_normal_1 > stress_normal_2
+    assert stress_quartet_1 > stress_quartet_2
 

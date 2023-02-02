@@ -11,10 +11,10 @@ class LowDLayoutBase:
     def __init__(self, algorithm, optional_metric_collection: dict[str: int]= None, no_iters: int = None):
         self.algorithm = algorithm
         self.final_positions = None
-        self.no_iters = no_iters  #number of iterations to be performeed
+        self.no_iters = no_iters  #number of iterations to be performed
         self.optional_metric_collection = optional_metric_collection # a dict specifying what metrics to collect
         # the below is a dict where each value - a tuple- contains a list of iteration numbers at pos 0
-        # and a list of collected valuesof a metric measured at the corresponding iteration number
+        # and a list of collected values of a metric measured at the corresponding iteration number
         self.collected_metrics = {metric : ([],[]) for metric in self.algorithm.available_metrics }
         self.data = algorithm.data
         self.labels = algorithm.dataset.labels

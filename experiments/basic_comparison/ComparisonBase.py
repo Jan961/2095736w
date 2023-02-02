@@ -3,12 +3,9 @@ from typing import List, Dict
 import os
 
 
-def load_object(filename):
-    try:
-        with open(filename, "rb") as f:
-            return pickle.load(f)
-    except Exception as ex:
-        print("Error during unpickling object (Possibly unsupported):", ex)
+def load_pickle(filename):
+    with open(filename, "rb") as f:
+        return pickle.load(f)
 
 
 class ComparisonBase:
@@ -26,19 +23,22 @@ class ComparisonBase:
         self.iterations = iterations
 
     def create_output_directory(self):
-        # exception catching bc we don't want to have to re-run the experiment in case of we mess up the naming
-        name = f"{self.experiment_name} - data"
 
+        name = f"{self.experiment_name} - pickled"
+        # exception catching bc we don't want to have to re-run the experiment in case of we mess up the naming
         try:
-            path = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', name))
+            path = os.path.realpath(os.path.join(os.path.dirname(__file__), '.', name))
             os.mkdir(path)
         except FileExistsError:
-            path = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', name + "(1)"))
+            path = os.path.realpath(os.path.join(os.path.dirname(__file__), '.', name + "(1)"))
             os.mkdir(path)
 
         return path
 
-    def save(self, path):
-        with open(os.path.join(path, f"{self.experiment_name}.pickle"), 'wb') as pickle_out:
+    def pickle(self):
+        directory = os.path.realpath(os.path.dirname(__file__))
+        path_to_pickle = os.path.join(directory, f"{self.experiment_name}.pickle")
+        with open(path_to_pickle, 'wb') as pickle_out:
             pickle.dump(self, pickle_out)
+        return path_to_pickle
 

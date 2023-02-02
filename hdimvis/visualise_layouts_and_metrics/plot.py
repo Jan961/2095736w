@@ -114,6 +114,8 @@ def show_generation_metrics(layout, stress: bool = True, average_speed: bool = F
     labels = [l.get_label() for l in lines]
     if title:
         plt.title(title)
+    else:
+        plt.title(layout.algorithm.dataset.name)
     ax1.legend(lines,labels)
     # label2 ="ada"
     # ax2.set_ylabel(label2)
