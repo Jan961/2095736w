@@ -22,7 +22,6 @@ def test_basic_comparison():
                             dataset_names=['mock data', 'mock data'], metric_collection = metric_collection)
     expr.run()
 
-
     print(expr.results)
     #test basic metrics
     assert len(expr.results['mock data']) == 2 # num algorithms

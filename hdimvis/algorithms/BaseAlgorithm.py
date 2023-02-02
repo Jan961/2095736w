@@ -24,8 +24,17 @@ class BaseAlgorithm:
     def get_positions(self) -> np.ndarray:
         pass
     @abstractmethod
-    def get_stress(self, **kwargs) -> float:
+    def get_unvectorised_euclidian_stress(self):
         pass
+
+    def get_stress(self, **kwargs) -> float:
+        try:
+            stress = self.get_vectorised_euclidian_stress()
+        except MemoryError:
+            stress = self.get_unvectorised_euclidian_stress()
+        finally:
+            return stress
+
     # @abstractmethod
     # def get_available_metrics(self) -> List:
     #     pass
@@ -40,9 +49,8 @@ class BaseAlgorithm:
             return self.additional_name
         else:
             return self.name + ' - ' + self.additional_name
-
     def get_vectorised_euclidian_stress(self):
-        print("euclidian stress")
+        print("vectorised euclidian stress")
         data = self.data
         hd_dist = np.sqrt(((data[:,:,None] - data[:,:,None].T)**2).sum(axis=1))
         ld_dist = np.sqrt(((self.get_positions()[:,:,None] - self.get_positions()[:,:,None].T)**2).sum(axis=1))

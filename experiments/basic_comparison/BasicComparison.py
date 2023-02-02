@@ -8,13 +8,13 @@ from hdimvis.algorithms.BaseAlgorithm import BaseAlgorithm
 from hdimvis.algorithms.spring_force_algos.SpringForceBase import SpringForceBase
 from hdimvis.algorithms.stochastic_quartet_algo.SQuaD import SQuaD
 from hdimvis.data_fetchers.Dataset import Dataset
-from experiments.basic_comparison.ComparisonBase import ExperimentBase
+from experiments.basic_comparison.ComparisonBase import ComparisonBase
 from time import perf_counter
 import tracemalloc
 
 # this is all very messy code
 
-class BasicComparison(ExperimentBase):
+class BasicComparison(ComparisonBase):
 
 
     def __init__(self, algorithms: dict, **kwargs):
@@ -26,7 +26,8 @@ class BasicComparison(ExperimentBase):
             assert isinstance(algorithm, BaseAlgorithm) and isinstance(name, str)
 
         super().__init__(**kwargs)
-        assert len(algorithms) >= 2
+
+        self.clean_algorithms = algorithms
         self.algorithms = algorithms
         self.results = { dataset:{} for dataset in self.dataset_names }
         self.layouts = { dataset:{} for dataset in self.dataset_names }
@@ -39,6 +40,7 @@ class BasicComparison(ExperimentBase):
             # basci metrics which will be added to self.result
             bm = np.zeros((self.num_repeats, 4))
             # 4 columns for memory; time; final normal stress; and (optional) final special squad stress
+
 
             for algorithm, name in self.algorithms.items():
 
@@ -66,7 +68,7 @@ class BasicComparison(ExperimentBase):
                     self.layouts[dataset_name][algorithm.get_name(only_additional=True)].append(layout)
 
                 self.results[dataset_name][algorithm.get_name(only_additional=True)] = bm
-
+            self.algorithms = self.clean_algorithms     # reset the initialisations
 
     def one_experiment(self, dataset: Dataset, algorithm: BaseAlgorithm, filtered_metric_collection: Dict[str,int]):
 
@@ -91,15 +93,6 @@ class BasicComparison(ExperimentBase):
 
         return basic_metrics, layout
 
-    def _initialise_dict_for_optional_metrics(self, algorithm_index: int, filtered_metric_collection: Dict,
-                                              algorithms_optional_generation_metrics: List[Dict]):
-        for metric, freq in filtered_metric_collection.items():
-            if self.iterations % freq == 0:
-                algorithms_optional_generation_metrics[algorithm_index][metric] = \
-                    np.zeros((self.num_repeats, int(self.iterations / freq) +1))
-            else:
-                algorithms_optional_generation_metrics[algorithm_index][metric] = \
-                    np.zeros((self.num_repeats, (self.iterations // freq) + 2))
 
     def _complete_algorithm_initialisation(self, algorithm: BaseAlgorithm, name:str, dataset: Dataset ):
         algorithm.dataset = dataset
@@ -108,6 +101,9 @@ class BasicComparison(ExperimentBase):
         algorithm.additional_name = name
         if isinstance(algorithm, SpringForceBase):
             algorithm.nodes = algorithm.build_nodes()
+            if algorithm.use_knnd:
+                algorithm.knnd_index = algorithm.create_knnd_index()
+
         if isinstance(algorithm, SQuaD):
             algorithm.N, M = dataset.data.shape
             algorithm.perms = np.arange(algorithm.N)

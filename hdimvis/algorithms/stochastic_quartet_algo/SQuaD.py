@@ -2,7 +2,7 @@ from itertools import combinations
 from typing import Callable
 from ...data_fetchers.Dataset import Dataset
 import numpy as np
-from numpy import sqrt
+import math
 from .gradients import compute_quartet_grads
 from ..BaseAlgorithm import BaseAlgorithm
 from ...distance_measures.euclidian_and_manhattan import euclidean
@@ -32,15 +32,24 @@ class SQuaD(BaseAlgorithm):
         self.vectorised = vectorised
 
 
-
-
  # aim for an end LR of 1e-3 , if not initialised with a std of 10 (not recommended), then this value should be changed as well
 
-    def get_positions(self):
+    def get_positions(self) -> np.ndarray:
         return self.low_d_positions
 
-    def get_stress(self) -> float:
-        return self.get_vectorised_euclidian_stress()
+    def get_unvectorised_euclidian_stress(self) -> float:
+
+        numerator: float = 0.0
+        denominator: float = 0.0
+
+        for source, target in combinations(zip(self.data.tolist(), self.get_positions().tolist() ), 2):
+            high_d_distance = euclidean(source[0], target[0])
+            low_d_distance = math.sqrt((target[1][0] - source[1][0]) ** 2 + (target[1][1] - source[1][1]) ** 2)
+            numerator += (high_d_distance - low_d_distance) ** 2
+            denominator += low_d_distance ** 2
+        if denominator == 0:
+            return math.inf
+        return numerator / denominator
 
     def get_average_quartet_stress(self):
         return self.last_average_quartet_stress_measurement

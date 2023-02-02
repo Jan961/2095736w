@@ -11,11 +11,11 @@ def load_object(filename):
         print("Error during unpickling object (Possibly unsupported):", ex)
 
 
-class ExperimentBase:
+class ComparisonBase:
     all_datasets_list = ('mnist', 'coil20', 'rna N3k', 'airfoil', 'wine quality',
                          'fashion mnist', 'shuttle', 'flow cytometry')
 
-    def __init__(self, experiment_name: str, dataset_names: List[str] = all_datasets_list,
+    def __init__(self, experiment_name: str = 'Experiment', dataset_names: List[str] = all_datasets_list,
                  metric_collection: Dict[str,int] = None, num_repeats: int = 3, record_memory=False,
                  iterations: int = 100):
         self.dataset_names = dataset_names
@@ -26,17 +26,19 @@ class ExperimentBase:
         self.iterations = iterations
 
     def create_output_directory(self):
-        # exception catching bc we don't want to have to re-run the experiment
+        # exception catching bc we don't want to have to re-run the experiment in case of we mess up the naming
+        name = f"{self.experiment_name} - data"
+
         try:
-            path = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', self.experiment_name))
+            path = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', name))
             os.mkdir(path)
         except FileExistsError:
-            path = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', self.experiment_name + "(1)"))
+            path = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', name + "(1)"))
             os.mkdir(path)
 
         return path
 
-    def save(self):
-        with open(f"{self.experiment_name}.pickle", 'wb') as pickle_out:
+    def save(self, path):
+        with open(os.path.join(path, f"{self.experiment_name}.pickle"), 'wb') as pickle_out:
             pickle.dump(self, pickle_out)
 

@@ -20,7 +20,7 @@ class LowDLayoutCreation:
 
         print("#" * 20)
         print(f"A 2D layout of the \"{algorithm.dataset.name}\" dataset will be created \n"
-              f"using the {algorithm.get_name()} algorithm")
+              f"using the \"{algorithm.get_name()}\" algorithm")
         print("#" * 20)
 
         if isinstance(algorithm, Chalmers96):
