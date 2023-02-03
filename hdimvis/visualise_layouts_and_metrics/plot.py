@@ -66,10 +66,11 @@ def show_layouts(*layouts: LowDLayoutBase, use_labels: bool = False, alpha: floa
         if sub_titles is not None and len(sub_titles) >= i+1:
             axis.title.set_text(sub_titles[i])
 
+    if title:
+        plt.title(title)
+    else:
+        plt.title(f"{layouts[0].algorithm.dataset.name} - {layouts[0].algorithm.get_name()}")
 
-
-
-    plt.title(title)
     plt.axis('off')
     plt.show()
 
@@ -115,7 +116,8 @@ def show_generation_metrics(layout, stress: bool = True, average_speed: bool = F
     if title:
         plt.title(title)
     else:
-        plt.title(layout.algorithm.dataset.name)
+        plt.title(f"{layout.algorithm.dataset.name} - {layout.algorithm.get_name()}" )
+
     ax1.legend(lines,labels)
     # label2 ="ada"
     # ax2.set_ylabel(label2)

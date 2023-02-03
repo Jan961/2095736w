@@ -4,7 +4,7 @@ import numpy as np
 from ..config import DATA_ROOT
 from ..LowLevelDataFetcherBase import LowLevelDataFetcherBase
 
-
+#stress works normally
 
 class MnistFetcher(LowLevelDataFetcherBase):
 

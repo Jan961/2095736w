@@ -27,7 +27,7 @@ in pypi (nxcurve)
 <br/>
 <br/>
 <br/>
-* at least for some cytometric data initialisation is critical for UMAP and t-SNE
+* at least for some cytometric data, initialisation is critical for UMAP and t-SNE
 * something called Laplacian Eigenmaps can be used to initialise the embeddings - apart from PCA
 <br/>
 <br/>
@@ -40,6 +40,10 @@ but it's in R
 * UMAP can be used to reduce dimensions t-SNE - more apparently not computationally feasible to do the same on large datasets
 * memory-mapped files to reduce memory use?
 * special data structures?
-* rss -resident set size mem- can be misleading bc does not include mem "swapped" to the hard drive
+* rss -resident set size mem- can be misleading bc does not include memory "swapped" to the hard drive
 * vms - can be misleading because it includes all memory used by the process including shared libs and can become larger that the total aval memory on the machine
-* tracemalloc only works for code written in pytho
+* tracemalloc only works for code written in python
+
+
+
+velocity x = (xld1 - xld2)* ((D_ld - D_hd)/ D_hd) * alpha * data_size_factor

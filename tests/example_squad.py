@@ -13,7 +13,7 @@ all_datasets_list = ['poker', 'mnist', 'bonds', 'coil20', 'rna N3k', 'airfoil', 
 
 
 metric_collection = {'Average quartet stress': 200, 'Stress': 200}
-dataset = DataFetcher().fetch_data('rna N3k')
+dataset = DataFetcher().fetch_data('coil20')
 
 Xld = PCA(n_components=2, whiten=False, copy=True).fit_transform(dataset.data).astype(np.float64)
 Xld *= 10/np.std(Xld)

@@ -31,6 +31,8 @@ class BaseAlgorithm:
         try:
             stress = self.get_vectorised_euclidian_stress()
         except np.core._exceptions._ArrayMemoryError:
+            print("Not enough memory to allocate for a numpy array for stress calculation. \n"
+                  "Stress will be calculated with a ")
             stress = self.get_unvectorised_euclidian_stress()
         finally:
             return stress

@@ -50,12 +50,15 @@ def test_stress_collected_correctly():
 def test_low_lvl_layout_created_correctly_for_squad():
     algo = SQuaD(dataset=mock_dataset_2, initial_layout=initial_positions)
     layout = LowDLayoutCreation().create_layout(algo, no_iters=2)
+
     assert np.allclose(initial_positions, layout.get_final_positions()) #tests if the correspondence between low D and high D
     assert np.allclose(initial_positions, layout.data)                                                          # maintained and the points are not shuffled
 
 
 #surprising result for stress
-def test_average_quartet_stress_decreases():
+def test_stress_decreases_as_expected():
+
+
     algo = SQuaD(dataset=mock_dataset_3, initial_layout=initial_positions)
     stress_normal_1 = algo.get_vectorised_euclidian_stress()
     measurements = {'Stress': 1, "Average quartet stress": 1}
@@ -65,6 +68,7 @@ def test_average_quartet_stress_decreases():
     stress_quartet_2 = algo.get_average_quartet_stress()
     stress_normal_2 = algo.get_vectorised_euclidian_stress()
     print(layout2.collected_metrics)
+
     assert stress_normal_1 > stress_normal_2
     assert stress_quartet_1 > stress_quartet_2
 
