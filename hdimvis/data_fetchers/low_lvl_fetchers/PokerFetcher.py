@@ -8,7 +8,7 @@ from typing import Any
 class PokerFetcher(LowLevelDataFetcherBase):
 
 
-    def load_dataset(self, size: int =1000) -> np:
+    def load_dataset(self, size: int =2000) -> np:
         return self._load_file(f'{size}.csv', np.int16), None
 
     def _load_file(self, name, dtype):

@@ -15,7 +15,7 @@ all_datasets_list = ['poker', 'mnist', 'bonds', 'coil20', 'rna N3k', 'airfoil', 
 
 metric_collection = {'Stress': 200}
 
-dataset = DataFetcher().fetch_data('rna N3k')
+dataset = DataFetcher().fetch_data('poker')
 Xld = PCA(n_components=2, whiten=False, copy=True).fit_transform(dataset.data).astype(np.float64)
 Xld *= 10/np.std(Xld)
 
@@ -23,11 +23,11 @@ zero_initial = np.zeros((dataset.data.shape[0], 2))
 
 
 tracemalloc.start()
-algo96 = Chalmers96(dataset=dataset, initial_layout=zero_initial, alpha=0.7,  distance_fn=euclidean,
-                    use_knnd=False, sample_set_size=10, neighbour_set_size=5)
+algo96 = Chalmers96(dataset=dataset, initial_layout=zero_initial, alpha=0.7,  distance_fn=poker_distance,
+                    use_knnd=False, sample_set_size=20, neighbour_set_size=5)
 
 
-layout = LowDLayoutCreation().create_layout(algo96, optional_metric_collection=None, no_iters=1)
+layout = LowDLayoutCreation().create_layout(algo96, optional_metric_collection=None, no_iters=100)
 print(tracemalloc.get_traced_memory())
 tracemalloc.stop()
 
@@ -37,6 +37,6 @@ tracemalloc.stop()
 # print(f"velocity: {layout.collected_metrics['average speed'][1]} \n")
 # print(f" stress: {layout.collected_metrics['stress'][1]} \n")
 # print("total time: {}")
-show_layouts(layout, use_labels=True, color_map='rainbow', title="chalmers zero")
-show_generation_metrics(layout, title="chalmers good settings")
+show_layouts(layout, use_labels=False, color_by=lambda i : i[10], color_map='rainbow', title="chalmers poker")
+show_generation_metrics(layout, title="chalmers poker")
 
