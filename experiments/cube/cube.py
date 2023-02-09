@@ -7,7 +7,8 @@ class Cube:
         self.side = side # side length
         self.angle = angle * np.pi # the acute angle of the front side to the x-y plane in radians
         self.num_points = num_points # num points per side length
-        self.distance_axes = distance_axes # perpendicular distance of the cube from each of x,y and z axes
+        self.distance_axes = distance_axes # perpendicular distance of the bottom front edge
+        # and right/left side of the cube from the x-y and y-z planes respectively
 
         #front
         front_y_len = np.cos(self.angle) * self.side
@@ -17,7 +18,7 @@ class Cube:
         z = np.tile(np.linspace(self.distance_axes, self.distance_axes+ front_z_len, self.num_points)[:,None],
                     (1,self.num_points))
         label = np.zeros_like(z) # a label which will allow us to us the same colouring on the 2D embedding plot
-        front_stacked = np.dstack((x,y,z, label)) #remove first and last column to eliminate duplicate points
+        front_stacked = np.dstack((x,y,z, label))
         self.front = front_stacked.reshape(-1,4)
 
         #top
@@ -29,8 +30,7 @@ class Cube:
         z_top = np.tile(np.linspace(self.distance_axes+ front_z_len, self.distance_axes+ front_z_len - top_z_len ,
                                     self.num_points)[:,None], (1,self.num_points))
         label_top = np.ones_like(z_top) # a label which will allow us to us the same colouring on the 2D embedding plot
-        top_stacked = np.dstack((x_top,y_top,z_top,label_top))[1:,:,:] #remove first row and
-        # first and last column to eliminate duplicate points
+        top_stacked = np.dstack((x_top,y_top,z_top,label_top))[1:,:,:] #remove first row to eliminate duplicate points
         self.top = top_stacked.reshape(-1,4)
 
         #bottom
