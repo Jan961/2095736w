@@ -28,6 +28,8 @@ class LowDLayoutBase:
 
     def get_final_positions(self):
         return self.final_positions
+    def get_data(self):
+        return self.data
 
     def get_final_stress(self):
         if 'Stress' not in self.optional_metric_collection:
