@@ -69,6 +69,6 @@ def test_stress_decreases_as_expected():
     stress_normal_2 = algo.get_vectorised_euclidian_stress()
     print(layout2.collected_metrics)
 
-    assert stress_normal_1 > stress_normal_2
-    assert stress_quartet_1 > stress_quartet_2
+    assert stress_normal_1 > stress_normal_2 # "standard" stress
+    assert stress_quartet_1 > stress_quartet_2 # average quartet stress
 

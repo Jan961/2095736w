@@ -52,15 +52,15 @@ class SimpleComparison(ComparisonBase):
                 self.layouts[dataset_name][algorithm.get_name(only_additional=True)] = []
                 self.results[dataset_name][algorithm.get_name(only_additional=True)] = None
 
-                if self.metric_collection is not None:
-                    filtered_metric_collection = {metric: freq for metric, freq in self.metric_collection.items()
+                if self.metric_collection_during_layout_creation is not None:
+                    filtered_metric_collection = {metric: freq for metric, freq
+                                                  in self.metric_collection_during_layout_creation.items()
                                                   if metric in algorithm.available_metrics}
                 else:
                     filtered_metric_collection = None
 
                 for j in range(self.num_repeats):
-                    basic_metrics, layout = self.one_experiment(dataset, algorithm,
-                                                                                     filtered_metric_collection)
+                    basic_metrics, layout = self.one_experiment( algorithm, filtered_metric_collection)
                     bm['memory'].append(basic_metrics.get('peak memory', np.NAN))
                     bm['time'].append(basic_metrics.get('time', np.NAN))
                     bm['final stress'].append(basic_metrics.get('final stress', np.NAN))
@@ -72,7 +72,7 @@ class SimpleComparison(ComparisonBase):
                 self.results[dataset_name][algorithm.get_name(only_additional=True)] = bm
             self.algorithms = self.clean_algorithms     # reset the initialisations
 
-    def one_experiment(self, dataset: Dataset, algorithm: BaseAlgorithm, filtered_metric_collection: Dict[str,int]):
+    def one_experiment(self, algorithm: BaseAlgorithm, filtered_metric_collection: Dict[str,int]):
 
         basic_metrics = dict()
         if self.record_memory:
@@ -95,6 +95,9 @@ class SimpleComparison(ComparisonBase):
         return basic_metrics, layout
 
 
+
+    # since we want to reuse the same algo with different datasets and rerun the layout creation multiple times
+    # given the earlier implementation now many initialisations have to be done manually:
     def _complete_algorithm_initialisation(self, algorithm: BaseAlgorithm, name:str, dataset: Dataset ):
         algorithm.dataset = dataset
         algorithm.data = dataset.data

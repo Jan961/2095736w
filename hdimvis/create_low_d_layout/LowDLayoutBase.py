@@ -32,8 +32,9 @@ class LowDLayoutBase:
         return self.data
 
     def get_final_stress(self):
-        if 'Stress' not in self.optional_metric_collection:
-            return self.collected_metrics['Stress'][1].append(self.algorithm.get_stress())
+        if self.optional_metric_collection is None or 'Stress' not in self.optional_metric_collection:
+            self.collected_metrics['Stress'][1].append(self.algorithm.get_stress())
+            return self.collected_metrics['Stress'][1][-1]
         else:
             return self.collected_metrics['Stress'][1][-1]
 

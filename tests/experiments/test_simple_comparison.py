@@ -9,7 +9,7 @@ mock_data = np.array([[0, 0, 0, 0], [1, 1, 1, 1], [40, 39, 39, 39], [40, 40, 40,
 dataset = Dataset(mock_data, np.array([0,1,2,3]), 'mock data')
 
 
-def test_simple_comparison():
+def test_correct_number_of_metrics_collected():
     algos_input = dict()
     algo1, name1 = Chalmers96(None, neighbour_set_size=1, sample_set_size=2), "simple 96"
     algo2, name2 = SQuaD(None), "basic squad"
@@ -19,7 +19,8 @@ def test_simple_comparison():
     metric_collection = {'Stress': 2, 'Average speed': 1, 'Average quartet stress':1}
 
     expr = SimpleComparison(algos_input, experiment_name="test experiment", iterations=2, num_repeats=2,
-                            dataset_names=['mock data', 'mock data'], metric_collection = metric_collection)
+                            dataset_names=['mock data', 'mock data'],
+                            metric_collection_during_layout_creation = metric_collection)
     expr.run()
 
     print(expr.results)
@@ -35,6 +36,24 @@ def test_simple_comparison():
     assert len(expr.layouts['mock data']['basic squad']) == 2 # num repeats
     assert len(expr.layouts['mock data']['simple 96']) == 2  # num repeats
 
+
+def test_correct_stress_calculated():
+    algos_input = dict()
+    algo1, name1 = Chalmers96(None, neighbour_set_size=1, sample_set_size=2), "simple 96"
+    algo2, name2 = SQuaD(None), "basic squad"
+    algos_input[algo1] = name1
+    algos_input[algo2] = name2
+
+
+    expr = SimpleComparison(algos_input, experiment_name="test experiment", iterations=2, num_repeats=2,
+                            dataset_names=['mock data', 'mock data'],
+                            metric_collection_during_layout_creation = None)
+    expr.run()
+
+    print(expr.results)
+
+    assert algo1.get_stress() == expr.results['mock data']['simple 96']['final stress'][-1]
+    assert algo2.get_stress() == expr.results['mock data']['basic squad']['final stress'][-1]
 
 
 

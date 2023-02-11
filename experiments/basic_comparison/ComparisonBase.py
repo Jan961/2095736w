@@ -13,11 +13,11 @@ class ComparisonBase:
                          'fashion mnist', 'shuttle', 'flow cytometry')
 
     def __init__(self, experiment_name: str = 'Experiment', dataset_names: List[str] = all_datasets_list,
-                 metric_collection: Dict[str,int] = None, num_repeats: int = 3, record_memory=False,
+                 metric_collection_during_layout_creation: Dict[str, int] = None, num_repeats: int = 3, record_memory=False,
                  iterations: int = 100):
         self.dataset_names = dataset_names
         self.experiment_name = experiment_name
-        self.metric_collection = metric_collection
+        self.metric_collection_during_layout_creation = metric_collection_during_layout_creation
         self.num_repeats = num_repeats
         self.record_memory = record_memory
         self.iterations = iterations
