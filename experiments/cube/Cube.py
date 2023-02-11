@@ -83,8 +83,10 @@ class Cube:
             return points[:, 2]
 
 
-    def plot_3d(self):
+    def plot_3d(self, title: str = None):
         fig = plt.figure()
+        fig.suptitle(title)
+
         ax = fig.add_subplot(projection='3d')
 
         #front
@@ -108,6 +110,7 @@ class Cube:
         ax.scatter(self.left[:, 0], self.left[:, 1], self.left[:, 2], c=color, cmap='winter_r')
         ax.set_aspect('equal', adjustable='box')
 
+
     def get_sample_dataset(self, size: int):
         all_points = self.get_all_points()
         assert size <= all_points.shape[0]
@@ -118,7 +121,7 @@ class Cube:
     def get_all_points(self):
         return np.vstack((self.front, self.top, self.bottom, self.right, self.left))
 
-    def plot_2d(self, layout: LowDLayoutBase, opacity: float = 1 ):
+    def plot_2d(self, layout: LowDLayoutBase, opacity: float = 1, title: str = None):
 
         fig, ax = plt.subplots()
         pos = layout.get_final_positions()
@@ -132,7 +135,7 @@ class Cube:
             color = self.get_colour_mapping(i, data[indices])
             points_to_plot = pos[indices]
             ax.scatter(points_to_plot[:,0], points_to_plot[:,1], c=color, cmap=cmap, alpha= opacity)
-
+        plt.title(title)
         plt.show()
 
 

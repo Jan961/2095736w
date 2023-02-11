@@ -56,6 +56,7 @@ class Hybrid(SpringForceBase):
 
     def one_iteration(self, stage: HybridStage, alpha: float = 1, interpolation_adjustment_iterations:int = 5) -> None:
 
+        self.stage = stage
         if stage == HybridStage.PLACE_SAMPLE:
             self._sample_stage_one_iteration()
         elif stage == HybridStage.INTERPOLATE:

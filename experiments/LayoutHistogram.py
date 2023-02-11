@@ -15,10 +15,11 @@ class LayoutHistogram():
 
         self.bins =bins
         self.range = range # range  [[xmin, xmax], [ymin, ymax]]
-        self.histogram, self.xedges, self.yedges = self.create_histogram
         self.positions = positions
         self.layout = layout
         self.pdf = pdf
+        self.histogram, self.xedges, self.yedges = self.create_histogram()
+
 
 
     def create_histogram(self):
@@ -32,14 +33,14 @@ class LayoutHistogram():
         # the parameter "density" converts the histogram into a PDF
         return np.histogram2d(x, y, self.bins, self.range, density=self.pdf)
 
-    def show_histogram(self ,title: str):
+    def show_histogram(self ,title: str =None):
 
         # Histogram does not follow Cartesian convention,
         # therefore transpose H for visualization purposes.
         H = self.histogram
         #H = H.T
         fig = plt.figure()
-        ax = fig.add_subplot(title='title')
+        ax = fig.add_subplot(title= title)
         plt.imshow(H, interpolation='nearest', origin='lower',
                    extent=[self.xedges[0], self.xedges[-1], self.yedges[0], self.yedges[-1]])
 
