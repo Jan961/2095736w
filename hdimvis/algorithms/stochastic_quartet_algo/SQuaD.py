@@ -17,6 +17,7 @@ class SQuaD(BaseAlgorithm):
     name = 'Stochastic Quartet Descent MDS'
 
     def __init__(self, dataset: Dataset | None, ntet_size: int = 4, nesterovs_momentum: bool = False,
+                 momentum: float = 0.6,
                  test_vectorisation: bool = False, **kwargs):
         super().__init__(dataset, **kwargs)
 
@@ -32,6 +33,10 @@ class SQuaD(BaseAlgorithm):
         self.last_average_quartet_stress_measurement = 0
         self.test_vectorisation = test_vectorisation
         self.nesterovs_momentum = nesterovs_momentum
+        self.momentum = momentum
+        if self.nesterovs_momentum:
+            self.nesterovs_v = np.zeros((self.N, 2)) if self.N is not None else None
+
 
 
 
@@ -71,7 +76,10 @@ class SQuaD(BaseAlgorithm):
 
         for batch_idx in self.batch_indices:
             quartet = self.perms[batch_idx]
-            LD_points = self.low_d_positions[quartet]
+            if self.nesterovs_momentum:
+                LD_points = self.low_d_positions[quartet] + self.momentum * self.nesterovs_v[quartet]
+            else:
+                LD_points = self.low_d_positions[quartet]
 
             # xa, ya = LD_points[0]
             # xb, yb = LD_points[1]
@@ -137,7 +145,10 @@ class SQuaD(BaseAlgorithm):
 
             quartet_grads = quartet_grads.reshape((self.ntet_size,2))
 
-            self.grad_acc[quartet] += quartet_grads
+            if self.nesterovs_momentum:
+                self.nesterovs_v[quartet] = self.nesterovs_v[quartet]* self.momentum - LR*quartet_grads
+            else:
+                self.grad_acc[quartet] += quartet_grads
             # self.grad_acc[quartet[0], 0] += quartet_grads[0]
             # self.grad_acc[quartet[0], 1] += quartet_grads[1]
             # self.grad_acc[quartet[1], 0] += quartet_grads[2]
@@ -153,8 +164,10 @@ class SQuaD(BaseAlgorithm):
         if calculate_average_stress:
             self.last_average_quartet_stress_measurement = quartet_stress/self.batch_indices.shape[0]
 
-
-        self.low_d_positions -= LR * self.grad_acc
+        if self.nesterovs_momentum:
+            self.low_d_positions += self.nesterovs_v
+        else:
+            self.low_d_positions -= LR * self.grad_acc
 
 
 

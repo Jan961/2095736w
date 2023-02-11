@@ -52,7 +52,7 @@ def test_create_error_fn_returns_function_that_returns_expected():
 
 
 # failed in the original
-def test_find_circle_quadrant_finds_expected_angles():
+def test_find_circle_quadrant_finds_expected_angles_with_original_error():
     sample_indexes = np.array([1, 2, 3])
     algorithm = Hybrid(dataset=dataset,
                        preset_sample=sample_indexes,
@@ -80,7 +80,7 @@ def test_find_circle_quadrant_finds_expected_angles():
     assert upper_angle == 90
 
 
-def test_binary_search_angle_finds_best_angle():
+def test_binary_search_angle_finds_best_angle_with_original_error():
     sample_indexes = [1, 2, 3]
     algorithm = Hybrid(dataset=dataset,
                        preset_sample=np.array(sample_indexes),
