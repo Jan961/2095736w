@@ -48,7 +48,6 @@ def point_on_circle(x: float, y: float, angle: float, radius: float) -> Tuple[fl
     given radius and angle
     """
     rad = math.radians(angle)
-    print(f"y: {y }")
     return (
         x + radius * math.cos(rad),
         y + radius * math.sin(rad),

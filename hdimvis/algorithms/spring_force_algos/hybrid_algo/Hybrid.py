@@ -30,7 +30,7 @@ class Hybrid(SpringForceBase):
         super().__init__(**kwargs)
 
         self.preset_sample = preset_sample
-        self.sample_set_size:             int = preset_sample.size if preset_sample is not None \
+        self.initial_sample_size:             int = preset_sample.size if preset_sample is not None \
                                                  else round(math.sqrt(len(self.nodes)))
 
         self.interpolation_adjustment_sample_size:       int = interpolation_adjustment_sample_size
@@ -40,8 +40,13 @@ class Hybrid(SpringForceBase):
         self.remainder:            List[Node] = [self.nodes[i] for i in self.remainder_indices]
         self.data_size_factor:          float = 1 / self.interpolation_adjustment_sample_size
 
-        self.sample_layout_stage_algorithm = Chalmers96(nodes=self.sample, dataset=None, distance_fn=self.distance_fn)
-        self.refine_stage_algorithm = Chalmers96(nodes=self.nodes, dataset=None, distance_fn=self.distance_fn, )
+        self.sample_layout_stage_algorithm = Chalmers96(nodes=self.sample, dataset=None, distance_fn=self.distance_fn,
+                                                        use_knnd=self.use_knnd, sample_set_size=self.sample_set_size,
+                                                        neighbour_set_size=self.neighbour_set_size)
+
+        self.refine_stage_algorithm = Chalmers96(nodes=self.nodes, dataset=None, distance_fn=self.distance_fn,
+                                                 use_knnd=self.use_knnd, sample_set_size=self.sample_set_size,
+                                                 neighbour_set_size=self.neighbour_set_size)
 
         self.stage:               HybridStage = HybridStage.PLACE_SAMPLE
 
@@ -50,18 +55,19 @@ class Hybrid(SpringForceBase):
         if self.preset_sample is not None:
             return self.preset_sample.tolist()
         else:
-            return random_sample_set(self.sample_set_size,
-                          len(self.nodes))
+            return random_sample_set(self.initial_sample_size,
+                                     len(self.nodes))
 
-
-    def one_iteration(self, stage: HybridStage, alpha: float = 1, interpolation_adjustment_iterations:int = 5) -> None:
-
+    def set_stage(self, stage: HybridStage):
         self.stage = stage
-        if stage == HybridStage.PLACE_SAMPLE:
+
+    def one_iteration(self, alpha: float = 1, interpolation_adjustment_iterations:int = 5) -> None:
+
+        if self.stage == HybridStage.PLACE_SAMPLE:
             self._sample_stage_one_iteration()
-        elif stage == HybridStage.INTERPOLATE:
+        elif self.stage == HybridStage.INTERPOLATE:
             self._interpolate(interpolation_adjustment_iterations=interpolation_adjustment_iterations ,alpha=alpha)
-        elif stage == HybridStage.REFINE:
+        elif self.stage == HybridStage.REFINE:
             self._refine_stage_one_iteration(alpha=alpha)
 
 
@@ -183,7 +189,7 @@ class Hybrid(SpringForceBase):
         """
         source = self.nodes[index]
         for i in range(interpolation_adjustment_iterations):
-            sample_set = random_sample_set(self.interpolation_adjustment_sample_size, self.sample_set_size, {index})
+            sample_set = random_sample_set(self.interpolation_adjustment_sample_size, self.initial_sample_size, {index})
             for j in sample_set:
                 target = self.sample[j]
                 x, y = self._current_distance(source, target)

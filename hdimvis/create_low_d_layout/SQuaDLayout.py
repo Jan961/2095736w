@@ -7,20 +7,26 @@ from ..algorithms.stochastic_quartet_algo.SQuaD import SQuaD
 from ..data_fetchers.Dataset import Dataset
 
 class SQuaDLayout(LowDLayoutBase):
-    def __init__(self, no_iters: int = 50, *basic_layout_creation_parameters):
+    def __init__(self, no_iters: int = 50, *basic_layout_creation_parameters,
+                 exaggerate_D: bool = False, stop_exaggeration: float = 0.6,
+                 decay: float = None, LR: float = 550.0
+                 ):
         super().__init__(no_iters, *basic_layout_creation_parameters)
 
         assert isinstance(self.algorithm, SQuaD)
         assert no_iters is not None, "For this algorithm the number of iterations must be specified"
+        self.exaggerate_D = exaggerate_D
+        self.stop_exaggeration = stop_exaggeration
+        self.decay = decay
+        self.LR = LR
 
-    def run(self, exaggerate_D: bool = False, stop_exaggeration: float = 0.6,
-                 decay: float = None, LR: float = 550.0):
+    def run(self):
 
         calculate_quartet_stress = False
         bar = IncrementalBar("Creating layout", max=self.no_iters)
-        decay = decay if decay is not None else np.exp(np.log(1e-3) / self.no_iters)
-        if exaggerate_D:  # exaggeration of HD distances by squaring
-            stop_d_exa = int(self.no_iters * stop_exaggeration)  # iteration when we stop the exaggeration
+        decay = self.decay if self.decay is not None else np.exp(np.log(1e-3) / self.no_iters)
+        if self.exaggerate_D:  # exaggeration of HD distances by squaring
+            stop_d_exa = int(self.no_iters * self.stop_exaggeration)  # iteration when we stop the exaggeration
         else:
             stop_d_exa = 0
 
@@ -34,10 +40,10 @@ class SQuaDLayout(LowDLayoutBase):
                     calculate_quartet_stress = True
 
             if i == stop_d_exa:
-                LR *= decay
+                self.LR *= decay
                 exaggerate_D = False
 
-            self.algorithm.one_iteration(exaggerate_D, LR, calculate_quartet_stress)
+            self.algorithm.one_iteration(exaggerate_D, self.LR, calculate_quartet_stress)
             if self.optional_metric_collection is not None:
                 self.collect_metrics()
             bar.next()
