@@ -25,10 +25,13 @@ class Hybrid(SpringForceBase):
     available_metrics = ['Stress', 'Average speed']
 
     def __init__(self, preset_sample : np.ndarray = None,
-                 interpolation_adjustment_sample_size: int = 15, **kwargs) -> None:
+                 interpolation_adjustment_sample_size: int = 15,
+                 use_correct_interpolation_error: bool = True,
+                 **kwargs) -> None:
 
         super().__init__(**kwargs)
 
+        self.use_correct_interpolation_error = use_correct_interpolation_error
         self.preset_sample = preset_sample
         self.initial_sample_size:             int = preset_sample.size if preset_sample is not None \
                                                  else round(math.sqrt(len(self.nodes)))
@@ -113,19 +116,28 @@ class Hybrid(SpringForceBase):
         self._force_layout_child(index, distances, alpha, interpolation_adjustment_iterations)
 
     def _create_error_fn(self, parent_index: int,
-                         distances: List[float]) -> Callable[[int], float]:
+                         distances: List[float],
+                         use_interpolation_correct_error: bool = True) -> Callable[[int], float]:
         """
         Create function specific to current node to calculate
         error in distances at an angle on the parent circle
         at the calculated radius
         """
+
         radius = distances[parent_index]
         parent = self.sample[parent_index]
-        distance_sum = sum(distances)
 
         def sample_distances_error(angle: int) -> float:
             point = point_on_circle(parent.x, parent.y, angle, radius)
-            return abs(distance_sum - self._sample_distances_sum(*point))
+            if self.use_correct_interpolation_error:
+                point_arr = np.array(point)
+                sample_arr = np.array([[node.x, node.y] for node in self.sample] )
+                distances_2d = np.linalg.norm(sample_arr-point_arr, axis=1)
+                distances_hd = np.array(distances)
+                return np.sum((distances_hd - distances_2d)**2)
+
+            else:
+                return abs(sum(distances)- self._sample_distances_sum(*point))
 
         return sample_distances_error
 
