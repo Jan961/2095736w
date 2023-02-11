@@ -7,7 +7,7 @@ import math
 
 def show_layouts(*layouts: LowDLayoutBase, use_labels: bool = False, alpha: float = None,
                 color_by: Callable[[np.ndarray],float] = None,
-                color_map: str = 'viridis', size: float = 3, title: str = None,
+                color_map: str = 'rainbow', size: float = 3, title: str = None,
                 sub_titles: List[str] = None) -> None:
 
     """

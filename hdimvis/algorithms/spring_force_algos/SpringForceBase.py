@@ -1,5 +1,4 @@
 import pynndescent
-
 from hdimvis.algorithms.BaseAlgorithm import BaseAlgorithm
 from hdimvis.algorithms.spring_force_algos.Node import Node
 from hdimvis.algorithms.spring_force_algos.utils import jiggle, get_size, mean
@@ -11,6 +10,7 @@ from abc import abstractmethod
 import numpy as np
 import math
 
+# code adapted and modified from 2019 Project by Iain Cattermole
 
 class SpringForceBase(BaseAlgorithm):
 
@@ -46,7 +46,7 @@ class SpringForceBase(BaseAlgorithm):
             self.distance = self.distance_no_cache
 
     @abstractmethod
-    def one_iteration(self, alpha: float) -> None:
+    def one_iteration(self, *args, **kwargs) -> None:
         """
         Perform one iteration of the algorithm
         """

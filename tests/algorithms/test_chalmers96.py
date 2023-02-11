@@ -7,6 +7,8 @@ import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
 import numpy as np
 
+# code adapted and slightly extended from 2019 Project by Iain Cattermole
+
 dataset = DataFetcher().fetch_data('poker', size=500)
 
 def test_get_neighbours_returns_correct_size_set():

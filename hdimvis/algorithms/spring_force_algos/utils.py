@@ -1,10 +1,12 @@
 from typing import Set, List, Tuple, Callable, Any, DefaultDict
 from collections import defaultdict
+from .Node import Node
 import random
 import math
 import sys
 import numpy as np
 
+# code copied from 2019 Project by Iain Cattermole
 
 def jiggle() -> float:
     """
@@ -46,6 +48,7 @@ def point_on_circle(x: float, y: float, angle: float, radius: float) -> Tuple[fl
     given radius and angle
     """
     rad = math.radians(angle)
+    print(f"y: {y }")
     return (
         x + radius * math.cos(rad),
         y + radius * math.sin(rad),
@@ -114,3 +117,7 @@ def get_size(obj: Any, seen: Set[int] = None):
     elif hasattr(obj, '__iter__') and not isinstance(obj, (str, bytes, bytearray)):
         size += sum([get_size(i, seen) for i in obj])
     return size
+
+def convert_nodes_to_dataset(nodes: List[Node]):
+    points = [node.datapoint for node in nodes]
+    return np.array(points)

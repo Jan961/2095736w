@@ -7,6 +7,7 @@ from typing import Callable, List, Dict
 import numpy as np
 import pynndescent
 
+# code adapted and modified from 2019 Project by Iain Cattermole
 
 class Chalmers96(SpringForceBase):
     """

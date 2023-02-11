@@ -8,6 +8,7 @@ from ..algorithms.spring_force_algos.chalmers96_algo.Chalmers96 import Chalmers9
 from .Chalmers96Layout import Chalmers96Layout
 from ..algorithms.stochastic_quartet_algo.SQuaD import SQuaD
 from .SQuaDLayout import SQuaDLayout
+from .HybridLayout import Hybrid
 from ..data_fetchers.Dataset import Dataset
 
 
@@ -26,8 +27,15 @@ class LowDLayoutCreation:
         if isinstance(algorithm, Chalmers96):
             layout = Chalmers96Layout(*basic_layout_creation_parameters)
 
+        elif isinstance(algorithm, Hybrid):
+            layout = Hybrid(*basic_layout_creation_parameters)
+
         elif isinstance(algorithm, SQuaD):
             layout = SQuaDLayout(*basic_layout_creation_parameters)
+
+        else:
+            print("Error: unsupported algorithm type")
+
 
         if optional_metric_collection is None:
             print("#" * 20)
@@ -48,7 +56,6 @@ class LowDLayoutCreation:
                   "You might want to use the \"initial layout\" parameter of the algorithm\n"
                   "to specify a different initialisation")
             print("#" * 20)
-        # print all the info here
 
         #the nodes are created here so that this operation is easier to include in memory and time measurements
         if isinstance(layout.algorithm, SpringForceBase):

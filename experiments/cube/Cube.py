@@ -83,9 +83,6 @@ class Cube:
             return points[:, 2]
 
 
-
-
-
     def plot_3d(self):
         fig = plt.figure()
         ax = fig.add_subplot(projection='3d')
@@ -96,11 +93,11 @@ class Cube:
 
         #top
         color = self.get_colour_mapping(1, self.top)
-        ax.scatter(self.top[:, 0], self.top[:, 1], self.top[:, 2], c=color, cmap='plasma')
+        ax.scatter(self.top[:, 0], self.top[:, 1], self.top[:, 2], c=color, cmap='plasma_r')
 
         #bottom
         color = self.get_colour_mapping(2,self.bottom)
-        ax.scatter(self.bottom[:, 0], self.bottom[:, 1], self.bottom[:, 2], c=color, cmap='spring')
+        ax.scatter(self.bottom[:, 0], self.bottom[:, 1], self.bottom[:, 2], c=color, cmap='spring_r')
 
         #right
         color = self.get_colour_mapping(3, self.right)
@@ -108,30 +105,34 @@ class Cube:
 
         #left
         color = self.get_colour_mapping(3, self.left)
-        ax.scatter(self.left[:, 0], self.left[:, 1], self.left[:, 2], c=color, cmap='winter')
+        ax.scatter(self.left[:, 0], self.left[:, 1], self.left[:, 2], c=color, cmap='winter_r')
         ax.set_aspect('equal', adjustable='box')
 
     def get_sample_dataset(self, size: int):
-        all_points = np.vstack(self.front, self.top, self.bottom, self.right, self.left)
+        all_points = self.get_all_points()
         assert size <= all_points.shape[0]
         sample_indices = np.random.randint(0, all_points.shape[0], size)
 
-        return Dataset(all_points[sample_indices], None, f"3d cube size {size}")
+        return Dataset(all_points[sample_indices], None, f"3d cube of {self.side}^3 points - {size} points sampled")
 
-    def plot_2d(self, layout: LowDLayoutBase ):
+    def get_all_points(self):
+        return np.vstack((self.front, self.top, self.bottom, self.right, self.left))
+
+    def plot_2d(self, layout: LowDLayoutBase, opacity: float = 1 ):
 
         fig, ax = plt.subplots()
         pos = layout.get_final_positions()
         data = layout.get_data()
 
-        cmaps = ['viridis', 'plasma', 'spring', 'cividis', 'winter']
+        cmaps = ['viridis', 'plasma_r', 'spring_r', 'cividis', 'winter_r']
 
         for i in range(5):
             cmap = cmaps[i]
-            indices = np.squeeze(np.argwhere(pos[:,3] == i))
+            indices = np.squeeze(np.argwhere(data[:,3] == i))
             color = self.get_colour_mapping(i, data[indices])
-            ax.scatter(pos[:,0], pos[:,1], c=color, cmap=cmap)
-            
+            points_to_plot = pos[indices]
+            ax.scatter(points_to_plot[:,0], points_to_plot[:,1], c=color, cmap=cmap, alpha= opacity)
+
         plt.show()
 
 

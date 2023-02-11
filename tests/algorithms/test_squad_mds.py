@@ -16,6 +16,7 @@ def test_one_iteration_correctly_performed():
     assert np.allclose(initial_positions, algo.get_positions())
     algo.one_iteration()
     assert np.allclose(initial_positions, algo.get_positions()) #tests if the correspondence between low D and high D
-    assert np.allclose(initial_positions, algo.data) # maintained and the points are not shuffled
+                                                                # is maintained and the points are not shuffled
+    assert np.allclose(initial_positions, algo.data)
 
 

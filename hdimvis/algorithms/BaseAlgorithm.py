@@ -14,7 +14,7 @@ class BaseAlgorithm:
                  initial_layout: np.ndarray = None,
                  distance_fn: Callable[[np.ndarray, np.ndarray], float] = euclidean,
                  **kwargs):
-        self.dataset = dataset
+        self.dataset = dataset if dataset is not None else None
         self.data = dataset.data if dataset is not None else None
         self.initial_layout = initial_layout if initial_layout is not None else self.initialise_layout()
         self.distance_fn = distance_fn
@@ -27,15 +27,21 @@ class BaseAlgorithm:
     def get_unvectorised_euclidian_stress(self):
         pass
 
+    @abstractmethod
+    def one_iteration(self, *args, **kwargs):
+        pass
+
     def get_stress(self) -> float:
         try:
             stress = self.get_vectorised_euclidian_stress()
+            return stress
+
         except np.core._exceptions._ArrayMemoryError:
             print("Not enough memory to allocate for a numpy array for stress calculation. \n"
-                  "Stress will be calculated with a ")
+                  "Stress will be calculated with a Python loop")
             stress = self.get_unvectorised_euclidian_stress()
-        finally:
             return stress
+
 
 
     # @abstractmethod

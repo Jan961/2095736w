@@ -8,14 +8,13 @@ from ..BaseAlgorithm import BaseAlgorithm
 from ...distance_measures.euclidian_and_manhattan import euclidean
 from ...distance_measures.relative_rbf_dists import relative_rbf_dists
 
+#code adapted and modified from https://github.com/PierreLambert3/SQuaD-MDS
 
 class SQuaD(BaseAlgorithm):
 
     available_metrics = ['Stress', 'Average quartet stress']
     name = 'Stochastic Quartet Descent MDS'
 
-
- # numpy.core._exceptions._ArrayMemoryError -  stress
     def __init__(self, dataset: Dataset | None, ntet_size: int = 4, vectorised: bool = True, **kwargs):
         super().__init__(dataset, **kwargs)
 

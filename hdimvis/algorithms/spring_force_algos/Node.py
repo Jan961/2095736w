@@ -1,6 +1,8 @@
 import numpy as np
 
 
+# code adapted from 2019 Project by Iain Cattermole
+
 class Node:
     __slots__ = ['datapoint', 'x', 'y', 'vx', 'vy']
 

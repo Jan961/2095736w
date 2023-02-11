@@ -1,6 +1,6 @@
 import numpy as np
 
-
+#code adapted and modified from https://github.com/PierreLambert3/SQuaD-MDS
 
 # gradients for one element of the loss function's sum, don't call this directly
 
