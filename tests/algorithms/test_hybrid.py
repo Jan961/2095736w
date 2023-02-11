@@ -34,7 +34,8 @@ def test_find_parent_gets_the_parent_with_minimum_distance():
 def test_create_error_fn_returns_function_that_returns_expected():
     sample_indexes = np.array([1, 2, 3])
     algorithm = Hybrid(dataset=dataset, preset_sample=sample_indexes,
-                       initial_layout=initial_layout,interpolation_adjustment_sample_size=1)
+                       initial_layout=initial_layout,interpolation_adjustment_sample_size=1,
+                       use_correct_interpolation_error=False)
 
     set_node_positions(algorithm)
     print(f"sample {algorithm.sample}")
@@ -56,7 +57,8 @@ def test_find_circle_quadrant_finds_expected_angles():
     algorithm = Hybrid(dataset=dataset,
                        preset_sample=sample_indexes,
                        initial_layout=initial_layout,
-                       interpolation_adjustment_sample_size=1)
+                       interpolation_adjustment_sample_size=1,
+                       use_correct_interpolation_error=False)
     set_node_positions(algorithm)
 
     # source: [0, 1] with parent [0, 0]

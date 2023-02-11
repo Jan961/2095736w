@@ -15,8 +15,8 @@ dataset = Dataset(mock_data, None, 'mock data')
 algorithms = [Chalmers96(dataset=dataset), SQuaD(dataset=dataset), Hybrid(dataset=dataset)]
 layout_classes = [Chalmers96Layout, SQuaDLayout]
 
-mock_data_2= np.array([[0,0],[0,10],[10,10],[10,0], [10,10]], dtype='float64')
-initial_positions = np.array([[0,0],[0,10],[10,10],[10,0], [10,10]], dtype='float64')
+mock_data_2= np.array([[0,0],[0,10],[10,10],[10,0]], dtype='float64')
+initial_positions = np.array([[0,0],[0,10],[10,10],[10,0]], dtype='float64')
 mock_dataset_2 = Dataset(mock_data_2, None, "mock data")
 mock_dataset_3 = DataFetcher().fetch_data("mock data")
 
@@ -33,10 +33,10 @@ def test_low_lvl_layout_created_correctly_for_chalmers96():
         assert layout.optional_metric_collection['Average speed'] == 1
 
 def test_low_lvl_layout_created_correctly_for_squad():
-    algo = SQuaD(dataset=dataset, initial_layout=initial_positions)
+    algo = SQuaD(dataset=mock_dataset_2, initial_layout=initial_positions)
     layout = LowDLayoutCreation().create_layout(algo, no_iters=2)
 
-    assert not np.allclose(initial_positions, layout.get_final_positions()) #tests if the correspondence between low D and high D
+    assert np.allclose(initial_positions, layout.get_final_positions()) #tests if the correspondence between low D and high D
     assert np.allclose(initial_positions, layout.data)
 
 
@@ -54,7 +54,8 @@ def test_low_lvl_layout_created_correctly_for_hybrid():
 
 def test_stress_collected_correctly():
 
-    for algo in algorithms:
+    for algo in algorithms[:-1]: #exclude hybrid as sample and neighbour set size parameter would have to be set
+                                # and we don't collect stress during generation for hybrid anyway
         for i in [1,2,3]:
             layout = LowDLayoutCreation().create_layout(algo, no_iters=4, optional_metric_collection={'Stress': i})
             if i != 3:

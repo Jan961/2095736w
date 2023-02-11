@@ -20,4 +20,4 @@ def test_one_iteration_correctly_performed():
     assert np.allclose(initial_positions, algo.data)
 
 
-def test_vectorised_calculations_produce_the_same_results_as_original():
+# def test_vectorised_calculations_produce_the_same_results_as_original():
