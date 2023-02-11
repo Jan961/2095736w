@@ -9,6 +9,11 @@ dataset = DataFetcher().fetch_data('coil20')
 mock_data= np.array([[0,0],[0,10],[10,10],[10,0]], dtype='float64')
 initial_positions = np.array([[0,0],[0,10],[10,10],[10,0]], dtype='float64')
 mock_dataset = Dataset(mock_data, None, "mock data")
+
+mock_data_2 = np.array([[0, 0, 0, 0], [1, 1, 1, 1], [40, 39, 39, 39], [40, 40, 40, 40]])
+initial_positions_2 = 20*np.random.rand(4,2)
+mock_dataset_2 = Dataset(mock_data_2, np.array([0,1,2,3]), 'mock data')
+
 def test_one_iteration_correctly_performed():
     algo = SQuaD(dataset=mock_dataset, initial_layout=initial_positions, distance_fn= relative_rbf_dists)
     assert np.allclose(initial_positions, algo.get_positions())
@@ -21,3 +26,18 @@ def test_one_iteration_correctly_performed():
 
 
 # def test_vectorised_calculations_produce_the_same_results_as_original():
+
+
+def test_nesterovs_momentum_v_increases_as_expected():
+    algo = SQuaD(dataset=mock_dataset_2, initial_layout=initial_positions_2, nesterovs_momentum=True, momentum=0.9)
+    assert not np.any(algo.nesterovs_v)  # check if all initial Nesterov's momenutm "changes or v are 0
+    previous_v = algo.nesterovs_v
+
+    for i in range(5):
+        algo.one_iteration()
+        assert np.sum(np.abs(previous_v) < np.sum(np.abs(algo.nesterovs_v)))
+        previous_v = algo.nesterovs_v
+
+
+
+

@@ -36,6 +36,7 @@ class SQuaD(BaseAlgorithm):
         self.momentum = momentum
         if self.nesterovs_momentum:
             self.nesterovs_v = np.zeros((self.N, 2)) if self.N is not None else None
+            print("\n Nesterov's momentum will be used by the algorithm \n")
 
 
 
