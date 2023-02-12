@@ -1,9 +1,14 @@
+
+# code copied from 2019 Project by Iain Cattermole
+
 suits = ['♣', '♦', '♥', '♠']
 ranks = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', ]
 cards = []
 for suit in suits:
     for rank in ranks:
         cards.append(rank + suit)
+
+
 
 hand_classes = [
     'High Card',

@@ -25,7 +25,13 @@ def test_one_iteration_correctly_performed():
     assert np.allclose(initial_positions, algo.data)
 
 
+# to run the below test uncomment the relevant sections of the Squad code - they take up a lot of space
+# duplicating many calculations, therefore making the code hard to read and thus are commented out
+
 # def test_vectorised_calculations_produce_the_same_results_as_original():
+#     algo = SQuaD(dataset=dataset, test_vectorisation=True)
+#     for i in range(20):
+#         algo.one_iteration()
 
 
 def test_nesterovs_momentum_v_increases_as_expected():

@@ -7,17 +7,15 @@ import numpy as np
 # points, Dld
 def ABCD_grad(xa, ya, xb, yb, xc, yc, xd, yd, dab, dac, dad, dbc, dbd, dcd, pab):
 
-    # sum_dist = np.sum(Dld)
-    # rel_dab = Dld[0]/sum_dist
-
-    # gradients_1 = 2 * (dhd_ab - rel_dab)/sum_dist * ((Dld[0]/sum_dist))
-
-
     sum_dist = dab + dac + dad + dbc + dbd + dcd
 
     # relative ab distance
     dr_ab = (dab / sum_dist)
 
+    # pab is the relative HD distance  between ab
+
+    # the order of the terms in the difference: pab - dr_ab is flipped wrt the formula in the paper hence the order of
+    # terms in the 2nd pair of brackets also flipped
     gxA = 2 * ((pab - dr_ab) / sum_dist) * ( (dab / sum_dist) * ((xa - xb) / dab + (xa - xc) / dac + (xa - xd) / dad) - (xa - xb) / dab)
 
     gyA = 2 * ((pab - dr_ab) / sum_dist) * ((dab / sum_dist) * ((ya - yb) / dab + (ya - yc) / dac + (ya - yd) / dad) - (ya - yb) / dab)
@@ -42,6 +40,18 @@ def ABCD_grad(xa, ya, xb, yb, xc, yc, xd, yd, dab, dac, dad, dbc, dbd, dcd, pab)
 # points shape: (4, 2)
 # Dhd shape   : (6,)
 def compute_quartet_grads(points, Dhd, Dld):
+
+
+
+
+
+
+
+
+
+
+
+
     xa, ya = points[0]
     xb, yb = points[1]
     xc, yc = points[2]
@@ -96,3 +106,5 @@ def compute_quartet_grads(points, Dhd, Dld):
     gyD = gyD + gyD2 + gyD3 + gyD4 + gyD5 + gyD6
 
     return np.array([gxA, gyA, gxB, gyB, gxC, gyC, gxD, gyD])
+
+

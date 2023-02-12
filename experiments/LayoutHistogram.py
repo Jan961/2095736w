@@ -18,20 +18,8 @@ class LayoutHistogram():
         self.positions = positions
         self.layout = layout
         self.pdf = pdf
-        self.histogram, self.xedges, self.yedges = self.create_histogram()
+        self.histogram, self.xedges, self.yedges = self._create_histogram()
 
-
-
-    def create_histogram(self):
-        if self.positions is not None:
-            x= self.positions[:,0]
-            y = self.positions[:,1]
-        else:
-            x= self.layout.get_final_positions()[:,0]
-            y = self.layout.get_final_positions()[:, 1]
-
-        # the parameter "density" converts the histogram into a PDF
-        return np.histogram2d(x, y, self.bins, self.range, density=self.pdf)
 
     def show_histogram(self ,title: str =None):
 
@@ -43,6 +31,18 @@ class LayoutHistogram():
         ax = fig.add_subplot(title= title)
         plt.imshow(H, interpolation='nearest', origin='lower',
                    extent=[self.xedges[0], self.xedges[-1], self.yedges[0], self.yedges[-1]])
+
+
+    def _create_histogram(self):
+        if self.positions is not None:
+            x= self.positions[:,0]
+            y = self.positions[:,1]
+        else:
+            x= self.layout.get_final_positions()[:,0]
+            y = self.layout.get_final_positions()[:, 1]
+
+        # the parameter "density" converts the histogram into a PDF
+        return np.histogram2d(x, y, self.bins, self.range, density=self.pdf)
 
 
 
