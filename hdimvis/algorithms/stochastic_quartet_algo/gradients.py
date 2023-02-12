@@ -4,52 +4,47 @@ import numpy as np
 
 # gradients for one element of the loss function's sum, don't call this directly
 
-# points, Dld
-def ABCD_grad(xa, ya, xb, yb, xc, yc, xd, yd, dab, dac, dad, dbc, dbd, dcd, pab):
-
-    sum_dist = dab + dac + dad + dbc + dbd + dcd
-
-    # relative ab distance
-    dr_ab = (dab / sum_dist)
-
-    # pab is the relative HD distance  between ab
-
-    # the order of the terms in the difference: pab - dr_ab is flipped wrt the formula in the paper hence the order of
-    # terms in the 2nd pair of brackets also flipped
-    gxA = 2 * ((pab - dr_ab) / sum_dist) * ( (dab / sum_dist) * ((xa - xb) / dab + (xa - xc) / dac + (xa - xd) / dad) - (xa - xb) / dab)
-
-    gyA = 2 * ((pab - dr_ab) / sum_dist) * ((dab / sum_dist) * ((ya - yb) / dab + (ya - yc) / dac + (ya - yd) / dad) - (ya - yb) / dab)
-
-    gxB = 2 * ((pab - dr_ab) / sum_dist) * ( (dab / sum_dist) * ((xb - xa) / dab + (xb - xc) / dbc + (xb - xd) / dbd) - (xb - xa) / dab)
-
-    gyB = 2 * ((pab - dr_ab) / sum_dist) * ((dab / sum_dist) * ((yb - ya) / dab + (yb - yc) / dbc + (yb - yd) / dbd) - (yb - ya) / dab)
-
-    gxC = 2 * ((pab - dr_ab) / sum_dist) * ((dab / sum_dist) * ((xc - xa) / dac + (xc - xb) / dbc + (xc - xd) / dcd))
-
-    gyC = 2 * ((pab - dr_ab) / sum_dist) * ((dab / sum_dist) * ((yc - ya) / dac + (yc - yb) / dbc + (yc - yd) / dcd))
-
-    gxD = 2 * ((pab - dr_ab) / sum_dist) * ((dab / sum_dist) * ((xd - xa) / dad + (xd - xb) / dbd + (xd - xc) / dcd))
-
-    gyD = 2 * ((pab - dr_ab) / sum_dist) * ((dab / sum_dist) * ((yd - ya) / dad + (yd - yb) / dbd + (yd - yc) / dcd))
-
-    return gxA, gyA, gxB, gyB, gxC, gyC, gxD, gyD
-
 
 # quartet gradients for a 2D projection, Dhd contains the top-right triangle of the HD distances
 # the points are named a,b,c and d internally to keep track of who is who
 # points shape: (4, 2)
-# Dhd shape   : (6,)
+
 def compute_quartet_grads(points, Dhd, Dld):
 
+    sum_dld = np.sum(Dld)
+    Dld = Dld/sum_dld     # make the distances in Dld relative
+    diffs = Dld - Dhd
+
+    first_bracket = (2/sum_dld) * diffs
+
+    # accumulate gradients from ech part of the sum here
+    gradients = np.zeros_like(points)
+
+
+    # iterate over the upper triangle of entries of the diffs matrix
+    # computing parts of the sum for each distance
+    row= 0
+    col = 1
+    helper1 =  np.zeros(points.shape[0]) # helper matrix
+    helper2 =  np.zeros(points.shape[0]) # helper matrix
+    while not (col == diffs.shape[1] -1 and row == diffs.shape[0] - 2):
+
+        helper1[row, col] = 1
+        # computing grads separately for x and y
+        for i in range(2):
+            temp_points = points[:,i]
+
+            helper2[row] = temp_points[col]
+            helper2[col] = temp_points[row]
+
+            first_term = helper1*(temp_points - helper2)
+            # second_term =
 
 
 
 
 
-
-
-
-
+def compute_quartet_grads_original(points, Dhd, Dld):
 
 
     xa, ya = points[0]
@@ -107,4 +102,31 @@ def compute_quartet_grads(points, Dhd, Dld):
 
     return np.array([gxA, gyA, gxB, gyB, gxC, gyC, gxD, gyD])
 
+def ABCD_grad(xa, ya, xb, yb, xc, yc, xd, yd, dab, dac, dad, dbc, dbd, dcd, pab):
 
+    sum_dist = dab + dac + dad + dbc + dbd + dcd
+
+    # relative ab distance
+    dr_ab = (dab / sum_dist)
+
+    # pab is the relative HD distance  between ab
+
+    # the order of the terms in the difference: pab - dr_ab is flipped wrt the formula in the paper hence the order of
+    # terms in the 2nd pair of brackets also flipped
+    gxA = 2 * ((pab - dr_ab) / sum_dist) * ( (dab / sum_dist) * ((xa - xb) / dab + (xa - xc) / dac + (xa - xd) / dad) - (xa - xb) / dab)
+
+    gyA = 2 * ((pab - dr_ab) / sum_dist) * ((dab / sum_dist) * ((ya - yb) / dab + (ya - yc) / dac + (ya - yd) / dad) - (ya - yb) / dab)
+
+    gxB = 2 * ((pab - dr_ab) / sum_dist) * ( (dab / sum_dist) * ((xb - xa) / dab + (xb - xc) / dbc + (xb - xd) / dbd) - (xb - xa) / dab)
+
+    gyB = 2 * ((pab - dr_ab) / sum_dist) * ((dab / sum_dist) * ((yb - ya) / dab + (yb - yc) / dbc + (yb - yd) / dbd) - (yb - ya) / dab)
+
+    gxC = 2 * ((pab - dr_ab) / sum_dist) * ((dab / sum_dist) * ((xc - xa) / dac + (xc - xb) / dbc + (xc - xd) / dcd))
+
+    gyC = 2 * ((pab - dr_ab) / sum_dist) * ((dab / sum_dist) * ((yc - ya) / dac + (yc - yb) / dbc + (yc - yd) / dcd))
+
+    gxD = 2 * ((pab - dr_ab) / sum_dist) * ((dab / sum_dist) * ((xd - xa) / dad + (xd - xb) / dbd + (xd - xc) / dcd))
+
+    gyD = 2 * ((pab - dr_ab) / sum_dist) * ((dab / sum_dist) * ((yd - ya) / dad + (yd - yb) / dbd + (yd - yc) / dcd))
+
+    return gxA, gyA, gxB, gyB, gxC, gyC, gxD, gyD
