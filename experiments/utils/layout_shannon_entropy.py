@@ -1,7 +1,7 @@
 import numpy as np
 
 from hdimvis.create_low_d_layout.LowDLayoutBase import LowDLayoutBase
-from .LayoutHistogram import LayoutHistogram
+from experiments.utils.LayoutHistogram import LayoutHistogram
 
 
 def calculate_entropy(layout: LowDLayoutBase, **kwargs ):

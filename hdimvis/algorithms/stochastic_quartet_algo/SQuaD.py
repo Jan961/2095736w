@@ -89,13 +89,13 @@ class SQuaD(BaseAlgorithm):
 
             # compute quartet's HD distances
             if exaggerate_dist:  # during exaggeration: don't take the square root of the distances
-                Dhd_distances_matrix = np.sum(
+                Dhd_distances_full_matrix = np.sum(
                     (self.data[quartet][:, :, None] - self.data[quartet][:, :, None].T) ** 2, axis=1)
-                Dhd_quartet = np.triu(Dhd_distances_matrix)
+                Dhd_quartet = np.triu(Dhd_distances_full_matrix)
 
 
                 # if self.test_vectorisation:
-                #     Dhd_quartet = Dhd_distances_matrix[np.nonzero(np.triu(Dhd_distances_matrix))]
+                #     Dhd_quartet = Dhd_distances_full_matrix[np.nonzero(np.triu(Dhd_distances_full_matrix))]
                 #     Dhd_quartet_og[0] = np.sum((self.data[quartet[0]] - self.data[quartet[1]]) ** 2)
                 #     Dhd_quartet_og[1] = np.sum((self.data[quartet[0]] - self.data[quartet[2]]) ** 2)
                 #     Dhd_quartet_og[2] = np.sum((self.data[quartet[0]] - self.data[quartet[3]]) ** 2)
@@ -103,14 +103,14 @@ class SQuaD(BaseAlgorithm):
                 #     Dhd_quartet_og[4] = np.sum((self.data[quartet[1]] - self.data[quartet[3]]) ** 2)
                 #     Dhd_quartet_og[5] = np.sum((self.data[quartet[2]] - self.data[quartet[3]]) ** 2)
             else:
-                Dhd_distances_matrix = np.sqrt(np.sum(
+                Dhd_distances_full_matrix = np.sqrt(np.sum(
                     (self.data[quartet][:, :, None] - self.data[quartet][:, :, None].T) ** 2, axis=1))
-                Dhd_distances_matrix += 1e-12             #for some datasets 0 distance is also apparently an issue
-                np.fill_diagonal(Dhd_distances_matrix, 0)      # for hd dist - hence the small number
-                Dhd_quartet = np.triu(Dhd_distances_matrix)
+                Dhd_distances_full_matrix += 1e-12             #for some datasets 0 distance is also apparently an issue
+                np.fill_diagonal(Dhd_distances_full_matrix, 0)      # for hd dist - hence the small number
+                Dhd_quartet = np.triu(Dhd_distances_full_matrix)
 
                 # if self.test_vectorisation:
-                #     Dhd_quartet = Dhd_distances_matrix[np.nonzero(np.triu(Dhd_distances_matrix))]
+                #     Dhd_quartet = Dhd_distances_full_matrix[np.nonzero(np.triu(Dhd_distances_full_matrix))]
                 #     Dhd_quartet_og[0] = sqrt(np.sum((self.data[quartet[0]] - self.data[quartet[1]]) ** 2))
                 #     Dhd_quartet_og[1] = sqrt(np.sum((self.data[quartet[0]] - self.data[quartet[2]]) ** 2))
                 #     Dhd_quartet_og[2] = sqrt(np.sum((self.data[quartet[0]] - self.data[quartet[3]]) ** 2))
@@ -126,14 +126,14 @@ class SQuaD(BaseAlgorithm):
 
 
             # LD distances, add a small number just in case
-            Dld_distances_matrix = np.sqrt(np.sum(
+            Dld_distances_full_matrix = np.sqrt(np.sum(
                 (LD_points[:, :, None] - LD_points[:, :, None].T) ** 2, axis=1))
-            Dld_distances_matrix += 1e-12
-            np.fill_diagonal(Dld_distances_matrix, 0)
-            Dld_quartet = np.triu(Dld_distances_matrix)
+            Dld_distances_full_matrix += 1e-12
+            np.fill_diagonal(Dld_distances_full_matrix, 0)
+            Dld_quartet = np.triu(Dld_distances_full_matrix)
 
             # if self.test_vectorisation:
-            #     Dld_quartet = Dld_distances_matrix[np.nonzero(np.triu(Dld_distances_matrix))]
+            #     Dld_quartet = Dld_distances_full_matrix[np.nonzero(np.triu(Dld_distances_full_matrix))]
             #     Dld_quartet_og[0] = np.sqrt((xa - xb) ** 2 + (ya - yb) ** 2) + 1e-12
             #     Dld_quartet_og[1] = np.sqrt((xa - xc) ** 2 + (ya - yc) ** 2) + 1e-12
             #     Dld_quartet_og[2] = np.sqrt((xa - xd) ** 2 + (ya - yd) ** 2) + 1e-12
@@ -147,14 +147,13 @@ class SQuaD(BaseAlgorithm):
 
             # after the below couple of lines the Dhd_quartet contains the relative distances
             # the distances in Dld_quartet are NOT relative and are passed as such to the compute_quartet_grads() funct
-            # - not changed to allow testing
             if self.distance_fn == relative_rbf_dists:
                 quartet_grads = compute_quartet_grads(LD_points, relative_rbf_dists(Dhd_quartet),
-                                                      Dld_quartet , Dld_distances_matrix)
+                                                      Dld_quartet , Dld_distances_full_matrix)
             else:
                 Dhd_quartet /= np.sum(Dhd_quartet)
                 quartet_grads = compute_quartet_grads(LD_points, Dhd_quartet,
-                                                      Dld_quartet, Dld_distances_matrix)
+                                                      Dld_quartet, Dld_distances_full_matrix)
 
             quartet_grads = quartet_grads.reshape((self.ntet_size,2))
 

@@ -9,13 +9,13 @@ import numpy as np
 # the points are named a,b,c and d internally to keep track of who is who
 # points shape: (4, 2)
 
-def compute_quartet_grads(points, Dhd, Dld):
+def compute_quartet_grads(points, Dhd, Dld, Dld_distances_full_matrix):
 
     sum_dld = np.sum(Dld)
-    Dld = Dld/sum_dld     # make the distances in Dld relative
-    diffs = Dld - Dhd
+    Dld_relative = Dld/sum_dld     # make the distances in Dld relative
+    diffs = Dld_relative - Dhd
 
-    first_bracket = (2/sum_dld) * diffs
+    first_bracket = (2/sum_dld) * diffs # first bracket of the grad formula from the Squad paper
 
     # accumulate gradients from ech part of the sum here
     gradients = np.zeros_like(points)
@@ -29,16 +29,18 @@ def compute_quartet_grads(points, Dhd, Dld):
     helper2 =  np.zeros(points.shape[0]) # helper matrix
     while not (col == diffs.shape[1] -1 and row == diffs.shape[0] - 2):
 
-        helper1[row, col] = 1
+        helper1[[row, col]] = 1 # performs similar role to the identity matrix in the gradient formula in the paper
+                                # we set BOTH the element indexed by "row" and "col" indices to 1; the rest are zero
+
         # computing grads separately for x and y
         for i in range(2):
             temp_points = points[:,i]
 
-            helper2[row] = temp_points[col]
-            helper2[col] = temp_points[row]
+            helper2[row] = temp_points[col] # helper2 allows for subtraction of relevant LD values
+            helper2[col] = temp_points[row] # - see the grad formula in the paper
 
-            first_term = helper1*(temp_points - helper2)
-            # second_term =
+            first_term = (helper1*(temp_points - helper2))/Dld[row,col]
+            # second_term = Dld_relative[row,col] *
 
 
 
