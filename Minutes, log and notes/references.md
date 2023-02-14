@@ -74,3 +74,5 @@ http://ieeexplore.ieee.org/document/1173161/
 <p class="done">Accelerating Barnes-Hut t-SNE Algorithm by Efficient Parallelization on Multi-Core CPUs Narendra Chaudhary, Alexander Pivovar, Pavel Yakovlev, Andrey Gorshkov, Sanchit Misra</p>
 
 <p class="done">https://numpy.org/devdocs/release/1.13.0-notes.html - numpy supports tracemalloc </p>
+
+<p class="not_read">https://www.mdpi.com/1099-4300/22/10/1105 - Fractional Norms and Quasinorms Do Not Help to Overcome the Curse of Dimensionality </p>

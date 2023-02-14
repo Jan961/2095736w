@@ -74,7 +74,7 @@ class SpringForceBase(BaseAlgorithm):
         for pos, node in zip(positions, self.nodes):
             node.x, node.y = pos
 
-    def get_unvectorised_euclidian_stress(self) -> float:
+    def get_unvectorised_stress(self) -> float:
 
         numerator: float = 0.0
         denominator: float = 0.0
@@ -107,7 +107,7 @@ class SpringForceBase(BaseAlgorithm):
         pair = frozenset({source, target})
         if pair in self.distances:
             return self.distances[pair]
-        distance = self.distance_fn(source.datapoint, target.datapoint)
+        distance = self.distance_fn(source.datapoint - target.datapoint)
         if cache:
             self.distances[pair] = distance
         return distance

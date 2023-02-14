@@ -1,13 +1,12 @@
 import numpy as np
 
+def euclidean(arr: np.ndarray,  axis: int = 0) -> float | np.ndarray:
+    return np.linalg.norm(arr, axis=axis)
 
-def euclidean(v1: np.ndarray, v2: np.ndarray) -> float:
-    return np.linalg.norm(v2 - v1)
 
-
-def manhattan(v1: np.ndarray, v2: np.ndarray) -> float:
+def manhattan(arr: np.ndarray, axis : int = 0) -> float | np.ndarray:
     """
     Calculate the Manhattan distance - the sum of
     the distances along every dimension
     """
-    return sum(map(abs, v2 - v1))
+    return np.sum(np.abs(arr), axis=axis)

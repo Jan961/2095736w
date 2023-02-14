@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from typing import Callable, List
+from typing import Callable, List, Optional
 from ..data_fetchers.Dataset import Dataset
 
 import numpy as np
@@ -12,7 +12,7 @@ class BaseAlgorithm:
 
     def __init__(self, dataset: Dataset | None, additional_name: str =None,
                  initial_layout: np.ndarray = None,
-                 distance_fn: Callable[[np.ndarray, np.ndarray], float] = euclidean,
+                 distance_fn = euclidean,
                  **kwargs):
         self.dataset = dataset if dataset is not None else None
         self.data = dataset.data if dataset is not None else None
@@ -24,7 +24,7 @@ class BaseAlgorithm:
     def get_positions(self) -> np.ndarray:
         pass
     @abstractmethod
-    def get_unvectorised_euclidian_stress(self):
+    def get_unvectorised_stress(self):
         pass
 
     @abstractmethod
@@ -33,13 +33,13 @@ class BaseAlgorithm:
 
     def get_stress(self) -> float:
         try:
-            stress = self.get_vectorised_euclidian_stress()
+            stress = self.get_vectorised_stress()
             return stress
 
         except np.core._exceptions._ArrayMemoryError:
             print("Not enough memory to allocate for a numpy array for stress calculation. \n"
                   "Stress will be calculated with a Python loop")
-            stress = self.get_unvectorised_euclidian_stress()
+            stress = self.get_unvectorised_stress()
             return stress
 
 
@@ -60,11 +60,11 @@ class BaseAlgorithm:
         else:
             return self.name + ' - ' + self.additional_name
 
-    def get_vectorised_euclidian_stress(self):
+    def get_vectorised_stress(self):
         print("vectorised euclidian stress")
         data = self.data
-        hd_dist = np.sqrt(((data[:,:,None] - data[:,:,None].T)**2).sum(axis=1))
-        ld_dist = np.sqrt(((self.get_positions()[:,:,None] - self.get_positions()[:,:,None].T)**2).sum(axis=1))
+        hd_dist = self.distance_fn(data[:,:,None] - data[:,:,None].T, 1)
+        ld_dist = self.distance_fn(self.get_positions()[:,:,None] - self.get_positions()[:,:,None].T, 1)
         numerator = np.sum((hd_dist - ld_dist)**2)/4
         denominator = np.sum(ld_dist**2)/4
         if denominator == 0:

@@ -17,8 +17,6 @@ def show_layouts(*layouts: LowDLayoutBase, use_labels: bool = False, alpha: floa
     color_by: function to represent a node as a single float which will be used to color it
     this can be used to colour the datapoints on the layout by for example
     one of the dimensions of the original high-d dataset
-    color_map: string name of matplotlib.pyplot.cm to take colors from when coloring
-               using color_by
     """
 
     no_layouts = len(layouts)

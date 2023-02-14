@@ -22,6 +22,8 @@ class SQuaDLayout(LowDLayoutBase):
 
     def run(self):
 
+        print(f" \"N-tet\" size: {self.algorithm.ntet_size}")
+
         calculate_quartet_stress = False
         bar = IncrementalBar("Creating layout", max=self.no_iters)
         decay = self.decay if self.decay is not None else np.exp(np.log(1e-3) / self.no_iters)

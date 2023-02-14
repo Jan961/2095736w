@@ -25,6 +25,8 @@ class LowDLayoutCreation:
         print(f"A 2D layout of the \"{algorithm.dataset.name}\" dataset will be created \n"
               f"using the \"{algorithm.get_name()}\" algorithm")
         print("#" * 20)
+        print(f"The HD distance measure used is: {algorithm.distance_fn.__name__}")
+        print("#" * 20)
 
         if isinstance(algorithm, Chalmers96):
             layout = Chalmers96Layout(*basic_layout_creation_parameters, **additional_parameters)

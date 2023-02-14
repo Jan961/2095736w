@@ -2,13 +2,12 @@ import numpy as np
 
 
 
-def compute_quartet_dhd(exaggerate_dist: bool, HD_points: np.ndarray):
+def compute_quartet_dhd(exaggerate_dist: bool, HD_points: np.ndarray, distance_fn):
 
-    Dhd_full_matrix = np.sum(
-        (HD_points[:, :, None] - HD_points[:, :, None].T) ** 2, axis=1)
+    Dhd_full_matrix = distance_fn(HD_points[:, :, None] - HD_points[:, :, None].T, 1)
 
-    if not exaggerate_dist:     # during exaggeration: don't take the square root of the distances
-        Dhd_full_matrix = np.sqrt(Dhd_full_matrix)
+    if exaggerate_dist:     # during exaggeration: don't take the square root of the distances
+        Dhd_full_matrix = Dhd_full_matrix**2
 
     Dhd_full_matrix += 1e-12  # for some datasets 0 distance is also apparently an issue
                                                          # for hd dist - hence the small number

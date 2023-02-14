@@ -65,7 +65,7 @@ def test_stress_collected_correctly():
                 assert len(layout.collected_metrics['Stress'][0]) == 4 // i + 2
                 assert len(layout.collected_metrics['Stress'][1]) == 4 // i + 2
 
-            assert np.allclose(algo.get_vectorised_euclidian_stress(), algo.get_unvectorised_euclidian_stress())
+            assert np.allclose(algo.get_vectorised_euclidian_stress(), algo.get_unvectorised_stress())
 
 
                                                      # maintained and the points are not shuffled

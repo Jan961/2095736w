@@ -47,8 +47,8 @@ def compute_quartet_grads(points : np.ndarray, Dhd : np.ndarray, Dld : np.ndarra
         helper1.fill(0)
         helper2.fill(0)
 
-        if col == diffs.shape[1] - 1: # moving to the next row of the upper triangular matrix with the diagonal ignored
-            row += 1
+        if col == diffs.shape[1] - 1:  # moving to the next row/column of the upper triangular
+            row += 1                   # matrix with the diagonal ignored
             col = row + 1
         else:
             col += 1

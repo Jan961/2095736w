@@ -40,30 +40,12 @@ class SQuaD(BaseAlgorithm):
             self.nesterovs_v = np.zeros((self.N, 2)) if self.N is not None else None
             print("\n Nesterov's momentum will be used by the algorithm \n")
 
-
-        if self.test: # for testing n-tet size must be set to 4
-            assert self.ntet_size == 4
+        assert self.distance_fn == euclidean, "Squad only supports euclidian distance"
+        if self.test:
+            assert self.ntet_size == 4 # for testing n-tet size must be set to 4
 
     def get_positions(self) -> np.ndarray:
         return self.low_d_positions
-
-    def get_unvectorised_euclidian_stress(self) -> float:
-
-        numerator: float = 0.0
-        denominator: float = 0.0
-
-        for source, target in combinations(zip(self.data.tolist(), self.get_positions().tolist() ), 2):
-            high_d_distance = euclidean(np.array(source[0]), np.array(target[0]))
-            low_d_distance = math.sqrt((target[1][0] - source[1][0]) ** 2 + (target[1][1] - source[1][1]) ** 2)
-            numerator += (high_d_distance - low_d_distance) ** 2
-            denominator += low_d_distance ** 2
-        if denominator == 0:
-            return math.inf
-        return numerator / denominator
-
-
-    def get_average_quartet_stress(self):
-        return self.last_average_quartet_stress_measurement
 
     def one_iteration(self, exaggerate_dist: bool = False, LR:float = 550.0, calculate_average_stress: bool = False):
 
@@ -84,7 +66,7 @@ class SQuaD(BaseAlgorithm):
             HD_points = self.data[quartet]
 
             # HD distances between quartet points
-            Dhd_quartet = compute_quartet_dhd(exaggerate_dist, HD_points)
+            Dhd_quartet = compute_quartet_dhd(exaggerate_dist, HD_points, self.distance_fn)
 
             # LD distances between quartet points and, including a full n_tet x n_tet sized matrix for grad computation
             Dld_full_matrix, Dld_quartet = compute_quartet_dld(LD_points)
@@ -125,6 +107,25 @@ class SQuaD(BaseAlgorithm):
         else:
             self.low_d_positions -= LR * self.grad_acc
 
+
+
+    def get_unvectorised_stress(self) -> float:
+
+        numerator: float = 0.0
+        denominator: float = 0.0
+
+        for source, target in combinations(zip(self.data.tolist(), self.get_positions().tolist() ), 2):
+            high_d_distance = self.distance_fn(np.array(source[0]) - np.array(target[0]))
+            low_d_distance = math.sqrt((target[1][0] - source[1][0]) ** 2 + (target[1][1] - source[1][1]) ** 2)
+            numerator += (high_d_distance - low_d_distance) ** 2
+            denominator += low_d_distance ** 2
+        if denominator == 0:
+            return math.inf
+        return numerator / denominator
+
+
+    def get_average_quartet_stress(self):
+        return self.last_average_quartet_stress_measurement
 
 
 
