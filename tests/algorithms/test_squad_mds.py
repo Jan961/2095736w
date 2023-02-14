@@ -5,7 +5,7 @@ from hdimvis.distance_measures.relative_rbf_dists import relative_rbf_dists
 from hdimvis.data_fetchers.Dataset import Dataset
 
 
-dataset = DataFetcher().fetch_data('coil20')
+dataset = DataFetcher().fetch_data('coil20', size=50)
 mock_data= np.array([[0,0],[0,10],[10,10],[10,0]], dtype='float64')
 initial_positions = np.array([[0,0],[0,10],[10,10],[10,0]], dtype='float64')
 mock_dataset = Dataset(mock_data, None, "mock data")
@@ -28,10 +28,10 @@ def test_one_iteration_correctly_performed():
 # to run the below test uncomment the relevant sections of the Squad code - they take up a lot of space
 # duplicating many calculations, therefore making the code hard to read and thus are commented out
 
-# def test_vectorised_calculations_produce_the_same_results_as_original():
-#     algo = SQuaD(dataset=dataset, test_vectorisation=True)
-#     for i in range(20):
-#         algo.one_iteration()
+def test_vectorised_calculations_produce_the_same_results_as_original():
+    algo = SQuaD(dataset=dataset, test=True)
+    for i in range(20):
+        algo.one_iteration()
 
 
 def test_nesterovs_momentum_v_increases_as_expected():

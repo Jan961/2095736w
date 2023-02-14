@@ -10,7 +10,7 @@ from ...distance_measures.relative_rbf_dists import relative_rbf_dists
 from numpy import sqrt
 
 #code adapted and modified from https://github.com/PierreLambert3/SQuaD-MDS
-# the original implementation commented out for legibility, retained for testing,
+# the original implementation commented out for legibility, but retained for testing,
 
 class SQuaD(BaseAlgorithm):
 
@@ -72,8 +72,8 @@ class SQuaD(BaseAlgorithm):
         np.random.shuffle(self.perms)
 
         self.grad_acc.fill(0.)
-        # Dhd_quartet_og = np.zeros((6,))
-        # Dld_quartet_og = np.zeros((6,))
+        Dhd_quartet_og = np.zeros((6,))
+        Dld_quartet_og = np.zeros((6,))
 
         quartet_stress = 0
 
@@ -84,10 +84,10 @@ class SQuaD(BaseAlgorithm):
             else:
                 LD_points = self.low_d_positions[quartet]
 
-            # xa, ya = LD_points[0]
-            # xb, yb = LD_points[1]
-            # xc, yc = LD_points[2]
-            # xd, yd = LD_points[3]
+            xa, ya = LD_points[0]
+            xb, yb = LD_points[1]
+            xc, yc = LD_points[2]
+            xd, yd = LD_points[3]
 
             # compute quartet's HD distances
             if exaggerate_dist:  # during exaggeration: don't take the square root of the distances
@@ -100,14 +100,14 @@ class SQuaD(BaseAlgorithm):
                 Dhd_quartet = np.triu(zeroed_diag_hd)
 
 
-                # if self.test:
-                #     Dhd_quartet = Dhd_distances_full_matrix[np.nonzero(np.triu(Dhd_distances_full_matrix))]
-                #     Dhd_quartet_og[0] = np.sum((self.data[quartet[0]] - self.data[quartet[1]]) ** 2)
-                #     Dhd_quartet_og[1] = np.sum((self.data[quartet[0]] - self.data[quartet[2]]) ** 2)
-                #     Dhd_quartet_og[2] = np.sum((self.data[quartet[0]] - self.data[quartet[3]]) ** 2)
-                #     Dhd_quartet_og[3] = np.sum((self.data[quartet[1]] - self.data[quartet[2]]) ** 2)
-                #     Dhd_quartet_og[4] = np.sum((self.data[quartet[1]] - self.data[quartet[3]]) ** 2)
-                #     Dhd_quartet_og[5] = np.sum((self.data[quartet[2]] - self.data[quartet[3]]) ** 2)
+                if self.test:
+                    Dhd_quartet_alt = Dhd_quartet[np.nonzero(Dhd_quartet)] #using the same format as the OG
+                    Dhd_quartet_og[0] = np.sum((self.data[quartet[0]] - self.data[quartet[1]]) ** 2)
+                    Dhd_quartet_og[1] = np.sum((self.data[quartet[0]] - self.data[quartet[2]]) ** 2)
+                    Dhd_quartet_og[2] = np.sum((self.data[quartet[0]] - self.data[quartet[3]]) ** 2)
+                    Dhd_quartet_og[3] = np.sum((self.data[quartet[1]] - self.data[quartet[2]]) ** 2)
+                    Dhd_quartet_og[4] = np.sum((self.data[quartet[1]] - self.data[quartet[3]]) ** 2)
+                    Dhd_quartet_og[5] = np.sum((self.data[quartet[2]] - self.data[quartet[3]]) ** 2)
             else:
                 Dhd_distances_full_matrix = np.sqrt(np.sum(
                     (self.data[quartet][:, :, None] - self.data[quartet][:, :, None].T) ** 2, axis=1))
@@ -117,20 +117,20 @@ class SQuaD(BaseAlgorithm):
                 np.fill_diagonal(zeroed_diag_hd, 0)
                 Dhd_quartet = np.triu(zeroed_diag_hd)
 
-                # if self.test:
-                #     Dhd_quartet = Dhd_distances_full_matrix[np.nonzero(np.triu(Dhd_distances_full_matrix))]
-                #     Dhd_quartet_og[0] = sqrt(np.sum((self.data[quartet[0]] - self.data[quartet[1]]) ** 2))
-                #     Dhd_quartet_og[1] = sqrt(np.sum((self.data[quartet[0]] - self.data[quartet[2]]) ** 2))
-                #     Dhd_quartet_og[2] = sqrt(np.sum((self.data[quartet[0]] - self.data[quartet[3]]) ** 2))
-                #     Dhd_quartet_og[3] = sqrt(np.sum((self.data[quartet[1]] - self.data[quartet[2]]) ** 2))
-                #     Dhd_quartet_og[4] = sqrt(np.sum((self.data[quartet[1]] - self.data[quartet[3]]) ** 2))
-                #     Dhd_quartet_og[5] = sqrt(np.sum((self.data[quartet[2]] - self.data[quartet[3]]) ** 2))
+                if self.test:
+                    Dhd_quartet_alt = Dhd_quartet[np.nonzero(Dhd_quartet)] #using the same format as the OG
+                    Dhd_quartet_og[0] = sqrt(np.sum((self.data[quartet[0]] - self.data[quartet[1]]) ** 2))
+                    Dhd_quartet_og[1] = sqrt(np.sum((self.data[quartet[0]] - self.data[quartet[2]]) ** 2))
+                    Dhd_quartet_og[2] = sqrt(np.sum((self.data[quartet[0]] - self.data[quartet[3]]) ** 2))
+                    Dhd_quartet_og[3] = sqrt(np.sum((self.data[quartet[1]] - self.data[quartet[2]]) ** 2))
+                    Dhd_quartet_og[4] = sqrt(np.sum((self.data[quartet[1]] - self.data[quartet[3]]) ** 2))
+                    Dhd_quartet_og[5] = sqrt(np.sum((self.data[quartet[2]] - self.data[quartet[3]]) ** 2))
 
 
 
-            # if self.test:
-            #     assert np.allclose(Dhd_quartet, Dhd_quartet_og)
-            #     print("HD distances equality assertion passed")
+            if self.test:
+                assert np.allclose(Dhd_quartet_alt, Dhd_quartet_og)
+                print("HD distances equality assertion passed")
 
 
             # LD distances, add a small number just in case
@@ -141,16 +141,16 @@ class SQuaD(BaseAlgorithm):
             np.fill_diagonal(zeroed_diag_ld, 0)
             Dld_quartet = np.triu(zeroed_diag_ld)
 
-            # if self.test:
-            #     Dld_quartet = Dld_distances_full_matrix[np.nonzero(np.triu(Dld_distances_full_matrix))]
-            #     Dld_quartet_og[0] = np.sqrt((xa - xb) ** 2 + (ya - yb) ** 2) + 1e-12
-            #     Dld_quartet_og[1] = np.sqrt((xa - xc) ** 2 + (ya - yc) ** 2) + 1e-12
-            #     Dld_quartet_og[2] = np.sqrt((xa - xd) ** 2 + (ya - yd) ** 2) + 1e-12
-            #     Dld_quartet_og[3] = np.sqrt((xb - xc) ** 2 + (yb - yc) ** 2) + 1e-12
-            #     Dld_quartet_og[4] = np.sqrt((xb - xd) ** 2 + (yb - yd) ** 2) + 1e-12
-            #     Dld_quartet_og[5] = np.sqrt((xc - xd) ** 2 + (yc - yd) ** 2) + 1e-12
-            #     assert np.allclose(Dld_quartet_og, Dld_quartet)
-            #     print("LD distances equality assertion passed")
+            if self.test:
+                Dld_quartet_alt = Dld_quartet[np.nonzero(Dld_quartet)]
+                Dld_quartet_og[0] = np.sqrt((xa - xb) ** 2 + (ya - yb) ** 2) + 1e-12
+                Dld_quartet_og[1] = np.sqrt((xa - xc) ** 2 + (ya - yc) ** 2) + 1e-12
+                Dld_quartet_og[2] = np.sqrt((xa - xd) ** 2 + (ya - yd) ** 2) + 1e-12
+                Dld_quartet_og[3] = np.sqrt((xb - xc) ** 2 + (yb - yc) ** 2) + 1e-12
+                Dld_quartet_og[4] = np.sqrt((xb - xd) ** 2 + (yb - yd) ** 2) + 1e-12
+                Dld_quartet_og[5] = np.sqrt((xc - xd) ** 2 + (yc - yd) ** 2) + 1e-12
+                assert np.allclose(Dld_quartet_og, Dld_quartet_alt)
+                print("LD distances equality assertion passed")
 
 
 
