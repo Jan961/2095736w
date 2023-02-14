@@ -10,6 +10,7 @@ from ...distance_measures.relative_rbf_dists import relative_rbf_dists
 from numpy import sqrt
 
 #code adapted and modified from https://github.com/PierreLambert3/SQuaD-MDS
+# the original implementation commented out for legibility, retained for testing,
 
 class SQuaD(BaseAlgorithm):
 
@@ -17,11 +18,10 @@ class SQuaD(BaseAlgorithm):
     name = 'Stochastic Quartet Descent MDS'
 
     def __init__(self, dataset: Dataset | None, ntet_size: int = 4, nesterovs_momentum: bool = False,
-                 momentum: float = 0.6,
-                 test_vectorisation: bool = False, **kwargs):
+                 momentum: float = 0.6, test: bool = False, **kwargs):
         super().__init__(dataset, **kwargs)
 
-        # the optional "None" values are used to allow automatic data collection from many datasets
+        # the optional "None" values are used to allow automatic data collection from many datasets in "Basic Comparison"
         self. N, M = self.data.shape if self.data is not None else (None, None)
         self.ntet_size = ntet_size # n-tet for: duet, trio (triplet), quartet, quintet, sextet etc.
         self.perms = np.arange(self.N) if self.N is not None else None
@@ -31,7 +31,7 @@ class SQuaD(BaseAlgorithm):
         self.grad_acc = np.ones((self.N, 2)) if self.N is not None else None
         self.low_d_positions = self.initial_layout
         self.last_average_quartet_stress_measurement = 0
-        self.test_vectorisation = test_vectorisation
+        self.test = test
         self.nesterovs_momentum = nesterovs_momentum
         self.momentum = momentum
         if self.nesterovs_momentum:
@@ -39,6 +39,8 @@ class SQuaD(BaseAlgorithm):
             print("\n Nesterov's momentum will be used by the algorithm \n")
 
 
+        if self.test: # for testing n-tet size must be set to 4
+            assert self.ntet_size == 4
 
 
  # aim for an end LR of 1e-3 , if not initialised with a std of 10 (not recommended), then this value should be changed as well
@@ -91,10 +93,14 @@ class SQuaD(BaseAlgorithm):
             if exaggerate_dist:  # during exaggeration: don't take the square root of the distances
                 Dhd_distances_full_matrix = np.sum(
                     (self.data[quartet][:, :, None] - self.data[quartet][:, :, None].T) ** 2, axis=1)
-                Dhd_quartet = np.triu(Dhd_distances_full_matrix)
+                Dhd_distances_full_matrix += 1e-12             #for some datasets 0 distance is also apparently an issue
+                                                                # for hd dist - hence the small number
+                zeroed_diag_hd = Dhd_distances_full_matrix.copy()
+                np.fill_diagonal(zeroed_diag_hd, 0)
+                Dhd_quartet = np.triu(zeroed_diag_hd)
 
 
-                # if self.test_vectorisation:
+                # if self.test:
                 #     Dhd_quartet = Dhd_distances_full_matrix[np.nonzero(np.triu(Dhd_distances_full_matrix))]
                 #     Dhd_quartet_og[0] = np.sum((self.data[quartet[0]] - self.data[quartet[1]]) ** 2)
                 #     Dhd_quartet_og[1] = np.sum((self.data[quartet[0]] - self.data[quartet[2]]) ** 2)
@@ -106,10 +112,12 @@ class SQuaD(BaseAlgorithm):
                 Dhd_distances_full_matrix = np.sqrt(np.sum(
                     (self.data[quartet][:, :, None] - self.data[quartet][:, :, None].T) ** 2, axis=1))
                 Dhd_distances_full_matrix += 1e-12             #for some datasets 0 distance is also apparently an issue
-                np.fill_diagonal(Dhd_distances_full_matrix, 0)      # for hd dist - hence the small number
-                Dhd_quartet = np.triu(Dhd_distances_full_matrix)
+                                                                # for hd dist - hence the small number
+                zeroed_diag_hd = Dhd_distances_full_matrix.copy()
+                np.fill_diagonal(zeroed_diag_hd, 0)
+                Dhd_quartet = np.triu(zeroed_diag_hd)
 
-                # if self.test_vectorisation:
+                # if self.test:
                 #     Dhd_quartet = Dhd_distances_full_matrix[np.nonzero(np.triu(Dhd_distances_full_matrix))]
                 #     Dhd_quartet_og[0] = sqrt(np.sum((self.data[quartet[0]] - self.data[quartet[1]]) ** 2))
                 #     Dhd_quartet_og[1] = sqrt(np.sum((self.data[quartet[0]] - self.data[quartet[2]]) ** 2))
@@ -120,7 +128,7 @@ class SQuaD(BaseAlgorithm):
 
 
 
-            # if self.test_vectorisation:
+            # if self.test:
             #     assert np.allclose(Dhd_quartet, Dhd_quartet_og)
             #     print("HD distances equality assertion passed")
 
@@ -129,10 +137,11 @@ class SQuaD(BaseAlgorithm):
             Dld_distances_full_matrix = np.sqrt(np.sum(
                 (LD_points[:, :, None] - LD_points[:, :, None].T) ** 2, axis=1))
             Dld_distances_full_matrix += 1e-12
-            np.fill_diagonal(Dld_distances_full_matrix, 0)
-            Dld_quartet = np.triu(Dld_distances_full_matrix)
+            zeroed_diag_ld = Dld_distances_full_matrix.copy()
+            np.fill_diagonal(zeroed_diag_ld, 0)
+            Dld_quartet = np.triu(zeroed_diag_ld)
 
-            # if self.test_vectorisation:
+            # if self.test:
             #     Dld_quartet = Dld_distances_full_matrix[np.nonzero(np.triu(Dld_distances_full_matrix))]
             #     Dld_quartet_og[0] = np.sqrt((xa - xb) ** 2 + (ya - yb) ** 2) + 1e-12
             #     Dld_quartet_og[1] = np.sqrt((xa - xc) ** 2 + (ya - yc) ** 2) + 1e-12
@@ -148,14 +157,13 @@ class SQuaD(BaseAlgorithm):
             # after the below couple of lines the Dhd_quartet contains the relative distances
             # the distances in Dld_quartet are NOT relative and are passed as such to the compute_quartet_grads() funct
             if self.distance_fn == relative_rbf_dists:
-                quartet_grads = compute_quartet_grads(LD_points, relative_rbf_dists(Dhd_quartet),
-                                                      Dld_quartet , Dld_distances_full_matrix)
+                Dhd_quartet = relative_rbf_dists(Dhd_quartet)
+
             else:
                 Dhd_quartet /= np.sum(Dhd_quartet)
-                quartet_grads = compute_quartet_grads(LD_points, Dhd_quartet,
-                                                      Dld_quartet, Dld_distances_full_matrix)
 
-            quartet_grads = quartet_grads.reshape((self.ntet_size,2))
+            quartet_grads = compute_quartet_grads(LD_points, Dhd_quartet,
+                                                  Dld_quartet, Dld_distances_full_matrix, self.test)
 
             if self.nesterovs_momentum:
                 self.nesterovs_v[quartet] = self.nesterovs_v[quartet]* self.momentum - LR*quartet_grads

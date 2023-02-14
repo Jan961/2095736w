@@ -9,13 +9,14 @@ import numpy as np
 # the points are named a,b,c and d internally to keep track of who is who
 # points shape: (4, 2)
 
-def compute_quartet_grads(points, Dhd, Dld, Dld_distances_full_matrix):
+def compute_quartet_grads(points : np.ndarray, Dhd : np.ndarray, Dld : np.ndarray,
+                          Dld_distances_full_matrix: np.ndarray , test: bool):
 
     sum_dld = np.sum(Dld)
     Dld_relative = Dld/sum_dld     # make the distances in Dld relative
     diffs = Dld_relative - Dhd
 
-    first_bracket = (2/sum_dld) * diffs # first bracket of the grad formula from the Squad paper
+    first_brackets = (2/sum_dld) * diffs # first bracket of the grad formula from the Squad paper
 
     # accumulate gradients from ech part of the sum here
     gradients = np.zeros_like(points)
@@ -32,7 +33,7 @@ def compute_quartet_grads(points, Dhd, Dld, Dld_distances_full_matrix):
         helper1[[row, col]] = 1 # performs similar role to the identity matrix in the gradient formula in the paper
                                 # we set BOTH the element indexed by "row" and "col" indices to 1; the rest are zero
 
-        # computing grads separately for x and y
+        # computing grads separately for x (i: 0) and y (i: 1)
         for i in range(2):
             temp_points = points[:,i]
 
@@ -40,10 +41,23 @@ def compute_quartet_grads(points, Dhd, Dld, Dld_distances_full_matrix):
             helper2[col] = temp_points[row] # - see the grad formula in the paper
 
             first_term = (helper1*(temp_points - helper2))/Dld[row,col]
-            # second_term = Dld_relative[row,col] *
+            second_term = Dld_relative[row,col] * \
+                          np.sum((temp_points[:, None] - temp_points[:, None].T)/Dld_distances_full_matrix, axis=1)
+
+            second_brackets =  first_term - second_term
+
+            gradients[:, i] += first_brackets[row, col] * second_brackets
+
+        if col == diffs.shape[1] - 1: # moving to the next row of the upper triangular matrix with the diagonal ignored
+            row += 1
+            col = row + 1
 
 
+    if test:
+        assert gradients == compute_quartet_grads_original(points, Dhd.ravel(), Dld.ravel())
+        print ("Gradient equality assertion passed")
 
+    return gradients
 
 
 def compute_quartet_grads_original(points, Dhd, Dld):
