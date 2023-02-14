@@ -7,7 +7,9 @@ from .gradients import compute_quartet_grads
 from ..BaseAlgorithm import BaseAlgorithm
 from ...distance_measures.euclidian_and_manhattan import euclidean
 from ...distance_measures.relative_rbf_dists import relative_rbf_dists
-from numpy import sqrt
+from .new_distance_calculations import compute_quartet_dhd, compute_quartet_dld
+from .original_calculations import original_dhd_calculation, original_dld_calculation
+
 
 #code adapted and modified from https://github.com/PierreLambert3/SQuaD-MDS
 # the original implementation commented out for legibility, but retained for testing,
@@ -42,9 +44,6 @@ class SQuaD(BaseAlgorithm):
         if self.test: # for testing n-tet size must be set to 4
             assert self.ntet_size == 4
 
-
- # aim for an end LR of 1e-3 , if not initialised with a std of 10 (not recommended), then this value should be changed as well
-
     def get_positions(self) -> np.ndarray:
         return self.low_d_positions
 
@@ -62,6 +61,7 @@ class SQuaD(BaseAlgorithm):
             return math.inf
         return numerator / denominator
 
+
     def get_average_quartet_stress(self):
         return self.last_average_quartet_stress_measurement
 
@@ -70,89 +70,33 @@ class SQuaD(BaseAlgorithm):
         assert self.data is not None
 
         np.random.shuffle(self.perms)
-
         self.grad_acc.fill(0.)
-        Dhd_quartet_og = np.zeros((6,))
-        Dld_quartet_og = np.zeros((6,))
-
         quartet_stress = 0
 
         for batch_idx in self.batch_indices:
             quartet = self.perms[batch_idx]
             if self.nesterovs_momentum:
+                # with Nesterov's momentum we use a projection of LD points positions instead of real positions
                 LD_points = self.low_d_positions[quartet] + self.momentum * self.nesterovs_v[quartet]
             else:
                 LD_points = self.low_d_positions[quartet]
 
-            xa, ya = LD_points[0]
-            xb, yb = LD_points[1]
-            xc, yc = LD_points[2]
-            xd, yd = LD_points[3]
+            HD_points = self.data[quartet]
 
-            # compute quartet's HD distances
-            if exaggerate_dist:  # during exaggeration: don't take the square root of the distances
-                Dhd_distances_full_matrix = np.sum(
-                    (self.data[quartet][:, :, None] - self.data[quartet][:, :, None].T) ** 2, axis=1)
-                Dhd_distances_full_matrix += 1e-12             #for some datasets 0 distance is also apparently an issue
-                                                                # for hd dist - hence the small number
-                zeroed_diag_hd = Dhd_distances_full_matrix.copy()
-                np.fill_diagonal(zeroed_diag_hd, 0)
-                Dhd_quartet = np.triu(zeroed_diag_hd)
+            # HD distances between quartet points
+            Dhd_quartet = compute_quartet_dhd(exaggerate_dist, HD_points)
 
-
-                if self.test:
-                    Dhd_quartet_alt = Dhd_quartet[np.nonzero(Dhd_quartet)] #using the same format as the OG
-                    Dhd_quartet_og[0] = np.sum((self.data[quartet[0]] - self.data[quartet[1]]) ** 2)
-                    Dhd_quartet_og[1] = np.sum((self.data[quartet[0]] - self.data[quartet[2]]) ** 2)
-                    Dhd_quartet_og[2] = np.sum((self.data[quartet[0]] - self.data[quartet[3]]) ** 2)
-                    Dhd_quartet_og[3] = np.sum((self.data[quartet[1]] - self.data[quartet[2]]) ** 2)
-                    Dhd_quartet_og[4] = np.sum((self.data[quartet[1]] - self.data[quartet[3]]) ** 2)
-                    Dhd_quartet_og[5] = np.sum((self.data[quartet[2]] - self.data[quartet[3]]) ** 2)
-            else:
-                Dhd_distances_full_matrix = np.sqrt(np.sum(
-                    (self.data[quartet][:, :, None] - self.data[quartet][:, :, None].T) ** 2, axis=1))
-                Dhd_distances_full_matrix += 1e-12             #for some datasets 0 distance is also apparently an issue
-                                                                # for hd dist - hence the small number
-                zeroed_diag_hd = Dhd_distances_full_matrix.copy()
-                np.fill_diagonal(zeroed_diag_hd, 0)
-                Dhd_quartet = np.triu(zeroed_diag_hd)
-
-                if self.test:
-                    Dhd_quartet_alt = Dhd_quartet[np.nonzero(Dhd_quartet)] #using the same format as the OG
-                    Dhd_quartet_og[0] = sqrt(np.sum((self.data[quartet[0]] - self.data[quartet[1]]) ** 2))
-                    Dhd_quartet_og[1] = sqrt(np.sum((self.data[quartet[0]] - self.data[quartet[2]]) ** 2))
-                    Dhd_quartet_og[2] = sqrt(np.sum((self.data[quartet[0]] - self.data[quartet[3]]) ** 2))
-                    Dhd_quartet_og[3] = sqrt(np.sum((self.data[quartet[1]] - self.data[quartet[2]]) ** 2))
-                    Dhd_quartet_og[4] = sqrt(np.sum((self.data[quartet[1]] - self.data[quartet[3]]) ** 2))
-                    Dhd_quartet_og[5] = sqrt(np.sum((self.data[quartet[2]] - self.data[quartet[3]]) ** 2))
-
-
+            # LD distances between quartet points and, including a full n_tet x n_tet sized matrix for grad computation
+            Dld_full_matrix, Dld_quartet = compute_quartet_dld(LD_points)
 
             if self.test:
-                assert np.allclose(Dhd_quartet_alt, Dhd_quartet_og)
-                print("HD distances equality assertion passed")
+                Dhd_quartet_alt = Dhd_quartet[np.nonzero(Dhd_quartet)] # convert to a form used by the og code
+                assert np.allclose(Dhd_quartet_alt, original_dhd_calculation(exaggerate_dist, HD_points))
+                print("HD distance equality assertion passed")
 
-
-            # LD distances, add a small number just in case
-            Dld_distances_full_matrix = np.sqrt(np.sum(
-                (LD_points[:, :, None] - LD_points[:, :, None].T) ** 2, axis=1))
-            Dld_distances_full_matrix += 1e-12
-            zeroed_diag_ld = Dld_distances_full_matrix.copy()
-            np.fill_diagonal(zeroed_diag_ld, 0)
-            Dld_quartet = np.triu(zeroed_diag_ld)
-
-            if self.test:
-                Dld_quartet_alt = Dld_quartet[np.nonzero(Dld_quartet)]
-                Dld_quartet_og[0] = np.sqrt((xa - xb) ** 2 + (ya - yb) ** 2) + 1e-12
-                Dld_quartet_og[1] = np.sqrt((xa - xc) ** 2 + (ya - yc) ** 2) + 1e-12
-                Dld_quartet_og[2] = np.sqrt((xa - xd) ** 2 + (ya - yd) ** 2) + 1e-12
-                Dld_quartet_og[3] = np.sqrt((xb - xc) ** 2 + (yb - yc) ** 2) + 1e-12
-                Dld_quartet_og[4] = np.sqrt((xb - xd) ** 2 + (yb - yd) ** 2) + 1e-12
-                Dld_quartet_og[5] = np.sqrt((xc - xd) ** 2 + (yc - yd) ** 2) + 1e-12
-                assert np.allclose(Dld_quartet_og, Dld_quartet_alt)
-                print("LD distances equality assertion passed")
-
-
+                Dld_quartet_alt = Dld_quartet[np.nonzero(Dld_quartet)]  # convert to a form used by the og code
+                assert np.allclose(Dld_quartet_alt, original_dld_calculation(LD_points))
+                print("LD distance equality assertion passed")
 
             # after the below couple of lines the Dhd_quartet contains the relative distances
             # the distances in Dld_quartet are NOT relative and are passed as such to the compute_quartet_grads() funct
@@ -163,20 +107,12 @@ class SQuaD(BaseAlgorithm):
                 Dhd_quartet /= np.sum(Dhd_quartet)
 
             quartet_grads = compute_quartet_grads(LD_points, Dhd_quartet,
-                                                  Dld_quartet, Dld_distances_full_matrix, self.test)
+                                                  Dld_quartet, Dld_full_matrix, self.test)
 
             if self.nesterovs_momentum:
                 self.nesterovs_v[quartet] = self.nesterovs_v[quartet]* self.momentum - LR*quartet_grads
             else:
                 self.grad_acc[quartet] += quartet_grads
-            # self.grad_acc[quartet[0], 0] += quartet_grads[0]
-            # self.grad_acc[quartet[0], 1] += quartet_grads[1]
-            # self.grad_acc[quartet[1], 0] += quartet_grads[2]
-            # self.grad_acc[quartet[1], 1] += quartet_grads[3]
-            # self.grad_acc[quartet[2], 0] += quartet_grads[4]
-            # self.grad_acc[quartet[2], 1] += quartet_grads[5]
-            # self.grad_acc[quartet[3], 0] += quartet_grads[6]
-            # self.grad_acc[quartet[3], 1] += quartet_grads[7]
 
             if calculate_average_stress:
                 quartet_stress += np.sum((Dhd_quartet/np.sum(Dhd_quartet) - Dld_quartet/np.sum(Dld_quartet))**2)
