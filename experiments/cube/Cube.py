@@ -121,12 +121,21 @@ class Cube:
     def get_all_points(self):
         return np.vstack((self.front, self.top, self.bottom, self.right, self.left))
 
-    def plot_2d(self, layout: LowDLayoutBase, opacity: float = 1, title: str = None):
+    def plot_2d(self, layout: LowDLayoutBase = None, layout_points: np.ndarray = None,
+                hd_points : np.ndarray =None, opacity: float = 1, title: str = None):
+
+        assert layout is not None or layout_points is not None, "Must provide a  layout object or 2D points"
+
+        if layout_points is not None:
+            assert hd_points is not None, "Must provide both LD and HD points as numpy arrays" \
+                                          " if not using a 2D layout object"
+            data = hd_points
+            pos = layout_points
+        else:
+            data = layout.get_data()
+            pos = layout.get_final_positions()
 
         fig, ax = plt.subplots()
-        pos = layout.get_final_positions()
-        data = layout.get_data()
-
         cmaps = ['viridis', 'plasma_r', 'spring_r', 'cividis', 'winter_r']
 
         for i in range(5):
@@ -136,6 +145,7 @@ class Cube:
             points_to_plot = pos[indices]
             ax.scatter(points_to_plot[:,0], points_to_plot[:,1], c=color, cmap=cmap, alpha= opacity)
         plt.title(title)
+        plt.axis('off')
         plt.show()
 
 

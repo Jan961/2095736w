@@ -2,8 +2,6 @@ from ..Node import Node
 from ..SpringForceBase import SpringForceBase
 from ..chalmers96_algo.Chalmers96 import Chalmers96
 from ..utils import point_on_circle, random_sample_set
-from ....distance_measures.euclidian_and_manhattan import euclidean
-from ....data_fetchers.Dataset import Dataset
 from typing import Callable, Tuple, List
 from .HybridStage import HybridStage
 import numpy as np

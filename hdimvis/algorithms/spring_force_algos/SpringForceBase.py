@@ -2,10 +2,9 @@ import pynndescent
 from hdimvis.algorithms.BaseAlgorithm import BaseAlgorithm
 from hdimvis.algorithms.spring_force_algos.Node import Node
 from hdimvis.algorithms.spring_force_algos.utils import jiggle, get_size, mean
-from hdimvis.distance_measures.euclidian_and_manhattan import euclidean
 from ...data_fetchers.Dataset import Dataset
 from itertools import combinations
-from typing import Callable, Tuple, List, Dict, FrozenSet
+from typing import Tuple, List, Dict, FrozenSet
 from abc import abstractmethod
 import numpy as np
 import math
@@ -74,19 +73,6 @@ class SpringForceBase(BaseAlgorithm):
         for pos, node in zip(positions, self.nodes):
             node.x, node.y = pos
 
-    def get_unvectorised_stress(self) -> float:
-
-        numerator: float = 0.0
-        denominator: float = 0.0
-
-        for source, target in combinations(self.nodes, 2):
-            high_d_distance = self.distance(source, target, cache=False)
-            low_d_distance = math.sqrt((target.x - source.x) ** 2 + (target.y - source.y) ** 2)
-            numerator += (high_d_distance - low_d_distance) ** 2
-            denominator += low_d_distance ** 2
-        if denominator == 0:
-            return math.inf
-        return numerator / denominator
 
     def get_memory(self) -> int:
         return get_size(self)

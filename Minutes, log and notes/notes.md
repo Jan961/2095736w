@@ -46,4 +46,4 @@ but it's in R
 
 
 
-velocity x = (xld1 - xld2)* ((D_ld - D_hd)/ D_hd) * alpha * data_size_factor
+velocity x = (xld1 - xld2)* ((D_ld - D_hd)/ D_) * alpha * data_size_factor

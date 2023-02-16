@@ -3,8 +3,7 @@ from hdimvis.algorithms.stochastic_quartet_algo.SQuaD import SQuaD
 from hdimvis.create_low_d_layout.LowDLayoutCreation import LowDLayoutCreation
 from hdimvis.data_fetchers.DataFetcher import DataFetcher
 from hdimvis.visualise_layouts_and_metrics.plot import show_layouts, show_generation_metrics
-from hdimvis.distance_measures.relative_rbf_dists import relative_rbf_dists
-from hdimvis.distance_measures.euclidian_and_manhattan import manhattan
+from hdimvis.metrics.distance_measures.euclidian_and_manhattan import manhattan
 import numpy as np
 import matplotlib.pyplot as plt
 

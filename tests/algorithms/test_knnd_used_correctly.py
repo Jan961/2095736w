@@ -1,9 +1,8 @@
 import numpy as np
-import pynndescent
 from hdimvis.algorithms.spring_force_algos.chalmers96_algo.Chalmers96 import Chalmers96
 from hdimvis.create_low_d_layout.LowDLayoutCreation import LowDLayoutCreation
 from hdimvis.data_fetchers.Dataset import Dataset
-from hdimvis.distance_measures.euclidian_and_manhattan import euclidean
+from hdimvis.metrics.distance_measures.euclidian_and_manhattan import euclidean
 
 mock_data = np.array([[0, 0, 0, 0], [1, 1, 1, 1], [40, 39, 39, 39], [40, 40, 40, 40]])
 dataset = Dataset(mock_data, np.array([0,1,2,3]), 'mock data')

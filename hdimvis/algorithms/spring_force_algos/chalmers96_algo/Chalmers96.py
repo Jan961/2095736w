@@ -1,11 +1,8 @@
 from hdimvis.algorithms.spring_force_algos.SpringForceBase import SpringForceBase
-from hdimvis.algorithms.spring_force_algos.Node import Node
 from ..utils import random_sample_set
-from ....distance_measures.euclidian_and_manhattan import euclidean
 from ....data_fetchers.Dataset import Dataset
-from typing import Callable, List, Dict
-import numpy as np
-import pynndescent
+from typing import List, Dict
+
 
 # code adapted and modified from 2019 Project by Iain Cattermole
 

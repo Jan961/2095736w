@@ -1,12 +1,11 @@
 from itertools import combinations
-from typing import Callable
 from ...data_fetchers.Dataset import Dataset
 import numpy as np
 import math
 from .gradients import compute_quartet_grads
 from ..BaseAlgorithm import BaseAlgorithm
-from ...distance_measures.euclidian_and_manhattan import euclidean
-from ...distance_measures.relative_rbf_dists import relative_rbf_dists
+from hdimvis.metrics.distance_measures.euclidian_and_manhattan import euclidean
+from hdimvis.metrics.distance_measures.relative_rbf_dists import relative_rbf_dists
 from .new_distance_calculations import compute_quartet_dhd, compute_quartet_dld
 from .original_calculations import original_dhd_calculation, original_dld_calculation
 

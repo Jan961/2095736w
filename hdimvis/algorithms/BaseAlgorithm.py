@@ -1,9 +1,9 @@
 from abc import abstractmethod
-from typing import Callable, List, Optional
+from typing import List, Callable
 from ..data_fetchers.Dataset import Dataset
-
+from ..metrics.stress.stress import vectorised_stress, unvectorised_stress
 import numpy as np
-from ..distance_measures.euclidian_and_manhattan import euclidean
+from hdimvis.metrics.distance_measures.euclidian_and_manhattan import euclidean, manhattan
 
 class BaseAlgorithm:
 
@@ -23,23 +23,26 @@ class BaseAlgorithm:
     @abstractmethod
     def get_positions(self) -> np.ndarray:
         pass
-    @abstractmethod
-    def get_unvectorised_stress(self):
-        pass
 
     @abstractmethod
     def one_iteration(self, *args, **kwargs):
         pass
 
-    def get_stress(self) -> float:
+    def get_stress(self, distance: str = "euclidian") -> float:
+
+        if distance == "euclidian":
+            distance_fn = euclidean
+        elif distance == "manhattan":
+            distance_fn = manhattan
+
         try:
-            stress = self.get_vectorised_stress()
+            stress = self.get_vectorised_stress(distance_fn)
             return stress
 
         except np.core._exceptions._ArrayMemoryError:
             print("Not enough memory to allocate for a numpy array for stress calculation. \n"
                   "Stress will be calculated with a Python loop")
-            stress = self.get_unvectorised_stress()
+            stress = self.get_unvectorised_stress(distance_fn)
             return stress
 
 
@@ -60,17 +63,14 @@ class BaseAlgorithm:
         else:
             return self.name + ' - ' + self.additional_name
 
-    def get_vectorised_stress(self):
-        print("vectorised euclidian stress")
-        data = self.data
-        hd_dist = self.distance_fn(data[:,:,None] - data[:,:,None].T, 1)
-        ld_dist = self.distance_fn(self.get_positions()[:,:,None] - self.get_positions()[:,:,None].T, 1)
-        numerator = np.sum((hd_dist - ld_dist)**2)/4
-        denominator = np.sum(ld_dist**2)/4
-        if denominator == 0:
-            return np.inf
-        else:
-            return numerator/denominator
+    def get_vectorised_stress(self, distance_function: Callable):
+        print(f"\n Vectorised {distance_function.__name__} stress")
+        return vectorised_stress(self.data, self.get_positions(), distance_function)
+
+
+    def get_unvectorised_stress(self, distance_function: Callable):
+        print(f"\n Un-vectorised {distance_function.__name__} stress")
+        return unvectorised_stress(self.data, self.get_positions(), distance_function)
 
     def initialise_layout(self):
         if self.dataset is not None:

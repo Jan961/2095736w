@@ -29,7 +29,7 @@ class LayoutHistogram():
         #H = H.T
         fig = plt.figure()
         ax = fig.add_subplot(title= title)
-        plt.imshow(H, interpolation='nearest', origin='lower',
+        fig.imshow(H, interpolation='nearest', origin='lower',
                    extent=[self.xedges[0], self.xedges[-1], self.yedges[0], self.yedges[-1]])
 
 

@@ -1,7 +1,7 @@
 import numpy as np
 from hdimvis.algorithms.stochastic_quartet_algo.SQuaD import SQuaD
 from hdimvis.data_fetchers.DataFetcher import DataFetcher
-from hdimvis.distance_measures.relative_rbf_dists import relative_rbf_dists
+from hdimvis.metrics.distance_measures.relative_rbf_dists import relative_rbf_dists
 from hdimvis.data_fetchers.Dataset import Dataset
 
 

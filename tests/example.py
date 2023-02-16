@@ -1,12 +1,10 @@
 from hdimvis.data_fetchers.DataFetcher import DataFetcher
-from hdimvis.distance_measures.poker_distance import poker_distance
-from hdimvis.distance_measures.euclidian_and_manhattan import euclidean, manhattan
+from hdimvis.metrics.distance_measures.euclidian_and_manhattan import manhattan
 from hdimvis.algorithms.spring_force_algos.chalmers96_algo.Chalmers96 import Chalmers96
 from hdimvis.create_low_d_layout.LowDLayoutCreation import LowDLayoutCreation
-from hdimvis.visualise_layouts_and_metrics.plot import show_layouts, show_generation_metrics
+from hdimvis.visualise_layouts_and_metrics.plot import show_layouts
 from sklearn.decomposition import PCA
 import numpy as np
-import tracemalloc
 
 all_datasets_list = ['poker', 'mnist', 'bonds', 'coil20', 'rna N3k', 'airfoil', 'wine quality', 'fashion mnist'
                                                                                                 'shuttle',

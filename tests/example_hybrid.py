@@ -1,6 +1,5 @@
 from hdimvis.data_fetchers.DataFetcher import DataFetcher
-from hdimvis.distance_measures.poker_distance import poker_distance
-from hdimvis.distance_measures.euclidian_and_manhattan import euclidean
+from hdimvis.metrics.distance_measures.euclidian_and_manhattan import euclidean
 from hdimvis.algorithms.spring_force_algos.hybrid_algo.Hybrid import Hybrid
 from hdimvis.create_low_d_layout.LowDLayoutCreation import LowDLayoutCreation
 from hdimvis.visualise_layouts_and_metrics.plot import show_layouts, show_generation_metrics
