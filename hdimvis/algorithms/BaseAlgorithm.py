@@ -64,12 +64,12 @@ class BaseAlgorithm:
             return self.name + ' - ' + self.additional_name
 
     def get_vectorised_stress(self, distance_function: Callable):
-        print(f"\n Vectorised {distance_function.__name__} stress")
+        print(f"\n Vectorised {distance_function.__name__} stress \n")
         return vectorised_stress(self.data, self.get_positions(), distance_function)
 
 
     def get_unvectorised_stress(self, distance_function: Callable):
-        print(f"\n Un-vectorised {distance_function.__name__} stress")
+        print(f"\n Un-vectorised {distance_function.__name__} stress \n")
         return unvectorised_stress(self.data, self.get_positions(), distance_function)
 
     def initialise_layout(self):

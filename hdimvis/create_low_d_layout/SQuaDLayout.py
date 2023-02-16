@@ -3,7 +3,7 @@ from progress.bar import IncrementalBar
 import numpy as np
 from .LowDLayoutBase import LowDLayoutBase
 from ..algorithms import BaseAlgorithm
-from ..algorithms.stochastic_quartet_algo.SQuaD import SQuaD
+from ..algorithms.stochastic_ntet_algo.SNaD import SNaD
 from ..data_fetchers.Dataset import Dataset
 
 class SQuaDLayout(LowDLayoutBase):
@@ -13,7 +13,7 @@ class SQuaDLayout(LowDLayoutBase):
                  ):
         super().__init__(no_iters, *basic_layout_creation_parameters)
 
-        assert isinstance(self.algorithm, SQuaD)
+        assert isinstance(self.algorithm, SNaD)
         assert no_iters is not None, "For this algorithm the number of iterations must be specified"
         self.exaggerate_D = exaggerate_D
         self.stop_exaggeration = stop_exaggeration

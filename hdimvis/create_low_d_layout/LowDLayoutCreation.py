@@ -6,7 +6,7 @@ from ..algorithms.BaseAlgorithm import BaseAlgorithm
 from ..algorithms.spring_force_algos.SpringForceBase import SpringForceBase
 from ..algorithms.spring_force_algos.chalmers96_algo.Chalmers96 import Chalmers96
 from .Chalmers96Layout import Chalmers96Layout
-from ..algorithms.stochastic_quartet_algo.SQuaD import SQuaD
+from ..algorithms.stochastic_ntet_algo.SNaD import SNaD
 from .SQuaDLayout import SQuaDLayout
 from ..algorithms.spring_force_algos.hybrid_algo.Hybrid import Hybrid
 from .HybridLayout import HybridLayout
@@ -34,7 +34,7 @@ class LowDLayoutCreation:
         elif isinstance(algorithm, Hybrid):
             layout = HybridLayout(*basic_layout_creation_parameters, **additional_parameters)
 
-        elif isinstance(algorithm, SQuaD):
+        elif isinstance(algorithm, SNaD):
             layout = SQuaDLayout(*basic_layout_creation_parameters, **additional_parameters)
 
         else:

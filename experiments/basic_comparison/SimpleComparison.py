@@ -6,7 +6,7 @@ from hdimvis.create_low_d_layout.LowDLayoutCreation import LowDLayoutCreation
 from hdimvis.data_fetchers.DataFetcher import DataFetcher
 from hdimvis.algorithms.BaseAlgorithm import BaseAlgorithm
 from hdimvis.algorithms.spring_force_algos.SpringForceBase import SpringForceBase
-from hdimvis.algorithms.stochastic_quartet_algo.SQuaD import SQuaD
+from hdimvis.algorithms.stochastic_ntet_algo.SNaD import SNaD
 from hdimvis.data_fetchers.Dataset import Dataset
 from experiments.basic_comparison.ComparisonBase import ComparisonBase
 from time import perf_counter
@@ -41,7 +41,7 @@ class SimpleComparison(ComparisonBase):
 
                 # basic metrics which will be added to self.result
                 bm = {'time': [], 'final stress': [], 'memory': []}
-                if isinstance(algorithm, SQuaD):
+                if isinstance(algorithm, SNaD):
                     bm['final squad stress'] = []
 
                 # since we want to reuse the same algo with different datasets
@@ -64,7 +64,7 @@ class SimpleComparison(ComparisonBase):
                     bm['memory'].append(basic_metrics.get('peak memory', np.NAN))
                     bm['time'].append(basic_metrics.get('time', np.NAN))
                     bm['final stress'].append(basic_metrics.get('final stress', np.NAN))
-                    if isinstance(algorithm, SQuaD):
+                    if isinstance(algorithm, SNaD):
                         bm['final squad stress'].append(basic_metrics.get('final squad stress', np.NAN))
 
                     self.layouts[dataset_name][algorithm.get_name(only_additional=True)].append(layout)
@@ -89,7 +89,7 @@ class SimpleComparison(ComparisonBase):
         else:
             basic_metrics['time'] = perf_counter() - t1
         basic_metrics['final stress'] = layout.get_final_stress()
-        if isinstance(algorithm,SQuaD):
+        if isinstance(algorithm, SNaD):
             basic_metrics['final squad stress'] = algorithm.get_average_quartet_stress()
 
         return basic_metrics, layout
@@ -108,7 +108,7 @@ class SimpleComparison(ComparisonBase):
             if algorithm.use_knnd:
                 algorithm.knnd_index = algorithm.create_knnd_index()
 
-        if isinstance(algorithm, SQuaD):
+        if isinstance(algorithm, SNaD):
             algorithm.N, M = dataset.data.shape
             algorithm.perms = np.arange(algorithm.N)
             algorithm.batch_indices = np.arange((algorithm.N - algorithm.N % 4)).reshape((-1, 4))

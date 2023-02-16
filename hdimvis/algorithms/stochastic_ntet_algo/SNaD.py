@@ -13,7 +13,7 @@ from .original_calculations import original_dhd_calculation, original_dld_calcul
 #code adapted and modified from https://github.com/PierreLambert3/SQuaD-MDS
 # the original implementation commented out for legibility, but retained for testing,
 
-class SQuaD(BaseAlgorithm):
+class SNaD(BaseAlgorithm):
 
     available_metrics = ['Stress', 'Average quartet stress']
     name = 'Stochastic Quartet Descent MDS'
