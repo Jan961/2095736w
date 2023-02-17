@@ -1,7 +1,7 @@
 import numpy as np
 import math
 
-def wiggle_index_vector_pair(v1 : np.ndarray, v2 : np.ndarray, ld_positions: np.ndarray = None):
+def wiggle_index_vector_pair(v1 : np.ndarray, v2 : np.ndarray, ld_positions: np.ndarray = None, cutoff: float = None):
 
     assert v1.ndim == 1 and v2.ndim == 1, "Vectors have to be 1-dimensional np arrays"
 
@@ -11,8 +11,10 @@ def wiggle_index_vector_pair(v1 : np.ndarray, v2 : np.ndarray, ld_positions: np.
 
     if ld_positions is not None:
         cutoff = calculate_cutoff(ld_positions)
+    elif cutoff is not None:
+        cutoff = cutoff
     else:
-        cutoff = 0.3
+        cutoff = 0.5
 
     transformed_l1 = vector_magnitude_map_function(l1, cutoff)
     transformed_l2 = vector_magnitude_map_function(l2, cutoff)
@@ -26,9 +28,9 @@ def vector_magnitude_map_function(input: float, cutoff: float):
     assert cutoff > 0, "Cutoff has to be greater than 0"
 
     if input < cutoff:
-        transformed = (input - 1)**6
+        transformed = (input)**6
     else:
-        transformed = -input + (cutoff-1)**6 + cutoff
+        transformed = 5*(input - cutoff) + (cutoff)**6
 
     return transformed
 
