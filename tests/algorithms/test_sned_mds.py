@@ -1,5 +1,5 @@
 import numpy as np
-from hdimvis.algorithms.stochastic_ntet_algo.SNaD import SNaD
+from hdimvis.algorithms.stochastic_ntet_algo.SNeD import SNeD
 from hdimvis.data_fetchers.DataFetcher import DataFetcher
 from hdimvis.metrics.distance_measures.relative_rbf_dists import relative_rbf_dists
 from hdimvis.data_fetchers.Dataset import Dataset
@@ -15,7 +15,7 @@ initial_positions_2 = 20*np.random.rand(4,2)
 mock_dataset_2 = Dataset(mock_data_2, np.array([0,1,2,3]), 'mock data')
 
 def test_one_iteration_correctly_performed():
-    algo = SNaD(dataset=mock_dataset, initial_layout=initial_positions, distance_fn= relative_rbf_dists)
+    algo = SNeD(dataset=mock_dataset, initial_layout=initial_positions, distance_fn= relative_rbf_dists)
     assert np.allclose(initial_positions, algo.get_positions())
     algo.one_iteration()
     assert np.allclose(initial_positions, algo.get_positions())
@@ -26,13 +26,14 @@ def test_one_iteration_correctly_performed():
 
 
 def test_vectorised_calculations_produce_the_same_results_as_original():
-    algo = SNaD(dataset=dataset, test=True)
+    algo = SNeD(dataset=dataset, test=True) # this uses in-build testing functionality in the algorithm
+    # implementation, as factoring this out would be very cumbersome
     for i in range(20):
         algo.one_iteration()
 
 
 def test_nesterovs_momentum_v_increases_as_expected():
-    algo = SNaD(dataset=mock_dataset_2, initial_layout=initial_positions_2, nesterovs_momentum=True, momentum=0.9)
+    algo = SNeD(dataset=mock_dataset_2, initial_layout=initial_positions_2, nesterovs_momentum=True, momentum=0.9)
     assert not np.any(algo.nesterovs_v)  # check if all initial Nesterov's momenutm "changes or v are 0
     previous_v = algo.nesterovs_v
 

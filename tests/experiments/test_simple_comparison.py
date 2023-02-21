@@ -1,4 +1,4 @@
-from hdimvis.algorithms.stochastic_ntet_algo.SNaD import SNaD
+from hdimvis.algorithms.stochastic_ntet_algo.SNeD import SNeD
 from hdimvis.algorithms.spring_force_algos.chalmers96_algo.Chalmers96 import Chalmers96
 from experiments.basic_comparison.SimpleComparison import SimpleComparison
 import numpy as np
@@ -12,7 +12,7 @@ dataset = Dataset(mock_data, np.array([0,1,2,3]), 'mock data')
 def test_correct_number_of_metrics_collected():
     algos_input = dict()
     algo1, name1 = Chalmers96(None, neighbour_set_size=1, sample_set_size=2), "simple 96"
-    algo2, name2 = SNaD(None), "basic squad"
+    algo2, name2 = SNeD(None), "basic squad"
     algos_input[algo1] = name1
     algos_input[algo2] = name2
 
@@ -40,7 +40,7 @@ def test_correct_number_of_metrics_collected():
 def test_correct_stress_calculated():
     algos_input = dict()
     algo1, name1 = Chalmers96(None, neighbour_set_size=1, sample_set_size=2), "simple 96"
-    algo2, name2 = SNaD(None), "basic squad"
+    algo2, name2 = SNeD(None), "basic squad"
     algos_input[algo1] = name1
     algos_input[algo2] = name2
 

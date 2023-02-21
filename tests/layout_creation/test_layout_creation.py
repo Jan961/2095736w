@@ -1,7 +1,7 @@
 from hdimvis.create_low_d_layout.LowDLayoutCreation import LowDLayoutCreation
 from hdimvis.data_fetchers.DataFetcher import DataFetcher
 from hdimvis.algorithms.spring_force_algos.chalmers96_algo.Chalmers96 import Chalmers96
-from hdimvis.algorithms.stochastic_ntet_algo.SNaD import SNaD
+from hdimvis.algorithms.stochastic_ntet_algo.SNeD import SNeD
 from hdimvis.create_low_d_layout.Chalmers96Layout import Chalmers96Layout
 from hdimvis.create_low_d_layout.SQuaDLayout import SQuaDLayout
 from hdimvis.algorithms.spring_force_algos.hybrid_algo.Hybrid import Hybrid
@@ -12,7 +12,7 @@ import numpy as np
 mock_data = np.random.randint(0,10, (40,3))
 mock_data_initial_positions = np.random.randint(0,5, (40,2))
 dataset = Dataset(mock_data, None, 'mock data')
-algorithms = [Chalmers96(dataset=dataset), SNaD(dataset=dataset), Hybrid(dataset=dataset)]
+algorithms = [Chalmers96(dataset=dataset), SNeD(dataset=dataset), Hybrid(dataset=dataset)]
 layout_classes = [Chalmers96Layout, SQuaDLayout]
 
 mock_data_2= np.array([[0,0],[0,10],[10,10],[10,0]], dtype='float64')
@@ -33,7 +33,7 @@ def test_low_lvl_layout_created_correctly_for_chalmers96():
         assert layout.optional_metric_collection['Average speed'] == 1
 
 def test_low_lvl_layout_created_correctly_for_squad():
-    algo = SNaD(dataset=mock_dataset_2, initial_layout=initial_positions)
+    algo = SNeD(dataset=mock_dataset_2, initial_layout=initial_positions)
     layout = LowDLayoutCreation().create_layout(algo, no_iters=2)
 
     assert np.allclose(initial_positions, layout.get_final_positions()) #tests if the correspondence between low D and high D
@@ -75,7 +75,7 @@ def test_stress_collected_correctly():
 def test_stress_decreases_as_expected():
 
 
-    algo = SNaD(dataset=mock_dataset_3, initial_layout=initial_positions)
+    algo = SNeD(dataset=mock_dataset_3, initial_layout=initial_positions)
     stress_normal_1 = algo.get_vectorised_euclidian_stress()
     measurements = {'Stress': 1, "Average quartet stress": 1}
     layout1 = LowDLayoutCreation().create_layout(algo, optional_metric_collection=measurements, no_iters=1,)
