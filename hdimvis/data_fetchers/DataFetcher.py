@@ -18,41 +18,42 @@ class DataFetcher:
 
     all_datasets_list = ['poker', 'mnist', 'bonds', 'coil20', 'rna N3k', 'airfoil', 'wine quality', 'fashion mnist'
                          'shuttle', 'flow cytometry']
-    def __init__(self):
-        self.low_lvl_data_fetcher = None
 
-    def fetch_data(self, dataset_name='poker', for_bhtsne: bool = False, **kwargs):
 
+    @staticmethod
+    def fetch_data( dataset_name='rna N3k', for_bhtsne: bool = False, **kwargs):
+
+        low_lvl_data_fetcher : LowLevelDataFetcherBase | None = None
         dataset_name = dataset_name.strip()
         print("#"*20)
         print(f"Fetching the \"{dataset_name}\" dataset")
 
         if dataset_name == 'poker':
-            self.low_lvl_data_fetcher = PokerFetcher()
+            low_lvl_data_fetcher = PokerFetcher()
         elif dataset_name == 'bonds':
-            self.low_lvl_data_fetcher = BondsFetcher()
+            low_lvl_data_fetcher = BondsFetcher()
         elif dataset_name == 'coil20':
-            self.low_lvl_data_fetcher = COIL20Fetcher()
+            low_lvl_data_fetcher = COIL20Fetcher()
         elif dataset_name == 'rna N3k':
-            self.low_lvl_data_fetcher = RNA_N3kFetcher()
+            low_lvl_data_fetcher = RNA_N3kFetcher()
         elif dataset_name == 'airfoil':
-            self.low_lvl_data_fetcher = AirfoilNoiseFetcher()
+            low_lvl_data_fetcher = AirfoilNoiseFetcher()
         elif dataset_name == 'wine quality':
-            self.low_lvl_data_fetcher = WineQualityFetcher()
+            low_lvl_data_fetcher = WineQualityFetcher()
         elif dataset_name == 'fashion mnist':
-            self.low_lvl_data_fetcher = FmnistFetcher()
+            low_lvl_data_fetcher = FmnistFetcher()
         elif dataset_name == 'shuttle':
-            self.low_lvl_data_fetcher = ShuttleFetcher()
+            low_lvl_data_fetcher = ShuttleFetcher()
         elif dataset_name == 'flow cytometry':
-            self.low_lvl_data_fetcher = FlowCytometryFetcher()
+            low_lvl_data_fetcher = FlowCytometryFetcher()
         elif dataset_name == 'mnist':
-            self.low_lvl_data_fetcher = MnistFetcher()
+            low_lvl_data_fetcher = MnistFetcher()
         elif dataset_name == 'mock data':
-            self.low_lvl_data_fetcher = MockDataFetcher()
+            low_lvl_data_fetcher = MockDataFetcher()
         else:
             print("Dataset name not recognised")
 
-        data, labels = self.low_lvl_data_fetcher.load_dataset( **kwargs)
+        data, labels = low_lvl_data_fetcher.load_dataset( **kwargs)
         print("#" * 20)
         print("Dataset loaded")
         print(f"Dataset shape: {data.shape[0], data.shape[1]}")

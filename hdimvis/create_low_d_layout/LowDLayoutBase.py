@@ -42,10 +42,15 @@ class LowDLayoutBase:
     # the "final" parameter is used to allow for collection of the final measurements
     # regardless of the collection interval specified by self.metric-collection
     def collect_metrics(self, final = False):
+
+        distance = 'euclidian'
+        if 'distance' in self.optional_metric_collection:
+            distance = self.optional_metric_collection['distance']
+
         if 'Stress' in self.optional_metric_collection:
             if final or self._check_collection_interval('Stress'):
                 self.collected_metrics['Stress'][0].append(self.iteration_number)
-                self.collected_metrics['Stress'][1].append(self.algorithm.get_stress())
+                self.collected_metrics['Stress'][1].append(self.algorithm.get_stress(distance=distance))
 
         if 'Average speed' in self.optional_metric_collection:
             if final or self._check_collection_interval('Average speed'):
