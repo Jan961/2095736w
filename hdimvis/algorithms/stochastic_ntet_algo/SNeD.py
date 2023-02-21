@@ -39,7 +39,8 @@ class SNeD(BaseAlgorithm):
             self.nesterovs_v = np.zeros((self.N, 2)) if self.N is not None else None
             print("\n Nesterov's momentum will be used by the algorithm \n")
 
-        assert self.distance_fn == euclidean, "Squad only supports euclidian distance"
+        assert self.distance_fn == euclidean or self.distance_fn == relative_rbf_dists,\
+            "Squad only supports euclidian distance with optional rbf adjustment"
         if self.test:
             assert self.ntet_size == 4 # for testing n-tet size must be set to 4
 

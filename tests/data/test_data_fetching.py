@@ -13,7 +13,7 @@ from hdimvis.data_fetchers.low_lvl_fetchers.MnistFetcher import MnistFetcher
 from sklearn.datasets import fetch_openml
 import numpy as np
 
-datasets = ['poker', 'bonds', 'coil20', 'rna N3k', 'airfoil', 'wine quality', 'fashion mnist', 'shuttle',
+dataset_names = ['poker', 'bonds', 'coil20', 'rna N3k', 'airfoil', 'wine quality', 'fashion mnist', 'shuttle',
             'flow cytometry', 'mnist']
 fetchers = [PokerFetcher, BondsFetcher, COIL20Fetcher, RNA_N3kFetcher, AirfoilNoiseFetcher, WineQualityFetcher,
             FmnistFetcher, ShuttleFetcher, FlowCytometryFetcher, MnistFetcher]
@@ -21,12 +21,12 @@ fetchers = [PokerFetcher, BondsFetcher, COIL20Fetcher, RNA_N3kFetcher, AirfoilNo
 
 # noinspection PyTypeHints
 def test_data_fetched_correctly():
-    for i, dataset in enumerate(datasets):
+    for i, dataset_name in enumerate(dataset_names):
         fetcher = DataFetcher()
-        dataset = fetcher.fetch_data(dataset)
-        assert isinstance(fetcher.low_lvl_data_fetcher, fetchers[i])
+        dataset = fetcher.fetch_data(dataset_name)
         assert isinstance(dataset.data, np.ndarray)
         assert isinstance(dataset.labels, np.ndarray) or dataset.labels is None
+        assert dataset.name == dataset_name
 
 
 def test_fmnist_fetching():
