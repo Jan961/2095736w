@@ -83,7 +83,7 @@ class SpringForceBase(BaseAlgorithm):
 
     def distance_no_cache(self, source: Node, target: Node, cache: bool = False) -> float:
         """ Distance function to use when self.disable_cache = True """
-        return self.distance_fn(source.datapoint, target.datapoint)
+        return self.distance_fn(source.datapoint - target.datapoint)
 
     def distance(self, source: Node, target: Node, cache: bool = False) -> float:
         """

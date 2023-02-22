@@ -19,12 +19,12 @@ dataset = DataFetcher.fetch_data('rna N3k')
 Xld = PCA(n_components=2, whiten=False, copy=True).fit_transform(dataset.data).astype(np.float64)
 Xld *= 10/np.std(Xld)
 
-squad = SNeD(dataset=dataset, initial_layout=None, nesterovs_momentum=False, ntet_size=12, distance_fn=manhattan)
-layout = LowDLayoutCreation().create_layout(squad, optional_metric_collection=None, no_iters=1000)
+squad = SNeD(dataset=dataset, initial_layout=Xld, use_nesterovs_momentum=False, ntet_size=12)
+layout = LowDLayoutCreation().create_layout(squad, optional_metric_collection=metric_collection, no_iters=1000)
 print(layout.collected_metrics)
-show_layouts(layout, use_labels=True, color_map='rainbow', title=" 2k iter ntet 2")
-show_generation_metrics(layout, quartet_stress=True)
+show_layouts(layout, use_labels=True, color_map='rainbow', title="  ntet 12")
+show_generation_metrics(layout, quartet_stress=True, title="ntet 12")
 
-fig, axis = plt.subplots()
-axis.scatter(Xld[:,0], Xld[:,1], c=dataset.labels, cmap='rainbow')
+# fig, axis = plt.subplots()
+# axis.scatter(Xld[:,0], Xld[:,1], c=dataset.labels, cmap='rainbow')
 

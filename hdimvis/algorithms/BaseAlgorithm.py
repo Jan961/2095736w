@@ -28,11 +28,11 @@ class BaseAlgorithm:
     def one_iteration(self, *args, **kwargs):
         pass
 
-    def get_stress(self, distance: str = "euclidian") -> float:
+    def get_stress(self, norm: str = "euclidian") -> float:
 
-        if distance == "euclidian":
+        if norm == "euclidian":
             distance_fn = euclidean
-        elif distance == "manhattan":
+        elif norm == "manhattan":
             distance_fn = manhattan
 
         try:
@@ -74,6 +74,7 @@ class BaseAlgorithm:
 
     def initialise_layout(self):
         if self.dataset is not None:
+            print("#" * 20)
             print("The algorithm will use a random initialization for the low D embedding/layout")
             return 20*np.random.rand(self.data.shape[0], 2)
         else:

@@ -16,10 +16,10 @@ from .original_calculations import original_dhd_calculation, original_dld_calcul
 class SNeD(BaseAlgorithm):
 
     available_metrics = ['Stress', 'Average quartet stress']
-    name = 'Stochastic Quartet Descent MDS'
+    name = 'Stochastic N-tet Descent MDS'
 
-    def __init__(self, dataset: Dataset | None, ntet_size: int = 4, nesterovs_momentum: bool = False,
-                 momentum: float = 0.6, test: bool = False, **kwargs):
+    def __init__(self, dataset: Dataset | None, ntet_size: int = 4, use_nesterovs_momentum: bool = False,
+                 momentum: float = 0.6, is_test: bool = False, use_rbf_adjustment: bool = True, **kwargs):
         super().__init__(dataset, **kwargs)
 
         # the optional "None" values are used to allow automatic data collection from many datasets in "Basic Comparison"
@@ -32,16 +32,16 @@ class SNeD(BaseAlgorithm):
         self.grad_acc = np.ones((self.N, 2)) if self.N is not None else None
         self.low_d_positions = self.initial_layout
         self.last_average_quartet_stress_measurement = 0
-        self.test = test
-        self.nesterovs_momentum = nesterovs_momentum
+        self.is_test = is_test
+        self.use_rbf_adjustment = use_rbf_adjustment
+        self.use_nesterovs_momentum = use_nesterovs_momentum
         self.momentum = momentum
-        if self.nesterovs_momentum:
+        if self.use_nesterovs_momentum:
             self.nesterovs_v = np.zeros((self.N, 2)) if self.N is not None else None
-            print("\n Nesterov's momentum will be used by the algorithm \n")
 
-        assert self.distance_fn == euclidean or self.distance_fn == relative_rbf_dists,\
-            "Squad only supports euclidian distance with optional rbf adjustment"
-        if self.test:
+        assert self.distance_fn == euclidean, \
+            "For now, Squad only supports euclidian distance with optional rbf adjustment"
+        if self.is_test:
             assert self.ntet_size == 4 # for testing n-tet size must be set to 4
 
     def get_positions(self) -> np.ndarray:
@@ -57,7 +57,7 @@ class SNeD(BaseAlgorithm):
 
         for batch_idx in self.batch_indices:
             quartet = self.perms[batch_idx]
-            if self.nesterovs_momentum:
+            if self.use_nesterovs_momentum:
                 # with Nesterov's momentum we use a projection of LD points positions instead of real positions
                 LD_points = self.low_d_positions[quartet] + self.momentum * self.nesterovs_v[quartet]
             else:
@@ -71,7 +71,7 @@ class SNeD(BaseAlgorithm):
             # LD distances between quartet points and, including a full n_tet x n_tet sized matrix for grad computation
             Dld_full_matrix, Dld_quartet = compute_quartet_dld(LD_points)
 
-            if self.test:
+            if self.is_test:
                 Dhd_quartet_alt = Dhd_quartet[np.nonzero(Dhd_quartet)] # convert to a form used by the og code
                 assert np.allclose(Dhd_quartet_alt, original_dhd_calculation(exaggerate_dist, HD_points))
                 print("HD distance equality assertion passed")
@@ -82,16 +82,16 @@ class SNeD(BaseAlgorithm):
 
             # after the below couple of lines the Dhd_quartet contains the relative distances
             # the distances in Dld_quartet are NOT relative and are passed as such to the compute_quartet_grads() funct
-            if self.distance_fn == relative_rbf_dists:
+            if self.use_rbf_adjustment:
                 Dhd_quartet = relative_rbf_dists(Dhd_quartet)
 
             else:
                 Dhd_quartet /= np.sum(Dhd_quartet)
 
             quartet_grads = compute_quartet_grads(LD_points, Dhd_quartet,
-                                                  Dld_quartet, Dld_full_matrix, self.test)
+                                                  Dld_quartet, Dld_full_matrix, self.is_test)
 
-            if self.nesterovs_momentum:
+            if self.use_nesterovs_momentum:
                 self.nesterovs_v[quartet] = self.nesterovs_v[quartet]* self.momentum - LR*quartet_grads
             else:
                 self.grad_acc[quartet] += quartet_grads
@@ -102,26 +102,11 @@ class SNeD(BaseAlgorithm):
         if calculate_average_stress:
             self.last_average_quartet_stress_measurement = quartet_stress/self.batch_indices.shape[0]
 
-        if self.nesterovs_momentum:
+        if self.use_nesterovs_momentum:
             self.low_d_positions += self.nesterovs_v
         else:
             self.low_d_positions -= LR * self.grad_acc
 
-
-
-    def get_unvectorised_stress(self) -> float:
-
-        numerator: float = 0.0
-        denominator: float = 0.0
-
-        for source, target in combinations(zip(self.data.tolist(), self.get_positions().tolist() ), 2):
-            high_d_distance = self.distance_fn(np.array(source[0]) - np.array(target[0]))
-            low_d_distance = math.sqrt((target[1][0] - source[1][0]) ** 2 + (target[1][1] - source[1][1]) ** 2)
-            numerator += (high_d_distance - low_d_distance) ** 2
-            denominator += low_d_distance ** 2
-        if denominator == 0:
-            return math.inf
-        return numerator / denominator
 
 
     def get_average_quartet_stress(self):

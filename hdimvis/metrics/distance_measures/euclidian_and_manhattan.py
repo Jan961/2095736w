@@ -1,6 +1,8 @@
 import numpy as np
 
+# the axis parameter allows us to vectorise calculations
 def euclidean(arr: np.ndarray,  axis: int = 0) -> float | np.ndarray:
+
     return np.linalg.norm(arr, axis=axis)
 
 

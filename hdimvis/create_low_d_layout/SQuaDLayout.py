@@ -20,6 +20,10 @@ class SQuaDLayout(LowDLayoutBase):
         self.decay = decay
         self.LR = LR
 
+        if self.algorithm.use_nesterovs_momentum:
+            print("\n Nesterov's momentum will be used by the algorithm \n")
+
+
     def run(self):
 
         print(f" \"N-tet\" size: {self.algorithm.ntet_size}")

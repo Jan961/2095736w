@@ -15,7 +15,7 @@ initial_positions_2 = 20*np.random.rand(4,2)
 mock_dataset_2 = Dataset(mock_data_2, np.array([0,1,2,3]), 'mock data')
 
 def test_one_iteration_correctly_performed():
-    algo = SNeD(dataset=mock_dataset, initial_layout=initial_positions, distance_fn= relative_rbf_dists)
+    algo = SNeD(dataset=mock_dataset, initial_layout=initial_positions)
     assert np.allclose(initial_positions, algo.get_positions())
     algo.one_iteration()
     assert np.allclose(initial_positions, algo.get_positions())
@@ -26,14 +26,14 @@ def test_one_iteration_correctly_performed():
 
 
 def test_vectorised_calculations_produce_the_same_results_as_original():
-    algo = SNeD(dataset=dataset, test=True) # this uses in-build testing functionality in the algorithm
+    algo = SNeD(dataset=dataset, is_test=True) # this uses in-build testing functionality in the algorithm
     # implementation, as factoring this out would be very cumbersome
     for i in range(20):
         algo.one_iteration()
 
 
 def test_nesterovs_momentum_v_increases_as_expected():
-    algo = SNeD(dataset=mock_dataset_2, initial_layout=initial_positions_2, nesterovs_momentum=True, momentum=0.9)
+    algo = SNeD(dataset=mock_dataset_2, initial_layout=initial_positions_2, use_nesterovs_momentum=True, momentum=0.9)
     assert not np.any(algo.nesterovs_v)  # check if all initial Nesterov's momenutm "changes or v are 0
     previous_v = algo.nesterovs_v
 

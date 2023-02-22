@@ -23,7 +23,7 @@ def unvectorised_stress(data: np.ndarray, ld_positions: np.ndarray, distance_fun
 
     for source, target in combinations(zip(data.tolist(), ld_positions.tolist()), 2):
         high_d_distance = distance_function(np.array(source[0]) - np.array(target[0]))
-        low_d_distance = math.sqrt((target[1][0] - source[1][0]) ** 2 + (target[1][1] - source[1][1]) ** 2)
+        low_d_distance = distance_function(np.array(source[1])-  np.array(target[1]))
         numerator += (high_d_distance - low_d_distance) ** 2
         denominator += low_d_distance ** 2
     if denominator == 0:

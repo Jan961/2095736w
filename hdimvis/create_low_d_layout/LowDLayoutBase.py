@@ -32,8 +32,12 @@ class LowDLayoutBase:
         return self.data
 
     def get_final_stress(self):
+        norm = 'euclidian'
+        if self.optional_metric_collection and 'norm' in self.optional_metric_collection:
+            norm = self.optional_metric_collection['norm']
+
         if self.optional_metric_collection is None or 'Stress' not in self.optional_metric_collection:
-            self.collected_metrics['Stress'][1].append(self.algorithm.get_stress())
+            self.collected_metrics['Stress'][1].append(self.algorithm.get_stress(norm=norm))
             return self.collected_metrics['Stress'][1][-1]
         else:
             return self.collected_metrics['Stress'][1][-1]
@@ -43,14 +47,14 @@ class LowDLayoutBase:
     # regardless of the collection interval specified by self.metric-collection
     def collect_metrics(self, final = False):
 
-        distance = 'euclidian'
-        if 'distance' in self.optional_metric_collection:
-            distance = self.optional_metric_collection['distance']
+        norm = 'euclidian'
+        if 'norm' in self.optional_metric_collection:
+            norm= self.optional_metric_collection['norm']
 
         if 'Stress' in self.optional_metric_collection:
             if final or self._check_collection_interval('Stress'):
                 self.collected_metrics['Stress'][0].append(self.iteration_number)
-                self.collected_metrics['Stress'][1].append(self.algorithm.get_stress(distance=distance))
+                self.collected_metrics['Stress'][1].append(self.algorithm.get_stress(norm=norm))
 
         if 'Average speed' in self.optional_metric_collection:
             if final or self._check_collection_interval('Average speed'):

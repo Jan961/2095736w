@@ -49,10 +49,18 @@ class LowDLayoutCreation:
 
         else:
             for metric, freq in optional_metric_collection.items():
-                assert freq > 0, f"Frequency of metric collection has to be > 0, got: {freq} "
-                assert metric in algorithm.available_metrics, f"{metric} not available for this algorithm"
-                print(f"\"{metric.capitalize()}\" will be measured every {freq} iterations")
-                print("#" * 20)
+                if metric != 'norm':
+                    assert freq > 0, f"Frequency of metric collection has to be > 0, got: {freq} "
+                    assert metric in algorithm.available_metrics, f"{metric} not available for this algorithm"
+                    print(f"\"{metric.capitalize()}\" will be measured every {freq} iterations")
+                    print("#" * 20)
+
+        norm = "euclidian"
+        if optional_metric_collection and "norm" in optional_metric_collection:
+            norm = optional_metric_collection["norm"]
+        print(f"All stress calculations will be performed using the {norm} norm")
+        print("#" * 20)
+
 
         if np.all(np.where(algorithm.initial_layout==0, 1,0)):
             print("#"*20)

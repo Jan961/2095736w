@@ -34,6 +34,6 @@ def test_knnd_used_correctly():
     lowd_layout = layout.get_final_positions()
 
     # check if similar points move closer and dissimilar farther away
-    assert euclidean(initial_layout[0], initial_layout[1]) > euclidean(lowd_layout[0], lowd_layout[1])
-    assert euclidean(initial_layout[2], initial_layout[3]) > euclidean(lowd_layout[2], lowd_layout[3])
-    assert euclidean(initial_layout[1], initial_layout[2]) < euclidean(lowd_layout[1], lowd_layout[2])
+    assert euclidean(initial_layout[0] - initial_layout[1]) > euclidean(lowd_layout[0] - lowd_layout[1])
+    assert euclidean(initial_layout[2] - initial_layout[3]) > euclidean(lowd_layout[2] - lowd_layout[3])
+    assert euclidean(initial_layout[1] - initial_layout[2]) < euclidean(lowd_layout[1] - lowd_layout[2])
