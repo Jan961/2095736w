@@ -1,5 +1,4 @@
 from hdimvis.create_low_d_layout.LowDLayoutCreation import LowDLayoutCreation
-from hdimvis.data_fetchers.DataFetcher import DataFetcher
 from hdimvis.algorithms.spring_force_algos.chalmers96_algo.Chalmers96 import Chalmers96
 from hdimvis.algorithms.stochastic_ntet_algo.SNeD import SNeD
 from hdimvis.create_low_d_layout.Chalmers96Layout import Chalmers96Layout
@@ -9,6 +8,7 @@ from hdimvis.data_fetchers.Dataset import Dataset
 from hdimvis.data_fetchers.DataFetcher import DataFetcher
 from hdimvis.metrics.distance_measures.euclidian_and_manhattan import euclidean,manhattan
 import numpy as np
+
 
 mock_data = np.random.randint(0,10, (40,3))
 mock_data_initial_positions = np.random.randint(0,5, (40,2))
@@ -22,7 +22,7 @@ mock_dataset_2 = Dataset(mock_data_2, None, "mock data")
 mock_dataset_3 = DataFetcher().fetch_data("mock data")
 
 
-
+# the below removes an annoying pycharm warning
 # noinspection PyTypeHints
 def test_low_lvl_layout_created_correctly_for_chalmers96():
         algo =algorithms[0]
@@ -38,6 +38,7 @@ def test_low_lvl_layout_created_correctly_for_squad():
     layout = LowDLayoutCreation().create_layout(algo, no_iters=2)
 
     assert np.allclose(initial_positions, layout.get_final_positions()) #tests if the correspondence between low D and high D
+    # in the internal representation is maintained and the points are not shuffled
     assert np.allclose(initial_positions, layout.data)
 
 

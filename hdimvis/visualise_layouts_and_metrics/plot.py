@@ -1,3 +1,4 @@
+from pathlib import Path
 from typing import Tuple, Optional, Callable, List
 from ..create_low_d_layout.LowDLayoutBase import LowDLayoutBase
 import numpy as np
@@ -8,7 +9,8 @@ import math
 def show_layouts(*layouts: LowDLayoutBase, use_labels: bool = False, alpha: float = None,
                 color_by: Callable[[np.ndarray],float] = None,
                 color_map: str = 'rainbow', size: float = 3, title: str = None,
-                sub_titles: List[str] = None) -> None:
+                sub_titles: List[str] = None,
+                save_to: Path  =None) -> None:
 
     """
 
@@ -74,7 +76,7 @@ def show_layouts(*layouts: LowDLayoutBase, use_labels: bool = False, alpha: floa
 
 
 def show_generation_metrics(layout, stress: bool = True, average_speed: bool = False, quartet_stress: bool = False,
-                            title: str = None):
+                            title: str = None, save_to: Path = None):
     assert not average_speed or not quartet_stress
     fig, ax1 = plt.subplots()
 
@@ -120,7 +122,7 @@ def show_generation_metrics(layout, stress: bool = True, average_speed: bool = F
     # label2 ="ada"
     # ax2.set_ylabel(label2)
     plt.tight_layout()
-    plt.show()
+
 
 
 
