@@ -17,19 +17,19 @@ cube = Cube(num_points=100, side=30, angle=0.4)
 dataset_cube= cube.get_sample_dataset(3000)
 
 
-metric_collection = {'Average quartet stress': 200, 'Stress': 200}
-dataset = DataFetcher.fetch_data('rna N3k')
+# metric_collection = {'Average quartet stress': 200, 'Stress': 200}
+# dataset = DataFetcher.fetch_data('rna N3k')
 
-Xld = PCA(n_components=2, whiten=False, copy=True).fit_transform(dataset.data).astype(np.float64)
+Xld = PCA(n_components=2, whiten=False, copy=True).fit_transform(dataset_cube.data).astype(np.float64)
 Xld *= 10/np.std(Xld)
 
 squad = SNeD(dataset=dataset_cube, initial_layout=None, use_nesterovs_momentum=False, ntet_size=4)
-layout = LowDLayoutCreation().create_layout(squad, optional_metric_collection=metric_collection, no_iters=800)
+layout = LowDLayoutCreation().create_layout(squad, optional_metric_collection=None, no_iters=800)
 print(layout.collected_metrics)
-show_layouts(layout, use_labels=True, color_map='rainbow', title="  ntet 12")
-show_generation_metrics(layout, quartet_stress=True, title="ntet 4")
+show_layouts(layout, use_labels=True, color_map='rainbow', title="  no initial")
+show_generation_metrics(layout, quartet_stress=True, title="no initial")
 
-cube.plot_2d(layout=layout, title="N 4 ")
+cube.plot_2d(layout=layout, title="no initial")
 
 # fig, axis = plt.subplots()
 # axis.scatter(Xld[:,0], Xld[:,1], c=dataset.labels, cmap='rainbow')
