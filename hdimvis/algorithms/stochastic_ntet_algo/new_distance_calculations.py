@@ -20,7 +20,7 @@ def compute_quartet_dld(LD_points: np.ndarray):
 
     Dld_full_matrix = np.sqrt(np.sum(
         (LD_points[:, :, None] - LD_points[:, :, None].T) ** 2, axis=1))
-    Dld_full_matrix += 1e-12
+    Dld_full_matrix += 1e-12 # add a small number just in case - to avoid zero division
     zeroed_diag_ld = Dld_full_matrix.copy()
     np.fill_diagonal(zeroed_diag_ld, 0)
     Dld_quartet = np.triu(zeroed_diag_ld)

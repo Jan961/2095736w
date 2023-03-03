@@ -5,6 +5,7 @@ import numpy as np
 import  matplotlib.pyplot as plt
 import math
 import os
+import pathlib
 
 
 def show_layouts(*layouts: LowDLayoutBase, use_labels: bool = False, alpha: float = None,
@@ -75,7 +76,8 @@ def show_layouts(*layouts: LowDLayoutBase, use_labels: bool = False, alpha: floa
     plt.axis('off')
 
     if save_to:
-        plt.savefig(os.path.realpath(os.path.join(save_to, f"{title}.png")))
+        plt.savefig((Path(save_to).joinpath(Path(f"{title}.png"))).resolve())
+
 
     plt.show()
 
@@ -129,7 +131,7 @@ def show_generation_metrics(layout, stress: bool = True, average_speed: bool = F
     plt.tight_layout()
 
     if save_to:
-        plt.savefig(os.path.realpath(os.path.join(save_to, f"{title}.png")))
+        plt.savefig((Path(save_to).joinpath(Path(f"{title}.png"))).resolve())
 
 
 
