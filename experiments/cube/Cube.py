@@ -2,6 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from hdimvis.data_fetchers.Dataset import Dataset
 from hdimvis.create_low_d_layout.LowDLayoutBase import LowDLayoutBase
+import pathlib
+from pathlib import Path
 
 
 class Cube:
@@ -122,7 +124,8 @@ class Cube:
         return np.vstack((self.front, self.top, self.bottom, self.right, self.left))
 
     def plot_2d(self, layout: LowDLayoutBase = None, layout_points: np.ndarray = None,
-                hd_points : np.ndarray =None, opacity: float = 1, title: str = None):
+                hd_points : np.ndarray =None, opacity: float = 1, title: str = None,
+                save_to: Path = None):
 
         assert layout is not None or layout_points is not None, "Must provide a  layout object or 2D points"
 
@@ -146,6 +149,10 @@ class Cube:
             ax.scatter(points_to_plot[:,0], points_to_plot[:,1], c=color, cmap=cmap, alpha= opacity)
         plt.title(title)
         plt.axis('off')
+
+        if save_to:
+            plt.savefig((Path(save_to).joinpath(Path(f"{title}.png"))).resolve())
+
         plt.show()
 
 
