@@ -202,10 +202,9 @@ class Hybrid(SpringForceBase):
             sample_set = random_sample_set(self.interpolation_adjustment_sample_size, self.initial_sample_size, {index})
             for j in sample_set:
                 target = self.sample[j]
-                x, y = self._current_distance(source, target)
-                force = self._force(math.hypot(x, y), distances[j], alpha)
-                source.increment_velocity(x * force, y * force)
-            source.apply_velocity()
+                f_x, f_y = self._calculate_force(source, target)
+                source.increment_position_update(f_x, f_y)
+            source.apply_position_update()
 
     def _sample_distances_sum(self, x: float, y: float):
         """

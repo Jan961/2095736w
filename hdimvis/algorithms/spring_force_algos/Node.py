@@ -4,31 +4,31 @@ import numpy as np
 # code adapted from 2019 Project by Iain Cattermole
 
 class Node:
-    __slots__ = ['datapoint', 'x', 'y', 'vx', 'vy']
+    __slots__ = ['datapoint', 'x', 'y', 'ux', 'uy']
 
     def __init__(self, datapoint: np.ndarray,
-                 vx: float=0.0, vy: float=0.0) -> None:
+                 ux: float=0.0, uy: float=0.0) -> None:
         self.datapoint = datapoint[:-2]
         self.x = datapoint[-2]
         self.y = datapoint[-1]
-        self.vx = vx
-        self.vy = vy
+        self.ux = ux
+        self.uy = uy
 
-    def increment_velocity(self, vx: float, vy: float) -> None:
-        self.vx += vx
-        self.vy += vy
+    def increment_position_update(self, ux: float, uy: float) -> None:
+        self.ux += ux
+        self.uy += uy
 
-    def apply_velocity(self) -> None:
-        self.x += self.vx
-        self.y += self.vy
-        self.clear_velocity()
+    def apply_position_update(self) -> None:
+        self.x += self.ux
+        self.y += self.uy
+        self.clear_position_update()
 
-    def clear_velocity(self) -> None:
-        self.vx = 0.0
-        self.vy = 0.0
+    def clear_position_update(self) -> None:
+        self.ux = 0.0
+        self.uy = 0.0
 
     def __str__(self) -> str:
-        return f'Node<{self.datapoint}>({self.x} + {self.vx}, {self.y} + {self.vy})'
+        return f'Node<{self.datapoint}>({self.x} + {self.ux}, {self.y} + {self.uy})'
 
     def __repr__(self) -> str:
         return f'Node<{self.datapoint}>'

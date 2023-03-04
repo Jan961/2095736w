@@ -72,6 +72,9 @@ class LowDLayoutCreation:
         #the nodes are created here so that this operation is easier to include in memory and time measurements
         if isinstance(layout.algorithm, SpringForceBase):
             layout.algorithm.build_nodes()
+            print(f"Spring constant is set to  {layout.algorithm.spring_constant} \n")
+            print(f"Damping constant is set to {layout.algorithm.damping_constant} \n")
+
 
         layout.run()
         return layout

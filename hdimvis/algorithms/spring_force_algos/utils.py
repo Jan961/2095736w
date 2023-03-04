@@ -12,9 +12,9 @@ def jiggle() -> float:
     """
     Return a random small non zero number
     """
-    small_non_zero = (random.random() - 0.5) * 1e-6
+    small_non_zero = (random.random() - 0.5) * 1e-12
     while small_non_zero == 0:
-        small_non_zero = (random.random() - 0.5) * 1e-6
+        small_non_zero = (random.random() - 0.5) * 1e-12
     return small_non_zero
 
 

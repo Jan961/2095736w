@@ -1,3 +1,5 @@
+import numpy as np
+
 from hdimvis.algorithms.spring_force_algos.SpringForceBase import SpringForceBase
 from ..utils import random_sample_set
 from ....data_fetchers.Dataset import Dataset
@@ -22,7 +24,6 @@ class Chalmers96(SpringForceBase):
         self.neighbours: Dict[int, List[int]] = dict() # dictionary used when no knnd index is supplied
         self.data_size_factor: float = 0.5 / (self.neighbour_set_size + self.sample_set_size)
 
-
     def one_iteration(self, alpha: float=1) -> None:
         """
         Perform one iteration of the spring layout
@@ -35,17 +36,22 @@ class Chalmers96(SpringForceBase):
 
             if self.sample_set_size:
                 sample_set = self._get_sample_set(i)
-                for j in sample_set:
-                    self._set_velocity(self.nodes[i], self.nodes[j], alpha)
+                for global_index in sample_set: # j tracks the position in self.sample_set_updates
+                    self._set_position_update( source=self.nodes[i], target=self.nodes[global_index])
 
             if self.neighbour_set_size:
                 neighbour_set = self._get_neighbours(i)
-                for j in neighbour_set:
-                    self._set_velocity(self.nodes[i], self.nodes[j], alpha, cache_distance=True)
+                for global_index in neighbour_set: # j tracks the position in self.neighbour_set_updates
+                    self._set_position_update( source=self.nodes[i], target=self.nodes[global_index],
+                                              cache_distance=True)
 
             if not self.use_knnd and self.neighbour_set_size and self.sample_set_size:
                 self._update_neighbours(i, samples=sample_set)
-        self._apply_velocities()
+
+
+
+
+        self._apply_position_update()
 
     def _get_neighbours(self, index: int) -> List[int]:
         """

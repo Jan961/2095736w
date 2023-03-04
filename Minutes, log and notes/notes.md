@@ -47,3 +47,12 @@ but it's in R
 
 
 velocity x = (xld1 - xld2)* ((D_ld - D_hd)/ D_) * alpha * data_size_factor
+
+
+* refactoring example :
+             for j in sample_set:
+                target = self.sample[j]
+                x, y = self._low_d_distance(source, target)
+                force = self._force(math.hypot(x, y), distances[j], alpha)
+                source.increment_position_update(x * force, y * force)
+            source.apply_position_update()
