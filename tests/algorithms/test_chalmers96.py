@@ -28,7 +28,7 @@ def test_get_neighbours_returns_sorted_list_of_neighbours():
     source = algorithm.nodes[0]
     previous = -1
     for i in neighbour_set:
-        distance = algorithm.distance(source, algorithm.nodes[i])
+        distance = algorithm.hd_distance(source, algorithm.nodes[i])
         assert distance >= previous
         previous = distance
 
@@ -59,7 +59,7 @@ def test_update_neighbours_keeps_sorted_neighbour_set():
         current_distance = -1
         for j in neighbour_set:
             target = algorithm.nodes[j]
-            distance = algorithm.distance(source, target)
+            distance = algorithm.hd_distance(source, target)
             assert distance >= current_distance
             current_distance = distance
 
@@ -83,10 +83,10 @@ def test_calling_distance_caches_result():
     target = algorithm.nodes[1]
     key = frozenset({source, target})
 
-    algorithm.distance(source, target, cache=False)
+    algorithm.hd_distance(source, target, cache=False)
     assert key not in algorithm.distances
 
-    distance = algorithm.distance(source, target, cache=True)
+    distance = algorithm.hd_distance(source, target, cache=True)
     assert key in algorithm.distances
     assert algorithm.distances[key] == distance
 
@@ -96,7 +96,7 @@ def test_calling_distance_doesnt_cache_result_when_cache_disabled():
 
     source = algorithm.nodes[0]
     target = algorithm.nodes[1]
-    algorithm.distance(source, target, cache=True)
+    algorithm.hd_distance(source, target, cache=True)
     assert not hasattr(algorithm, 'distances')
 
 

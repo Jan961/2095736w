@@ -64,7 +64,7 @@ class Chalmers96(SpringForceBase):
         if index not in self.neighbours:
             random_sample = random_sample_set(self.neighbour_set_size, len(self.nodes), {index})
             random_sample.sort(
-                key=lambda j: self.distance(self.nodes[index], self.nodes[j])
+                key=lambda j: self.hd_distance(self.nodes[index], self.nodes[j])
             )
             self.neighbours[index] = random_sample
         return self.neighbours[index]
@@ -85,17 +85,17 @@ class Chalmers96(SpringForceBase):
         """
         source = self.nodes[i]
         neighbours = self._get_neighbours(i)
-        furthest_neighbour = self.distance(source, self.nodes[neighbours[-1]])
+        furthest_neighbour = self.hd_distance(source, self.nodes[neighbours[-1]])
         for s in samples:
-            sample_distance = self.distance(source, self.nodes[s])
+            sample_distance = self.hd_distance(source, self.nodes[s])
             if sample_distance < furthest_neighbour:
                 n = self.neighbour_set_size - 2
-                neighbour_distance = self.distance(source, self.nodes[neighbours[n]])
+                neighbour_distance = self.hd_distance(source, self.nodes[neighbours[n]])
                 while sample_distance < neighbour_distance:
                     n -= 1
                     if n < 0:
                         break
-                    neighbour_distance = self.distance(source, self.nodes[neighbours[n]])
+                    neighbour_distance = self.hd_distance(source, self.nodes[neighbours[n]])
                 neighbours.insert(n + 1, s)
                 distance_key = frozenset({source, self.nodes[neighbours[-1]]})
                 if self.enable_cache and distance_key in self.distances:

@@ -41,7 +41,7 @@ def test_create_error_fn_returns_function_that_returns_expected():
     print(f"sample {algorithm.sample}")
 
     source = algorithm.nodes[0]
-    distances = [algorithm.distance(source, algorithm.nodes[t]) for t in sample_indexes]
+    distances = [algorithm.hd_distance(source, algorithm.nodes[t]) for t in sample_indexes]
     error_fn = algorithm._create_error_fn(0, distances)
 
 
@@ -63,7 +63,7 @@ def test_find_circle_quadrant_finds_expected_angles_with_original_error():
 
     # source: [0, 1] with parent [0, 0]
     source = algorithm.nodes[0]
-    distances = [algorithm.distance(source, algorithm.nodes[t]) for t in sample_indexes]
+    distances = [algorithm.hd_distance(source, algorithm.nodes[t]) for t in sample_indexes]
     error_fn = algorithm._create_error_fn(0, distances)
 
     lower_angle, upper_angle = algorithm._find_circle_quadrant(error_fn)
@@ -72,7 +72,7 @@ def test_find_circle_quadrant_finds_expected_angles_with_original_error():
 
     # source: [1, 1] with parent [0, 0]
     source = algorithm.nodes[4]
-    distances = [algorithm.distance(source, algorithm.nodes[t]) for t in sample_indexes]
+    distances = [algorithm.hd_distance(source, algorithm.nodes[t]) for t in sample_indexes]
     error_fn = algorithm._create_error_fn(0, distances)
 
     lower_angle, upper_angle = algorithm._find_circle_quadrant(error_fn)
@@ -89,7 +89,7 @@ def test_binary_search_angle_finds_best_angle_with_original_error():
 
     # source: [0, 1] with parent [0, 0]
     source = algorithm.nodes[0]
-    distances = [algorithm.distance(source, algorithm.nodes[t]) for t in sample_indexes]
+    distances = [algorithm.hd_distance(source, algorithm.nodes[t]) for t in sample_indexes]
     error_fn = algorithm._create_error_fn(0, distances)
     lower_angle, upper_angle = (90, 180)
 
@@ -98,7 +98,7 @@ def test_binary_search_angle_finds_best_angle_with_original_error():
 
     # source: [1, 1] with parent [0, 0]
     source = algorithm.nodes[4]
-    distances = [algorithm.distance(source, algorithm.nodes[t]) for t in sample_indexes]
+    distances = [algorithm.hd_distance(source, algorithm.nodes[t]) for t in sample_indexes]
     error_fn = algorithm._create_error_fn(0, distances)
     lower_angle, upper_angle = (0, 90)
 

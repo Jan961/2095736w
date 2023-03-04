@@ -144,7 +144,7 @@ class Hybrid(SpringForceBase):
         Find the cloest parent node to the source, also return the
         list of calculated distances to speed up later calculation
         """
-        distances: List[float] = [self.distance(source, target) for target in self.sample]
+        distances: List[float] = [self.hd_distance(source, target) for target in self.sample]
         parent_index: int = np.argmin(distances)
         return parent_index, distances
 

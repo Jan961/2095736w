@@ -145,7 +145,7 @@ class SpringForceBase(BaseAlgorithm):
 
         dist_x, dist_y = self._low_d_distances_xy(source, target)
         ld_dist = math.hypot(dist_x, dist_y)
-        hd_dist = self.distance(source, target, cache=cache_distance)
+        hd_dist = self.hd_distance(source, target, cache=cache_distance)
 
         first_term = self.spring_constant * (ld_dist - hd_dist)
         second_term = self.damping_constant * ld_dist
