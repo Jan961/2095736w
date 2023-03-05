@@ -78,13 +78,13 @@ def show_layouts(*layouts: LowDLayoutBase, use_labels: bool = False, alpha: floa
     if save_to:
         plt.savefig((Path(save_to).joinpath(Path(f"{title}.png"))).resolve())
 
-
     plt.show()
+
 
 
 def show_generation_metrics(layout, stress: bool = True, average_speed: bool = False, quartet_stress: bool = False,
                             title: str = None, save_to: Path = None):
-    assert not average_speed or not quartet_stress
+    assert not average_speed or not quartet_stress # those are for different alog so can't both be used
     fig, ax1 = plt.subplots()
 
     line1, line2, line3 = [], [], []
@@ -97,7 +97,7 @@ def show_generation_metrics(layout, stress: bool = True, average_speed: bool = F
         ax1.set_xlabel("Iteration number")
         ax1.set_ylabel("Stress")
 
-        if average_speed or quartet_stress:
+        if average_speed or quartet_stress: # add second axis for speed/quartet stress
             if average_speed:
                 label = 'Average speed'
             else:
@@ -110,12 +110,21 @@ def show_generation_metrics(layout, stress: bool = True, average_speed: bool = F
             ax2.set_ylabel(label)
 
 
-    elif quartet_stress:
+    elif quartet_stress: # quartet stress alone
         x1 = layout.collected_metrics['Average quartet stress'][0]
         y1 = layout.collected_metrics['Average quartet stress'][1]
         line1 = ax1.plot(x1, y1, c='r', label="Average quartet stress")
         ax1.set_xlabel("Iteration number")
         ax1.set_ylabel("Average quartet stress")
+
+    elif average_speed: # velocity alone
+        x1 = layout.collected_metrics['Average speed'][0]
+        y1 = layout.collected_metrics['Average speed'][1]
+        line1 = ax1.plot(x1, y1, c='r', label="Average speed")
+        ax1.set_xlabel("Iteration number")
+        ax1.set_ylabel("Average speed")
+
+
 
 
     lines = line1 + line2 + line3
@@ -126,12 +135,13 @@ def show_generation_metrics(layout, stress: bool = True, average_speed: bool = F
         plt.title(f"{layout.algorithm.dataset.name} - {layout.algorithm.get_name()}" )
 
     ax1.legend(lines,labels)
-    # label2 ="ada"
-    # ax2.set_ylabel(label2)
     plt.tight_layout()
 
     if save_to:
         plt.savefig((Path(save_to).joinpath(Path(f"{title}.png"))).resolve())
+
+    plt.show()
+
 
 
 

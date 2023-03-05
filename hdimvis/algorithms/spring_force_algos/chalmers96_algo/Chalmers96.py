@@ -22,7 +22,7 @@ class Chalmers96(SpringForceBase):
         super().__init__( dataset, **kwargs)
 
         self.neighbours: Dict[int, List[int]] = dict() # dictionary used when no knnd index is supplied
-        self.data_size_factor: float = 0.5 / (self.neighbour_set_size + self.sample_set_size)
+        self.
 
     def one_iteration(self, alpha: float=1) -> None:
         """

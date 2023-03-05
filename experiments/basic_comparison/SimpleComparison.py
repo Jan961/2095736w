@@ -40,13 +40,13 @@ class SimpleComparison(ComparisonBase):
             for algorithm, name in self.algorithms.items():
 
                 # basic metrics which will be added to self.result
-                bm = {'time': [], 'final stress': [], 'memory': []}
+                bm = {'time': [], 'final stress': [], 'peak memory': [], 'baseline memory': []}
                 if isinstance(algorithm, SNeD):
                     bm['final squad stress'] = []
 
                 # since we want to reuse the same algo with different datasets
                 # given the earlier implementation now many initialisations have to be done manually:
-                self._complete_algorithm_initialisation(algorithm, name, dataset)
+                self._algorithm_initialisation(algorithm, name, dataset)
 
                 # initialise data structures used for collecting measurements:
                 self.layouts[dataset_name][algorithm.get_name(only_additional=True)] = []
@@ -61,7 +61,8 @@ class SimpleComparison(ComparisonBase):
 
                 for j in range(self.num_repeats):
                     basic_metrics, layout = self.one_experiment( algorithm, filtered_metric_collection)
-                    bm['memory'].append(basic_metrics.get('peak memory', np.NAN))
+                    bm['peak memory'].append(basic_metrics.get('peak memory', np.NAN))
+                    bm['baseline memory'].append(basic_metrics.get('baseline memory', np.NAN))
                     bm['time'].append(basic_metrics.get('time', np.NAN))
                     bm['final stress'].append(basic_metrics.get('final stress', np.NAN))
                     if isinstance(algorithm, SNeD):
@@ -74,20 +75,34 @@ class SimpleComparison(ComparisonBase):
 
     def one_experiment(self, algorithm: BaseAlgorithm, filtered_metric_collection: Dict[str,int]):
 
-        basic_metrics = dict()
-        if self.record_memory:
-            tracemalloc.start()
-        else:
-            t1 = perf_counter()
+        # separate runs for memory measurement and runtime measurements as tracemalloc adds some runtime overhead
 
-        layout = LowDLayoutCreation().create_layout(algorithm,
+        basic_metrics = dict()
+        if self.measure_memory_use:
+            tracemalloc.start()
+
+            # include time spent creating k-nn index/nodes in the measurements
+            if isinstance(algorithm, SpringForceBase):
+                self._initialise_nodes_or_knn_index(algorithm)
+
+            layout = LowDLayoutCreation().create_layout(algorithm,
                                                     optional_metric_collection=filtered_metric_collection,
                                                     no_iters=self.iterations)
-        if self.record_memory:
-            basic_metrics['current memory'], basic_metrics['peak memory'] = tracemalloc.get_tracemalloc_memory()
+            basic_metrics['baseline memory'], basic_metrics['peak memory'] = tracemalloc.get_traced_memory()
             tracemalloc.stop()
-        else:
+
+        if self.measure_time:
+            t1 = perf_counter()
+
+            # include time spent building k-nn index/nodes in the measurements
+            if isinstance(algorithm, SpringForceBase):
+                self._initialise_nodes_or_knn_index(algorithm)
+
+            layout = LowDLayoutCreation().create_layout(algorithm,
+                                                        optional_metric_collection=filtered_metric_collection,
+                                                        no_iters=self.iterations)
             basic_metrics['time'] = perf_counter() - t1
+
         basic_metrics['final stress'] = layout.get_final_stress()
         if isinstance(algorithm, SNeD):
             basic_metrics['final squad stress'] = algorithm.get_average_quartet_stress()
@@ -97,8 +112,10 @@ class SimpleComparison(ComparisonBase):
 
 
     # since we want to reuse the same algo with different datasets and rerun the layout creation multiple times
-    # given the earlier implementation now many initialisations have to be done manually:
-    def _complete_algorithm_initialisation(self, algorithm: BaseAlgorithm, name:str, dataset: Dataset ):
+    # given the earlier implementation now many initialisations have to be done manually
+    # at the same we want to include the creation of the k-nn index in the measurements - see
+    # :
+    def _algorithm_initialisation(self, algorithm: BaseAlgorithm, name:str, dataset: Dataset):
         algorithm.dataset = dataset
         algorithm.data = dataset.data
         algorithm.initial_layout = algorithm.initialise_layout()
@@ -114,3 +131,10 @@ class SimpleComparison(ComparisonBase):
             algorithm.batch_indices = np.arange((algorithm.N - algorithm.N % 4)).reshape((-1, 4))
             algorithm.grad_acc = np.ones((algorithm.N, 2))
             algorithm.low_d_positions = algorithm.initial_layout
+
+
+    def _initialise_nodes_or_knn_index(self, algorithm: SpringForceBase):
+        algorithm.nodes = algorithm.build_nodes()
+        if algorithm.use_knnd:
+            algorithm.knnd_index = algorithm.create_knnd_index()
+

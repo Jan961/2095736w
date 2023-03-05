@@ -22,6 +22,8 @@ class SNeD(BaseAlgorithm):
                  momentum: float = 0.6, is_test: bool = False, use_rbf_adjustment: bool = True, **kwargs):
         super().__init__(dataset, **kwargs)
 
+        assert ntet_size > 2, "Only n-tet sizes of 3 or greater are available"
+
         # the optional "None" values are used to allow automatic data collection from many datasets in "Basic Comparison"
         self. N, M = self.data.shape if self.data is not None else (None, None)
         self.ntet_size = ntet_size # n-tet for: duet, trio (triplet), quartet, quintet, sextet etc.

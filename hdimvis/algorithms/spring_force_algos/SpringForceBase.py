@@ -22,8 +22,10 @@ class SpringForceBase(BaseAlgorithm):
                  neighbour_set_size: int = 5,
                  sample_set_size: int = 10,
                  spring_constant: float = 1,
-                 data_size_factor: float = 1, # 2019 calculations parameter
-                 damping_constant: float = 1,    # for more details see README
+                 data_size_factor: float = 1, # 2019 calculations parameter;
+                 # 2019 default =  0.5 / (neighbour_set_size + sample_set_size)
+
+                 damping_constant: float = 0,
                  **kwargs) -> None:
 
         # the base class extracts data from the Dataset object
@@ -41,13 +43,6 @@ class SpringForceBase(BaseAlgorithm):
         self.damping_constant = damping_constant
         self.knnd_parameters = knnd_parameters
         self.use_knnd = use_knnd
-
-        # the below arrays are used to store forces or velocities or position updates between a node
-        # and each member of its sample or neighbour set - the forces are summed to calculate the position updates
-        # these are re-use for every node (i.e. datapoint)
-        self.sample_set_updates: np.ndarray = np.zeros((self.sample_set_size, 2))
-        self.neighbour_set_updates: np.ndarray = np.zeros((self.neighbour_set_size, 2))
-
         if self.use_knnd:
             if self.data is not None:
                 self.knnd_index = self.create_knnd_index()
@@ -150,7 +145,7 @@ class SpringForceBase(BaseAlgorithm):
         first_term = self.spring_constant * (ld_dist - hd_dist)
         second_term = self.damping_constant * ld_dist
 
-        # force magnitude - data_size_factor was included in the 2019 code but not in original paper,
+        # force magnitude; data_size_factor was included in the 2019 code but not in the original paper,
         # here it is set to 1 by default
         force_mag = (first_term + second_term) * self.data_size_factor
         f_x =  (dist_x/ld_dist) * force_mag
