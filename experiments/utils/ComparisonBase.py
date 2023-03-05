@@ -36,10 +36,10 @@ class ComparisonBase:
         name = f"{self.experiment_name} - pickled"
         # exception catching bc we don't want to have to re-run the experiment in case of we mess up the naming
         try:
-            path = os.path.realpath(os.path.join(os.path.dirname(__file__), '.', name))
+            path = os.path.realpath(os.path.join(os.path.dirname(__file__), '../basic_comparison', name))
             os.mkdir(path)
         except FileExistsError:
-            path = os.path.realpath(os.path.join(os.path.dirname(__file__), '.', name + "(1)"))
+            path = os.path.realpath(os.path.join(os.path.dirname(__file__), '../basic_comparison', name + "(1)"))
             os.mkdir(path)
 
         return path

@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import Dict
 
 import numpy as np
 
@@ -8,7 +8,7 @@ from hdimvis.algorithms.BaseAlgorithm import BaseAlgorithm
 from hdimvis.algorithms.spring_force_algos.SpringForceBase import SpringForceBase
 from hdimvis.algorithms.stochastic_ntet_algo.SNeD import SNeD
 from hdimvis.data_fetchers.Dataset import Dataset
-from experiments.basic_comparison.ComparisonBase import ComparisonBase
+from experiments.utils.ComparisonBase import ComparisonBase
 from time import perf_counter
 import tracemalloc
 
