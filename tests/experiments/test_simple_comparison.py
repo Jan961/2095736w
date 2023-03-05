@@ -27,10 +27,10 @@ def test_correct_number_of_metrics_collected():
     #test basic metrics
     assert len(expr.results['mock data']) == 2 # num algorithms
     assert len(expr.results['mock data']['simple 96']['final stress']) == 2 # num repeats
-    assert len(expr.results['mock data']['simple 96']) == 3 # num available metrics
+    assert len(expr.results['mock data']['simple 96']) == 4 # num available metrics
 
     assert len(expr.results['mock data']['basic squad']['final squad stress']) == 2
-    assert len(expr.results['mock data']['basic squad']) == 4
+    assert len(expr.results['mock data']['basic squad']) == 5
 
     #test generation metric collection for chalmers' 96
     assert len(expr.layouts['mock data']['basic squad']) == 2 # num repeats

@@ -25,7 +25,7 @@ class SpringForceBase(BaseAlgorithm):
                  data_size_factor: float = 1, # 2019 calculations parameter;
                  # 2019 default =  0.5 / (neighbour_set_size + sample_set_size)
 
-                 damping_constant: float = 0,
+                 damping_constant: float = 1,
                  **kwargs) -> None:
 
         # the base class extracts data from the Dataset object
@@ -53,7 +53,7 @@ class SpringForceBase(BaseAlgorithm):
             self.distances: Dict[FrozenSet[Node], float] = dict()
         else:
             # Change the distance function
-            self.distance = self.distance_no_cache
+            self.hd_distance = self.hd_distance_no_cache
 
     @abstractmethod
     def one_iteration(self, *args, **kwargs) -> None:
@@ -92,7 +92,7 @@ class SpringForceBase(BaseAlgorithm):
         """ Return the 5-running mean of the average node speeds """
         return mean(self._average_speeds[-5:]) if len(self._average_speeds) > 0 else np.inf
 
-    def distance_no_cache(self, source: Node, target: Node, cache: bool = False) -> float:
+    def hd_distance_no_cache(self, source: Node, target: Node, cache: bool = False) -> float:
         """ Distance function to use when self.disable_cache = True """
         return self.distance_fn(source.datapoint - target.datapoint)
 
@@ -143,11 +143,15 @@ class SpringForceBase(BaseAlgorithm):
         hd_dist = self.hd_distance(source, target, cache=cache_distance)
 
         first_term = self.spring_constant * (ld_dist - hd_dist)
-        second_term = self.damping_constant * ld_dist
+
+        velocity_source = math.hypot(source.ux + source.uy) # damping linearly proportional to
+        velocity_target = math.hypot(target.ux + target.uy) # the sum of current velocities
+        second_term = self.damping_constant * (velocity_source + velocity_target)
+
 
         # force magnitude; data_size_factor was included in the 2019 code but not in the original paper,
         # here it is set to 1 by default
-        force_mag = (first_term + second_term) * self.data_size_factor
+        force_mag = (first_term - second_term) * self.data_size_factor
         f_x =  (dist_x/ld_dist) * force_mag
         f_y = (dist_y/ld_dist) * force_mag
 
