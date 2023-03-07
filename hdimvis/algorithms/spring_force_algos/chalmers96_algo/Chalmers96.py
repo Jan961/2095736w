@@ -21,7 +21,7 @@ class Chalmers96(SpringForceBase):
         # the base class extracts data from the Dataset object
         super().__init__( dataset, **kwargs)
 
-        self.neighbours: Dict[int, List[int]] = dict() # dictionary used when no knnd index is supplied
+        self.neighbours: Dict[int, List[int]] = dict() # dictionary used when no k-nnd is not used
 
     def one_iteration(self, alpha: float=1) -> None:
         """

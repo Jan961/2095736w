@@ -7,11 +7,11 @@ import math
 # code adapted from 2019 Project by Iain Cattermole
 
 dataset = Dataset(np.array([
-    [0, 1],
     [0, 0],
-    [1, 0],
-    [2, 0],
     [1, 1],
+    [10, 10],
+    [20, 0],
+    [0, 20],
 ]), None, "test data")
 
 initial_layout = np.zeros((5,2))
@@ -24,15 +24,18 @@ def set_node_positions(algorithm):
 
 def test_find_parent_gets_the_parent_with_minimum_distance():
     algorithm = Hybrid(dataset=dataset,
-                       preset_sample=np.array([1, 2, 3]))
+                       preset_sample=np.array([1, 2, 3, 4]))
     test_node = algorithm.nodes[0]
     parent_index = algorithm._find_parent(test_node)[0]
 
-    assert parent_index == 0  # sample node 0 is [0, 0]
+    assert parent_index == 0  # the closest node has index 0 in the sample (1 global index)
+    assert np.all(algorithm.sample[parent_index].datapoint == np.array([1,1])) # [1,1] is the closest node
+
+
 
 
 def test_create_error_fn_returns_function_that_returns_expected():
-    sample_indexes = np.array([1, 2, 3])
+    sample_indexes = np.array([1, 2, 3, 4])
     algorithm = Hybrid(dataset=dataset, preset_sample=sample_indexes,
                        initial_layout=initial_layout,interpolation_adjustment_sample_size=1,
                        use_correct_interpolation_error=False)

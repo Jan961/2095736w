@@ -30,12 +30,12 @@ class Hybrid(SpringForceBase):
         super().__init__(**kwargs)
 
         self.use_correct_interpolation_error = use_correct_interpolation_error
-        self.preset_sample = preset_sample
+        self.preset_sample = preset_sample  # node indices - we can manually set the sample used for interpolation here
         self.initial_sample_size:             int = preset_sample.size if preset_sample is not None \
                                                  else round(math.sqrt(len(self.nodes)))
 
         self.interpolation_adjustment_sample_size:       int = interpolation_adjustment_sample_size
-        self.sample_indices:        List[int] = self.create_sample_indices()
+        self.sample_indices:        List[int] = self.create_sample_indices() # use preset_sample or select random
         self.remainder_indices:     List[int] = list(set(range(len(self.nodes))) - set(self.sample_indices))
         self.sample:               List[Node] = [self.nodes[i] for i in self.sample_indices]
         self.remainder:            List[Node] = [self.nodes[i] for i in self.remainder_indices]
@@ -143,6 +143,7 @@ class Hybrid(SpringForceBase):
         """
         Find the cloest parent node to the source, also return the
         list of calculated distances to speed up later calculation
+        Return the index of the parent in the sample not global
         """
         distances: List[float] = [self.hd_distance(source, target) for target in self.sample]
         parent_index: int = np.argmin(distances)

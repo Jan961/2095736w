@@ -21,11 +21,11 @@ class SpringForceBase(BaseAlgorithm):
                  use_knnd: bool = False, knnd_parameters: Dict = None,  # k-nn descent algorithm parameters
                  neighbour_set_size: int = 5,
                  sample_set_size: int = 10,
-                 spring_constant: float = 1,
+                 spring_constant: float = 0.7,
                  data_size_factor: float = 1, # 2019 calculations parameter;
                  # 2019 default =  0.5 / (neighbour_set_size + sample_set_size)
 
-                 damping_constant: float = 1,
+                 damping_constant: float = 0.3,
                  **kwargs) -> None:
 
         # the base class extracts data from the Dataset object
@@ -83,10 +83,6 @@ class SpringForceBase(BaseAlgorithm):
     def set_positions(self, positions: np.ndarray) -> None:
         for pos, node in zip(positions, self.nodes):
             node.x, node.y = pos
-
-
-    def get_memory(self) -> int:
-        return get_size(self)
 
     def get_average_speed(self) -> float:
         """ Return the 5-running mean of the average node speeds """
@@ -152,7 +148,7 @@ class SpringForceBase(BaseAlgorithm):
         # force magnitude; data_size_factor was included in the 2019 code but not in the original paper,
         # here it is set to 1 by default
         force_mag = (first_term - second_term) * self.data_size_factor
-        f_x =  (dist_x/ld_dist) * force_mag
+        f_x = (dist_x/ld_dist) * force_mag
         f_y = (dist_y/ld_dist) * force_mag
 
         return f_x, f_y

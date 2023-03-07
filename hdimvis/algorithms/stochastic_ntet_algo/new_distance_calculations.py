@@ -9,8 +9,8 @@ def compute_quartet_dhd(exaggerate_dist: bool, HD_points: np.ndarray, distance_f
     if exaggerate_dist:     # during exaggeration: don't take the square root of the distances
         Dhd_full_matrix = Dhd_full_matrix**2
 
-    Dhd_full_matrix += 1e-12  # for some datasets 0 distance is also apparently an issue
-                                                         # for hd dist - hence the small number
+    Dhd_full_matrix += 1e-12  # for some datasets 0 distance is also apparently an issue for hd dist
+                                                         #  - hence the small number added
     np.fill_diagonal(Dhd_full_matrix, 0)
     Dhd_quartet = np.triu(Dhd_full_matrix) # zero duplicate and unneeded entries
     return Dhd_quartet
