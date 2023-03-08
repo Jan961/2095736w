@@ -47,9 +47,6 @@ class Chalmers96(SpringForceBase):
             if not self.use_knnd and self.neighbour_set_size and self.sample_set_size:
                 self._update_neighbours(i, samples=sample_set)
 
-
-
-
         self._apply_position_update()
 
     def _get_neighbours(self, index: int) -> List[int]:

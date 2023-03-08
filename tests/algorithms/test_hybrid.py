@@ -16,6 +16,10 @@ dataset = Dataset(np.array([
 
 initial_layout = np.zeros((5,2))
 
+def set_node_positions(algorithm):
+    for node in algorithm.nodes:
+        node.x, node.y = node.datapoint
+
 
 def test_find_parent_gets_the_parent_with_minimum_distance():
     algorithm = Hybrid(dataset=dataset,
@@ -34,14 +38,12 @@ def test_create_error_fn_returns_function_that_returns_expected():
                        initial_layout=initial_layout,interpolation_adjustment_sample_size=1,
                        use_correct_interpolation_error=False)
 
-    print(f"sample {algorithm.sample}")
     parent_node = algorithm.nodes[1]
     parent_node.x, parent_node.y = 1, 0 # set same as its hd position to make it easy
 
     source = algorithm.nodes[0]
     hd_distances = [algorithm.hd_distance(source, algorithm.nodes[t]) for t in sample_indexes]
     error_fn = algorithm._create_error_fn(0, hd_distances)
-
 
     # radius of the circle used by the fn is 1 ( distance between [0,0] and [1,0]
     # thus the point at
@@ -53,8 +55,6 @@ def test_create_error_fn_returns_function_that_returns_expected():
 
     for i, angle in enumerate([0, 90, 180, 270]):
         ld_distances = [ np.linalg.norm(algorithm.get_positions()[j] - potential_positions[i]) for j in sample_indexes]
-        print(ld_distances)
-        print(hd_distances)
 
         assert error_fn(angle, correct_error_calc=True) == np.sum((np.array(ld_distances) - np.array(hd_distances))**2)
 

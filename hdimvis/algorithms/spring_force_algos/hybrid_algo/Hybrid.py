@@ -131,14 +131,11 @@ class Hybrid(SpringForceBase):
                 correct_error_calc = self.use_correct_interpolation_error
 
             point = point_on_circle(parent.x, parent.y, angle, radius)
-            print(f"point {point}")
+
             if correct_error_calc:
                 point_arr = np.array(point)
                 sample_arr = np.array([[node.x, node.y] for node in self.sample] )
-                print(f"sample arr {sample_arr}")
                 distances_2d = np.linalg.norm(sample_arr - point_arr, axis=1)
-                print(f"distances 2d {distances_2d}")
-                print(f"distances hd {distances}")
                 distances_hd = np.array(distances)
                 return np.sum((distances_hd - distances_2d)**2)
 

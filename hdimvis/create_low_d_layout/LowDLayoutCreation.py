@@ -40,7 +40,6 @@ class LowDLayoutCreation:
         else:
             print("Error: unsupported algorithm type")
 
-
         if optional_metric_collection is None:
             print("#" * 20)
             print("No metrics will be collected during layout creation. \n"
@@ -48,11 +47,11 @@ class LowDLayoutCreation:
             print("#" * 20)
 
         else:
-            for metric, freq in optional_metric_collection.items():
+            for metric, interval in optional_metric_collection.items():
                 if metric != 'norm':
-                    assert freq > 0, f"Frequency of metric collection has to be > 0, got: {freq} "
+                    assert interval > 0, f"Interval of metric collection has to be > 0, got: {interval} "
                     assert metric in algorithm.available_metrics, f"{metric} not available for this algorithm"
-                    print(f"\"{metric.capitalize()}\" will be measured every {freq} iterations")
+                    print(f"\"{metric.capitalize()}\" will be measured every {interval} iterations")
                     print("#" * 20)
 
         norm = "euclidian"
@@ -75,7 +74,6 @@ class LowDLayoutCreation:
             print(f"Spring constant is set to  {layout.algorithm.spring_constant} ")
             print(f"Damping constant is set to {layout.algorithm.damping_constant} ")
             print("#" * 20)
-
 
         layout.run()
         return layout

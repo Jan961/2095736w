@@ -21,11 +21,11 @@ class SpringForceBase(BaseAlgorithm):
                  use_knnd: bool = False, knnd_parameters: Dict = None,  # k-nn descent algorithm parameters
                  neighbour_set_size: int = 5,
                  sample_set_size: int = 10,
-                 spring_constant: float = 0.7,
+                 spring_constant: float = 0.1,
                  data_size_factor: float = 1, # 2019 calculations parameter;
                  # 2019 default =  0.5 / (neighbour_set_size + sample_set_size)
 
-                 damping_constant: float = 0.3,
+                 damping_constant: float = 0.01,
                  **kwargs) -> None:
 
         # the base class extracts data from the Dataset object
