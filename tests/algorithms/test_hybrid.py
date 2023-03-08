@@ -4,22 +4,17 @@ from hdimvis.data_fetchers.Dataset import Dataset
 import numpy as np
 import math
 
-# code adapted from 2019 Project by Iain Cattermole
+# code adapted and modified from 2019 Project by Iain Cattermole
 
 dataset = Dataset(np.array([
     [0, 0],
-    [1, 1],
+    [1, 0],
     [10, 10],
     [20, 0],
     [0, 20],
 ]), None, "test data")
 
 initial_layout = np.zeros((5,2))
-
-
-def set_node_positions(algorithm):
-    for node in algorithm.nodes:
-        node.x, node.y = node.datapoint
 
 
 def test_find_parent_gets_the_parent_with_minimum_distance():
@@ -29,29 +24,41 @@ def test_find_parent_gets_the_parent_with_minimum_distance():
     parent_index = algorithm._find_parent(test_node)[0]
 
     assert parent_index == 0  # the closest node has index 0 in the sample (1 global index)
-    assert np.all(algorithm.sample[parent_index].datapoint == np.array([1,1])) # [1,1] is the closest node
-
-
+    assert np.all(algorithm.sample[parent_index].datapoint == np.array([1,0])) # [1,0] is the closest node
 
 
 def test_create_error_fn_returns_function_that_returns_expected():
+
     sample_indexes = np.array([1, 2, 3, 4])
     algorithm = Hybrid(dataset=dataset, preset_sample=sample_indexes,
                        initial_layout=initial_layout,interpolation_adjustment_sample_size=1,
                        use_correct_interpolation_error=False)
 
-    set_node_positions(algorithm)
     print(f"sample {algorithm.sample}")
+    parent_node = algorithm.nodes[1]
+    parent_node.x, parent_node.y = 1, 0 # set same as its hd position to make it easy
 
     source = algorithm.nodes[0]
-    distances = [algorithm.hd_distance(source, algorithm.nodes[t]) for t in sample_indexes]
-    error_fn = algorithm._create_error_fn(0, distances)
+    hd_distances = [algorithm.hd_distance(source, algorithm.nodes[t]) for t in sample_indexes]
+    error_fn = algorithm._create_error_fn(0, hd_distances)
 
 
-    assert error_fn(90) == 0
-    assert error_fn(270) == 0  # sample is 3 nodes in a line so either side works
-    assert error_fn(180) == 6 - sum(distances)
-    assert error_fn(0) == sum(distances) - 2
+    # radius of the circle used by the fn is 1 ( distance between [0,0] and [1,0]
+    # thus the point at
+    # 0 angle has coords [2,0]
+    # 90 angle [1,1]
+    # 180  [0,0]
+    # and 270 [1,-1] therefore:
+    potential_positions = [[2,0], [1,1], [0,0], [1,-1]]
+
+    for i, angle in enumerate([0, 90, 180, 270]):
+        ld_distances = [ np.linalg.norm(algorithm.get_positions()[j] - potential_positions[i]) for j in sample_indexes]
+        print(ld_distances)
+        print(hd_distances)
+
+        assert error_fn(angle, correct_error_calc=True) == np.sum((np.array(ld_distances) - np.array(hd_distances))**2)
+
+        assert error_fn(angle, correct_error_calc=False) == np.abs(np.sum(ld_distances) - np.sum(hd_distances))
 
 
 # failed in the original

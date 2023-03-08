@@ -113,24 +113,32 @@ class Hybrid(SpringForceBase):
         source.x, source.y = point_on_circle(parent.x, parent.y, best_angle, radius)
         self._force_layout_child(index, distances, alpha, interpolation_adjustment_iterations)
 
-    def _create_error_fn(self, parent_index: int,
-                         distances: List[float],
-                         use_interpolation_correct_error: bool = True) -> Callable[[int], float]:
+    def _create_error_fn(self, parent_index: int,  # parent index in the sample, not in the list of all nodes
+                         distances: List[float],   # these are hd distances
+                         ) -> Callable[[int, bool], float]:
         """
         Create function specific to current node to calculate
-        error in distances at an angle on the parent circle
-        at the calculated radius
+        error in distances at an angle on the circle centred at the parent
+        at the calculated radius - i.e. radius equal to hd distance between the node and its parent
         """
 
         radius = distances[parent_index]
         parent = self.sample[parent_index]
 
-        def sample_distances_error(angle: int) -> float:
+        def sample_distances_error(angle: int, correct_error_calc: bool = None) -> float:
+
+            if correct_error_calc is None:
+                correct_error_calc = self.use_correct_interpolation_error
+
             point = point_on_circle(parent.x, parent.y, angle, radius)
-            if self.use_correct_interpolation_error:
+            print(f"point {point}")
+            if correct_error_calc:
                 point_arr = np.array(point)
                 sample_arr = np.array([[node.x, node.y] for node in self.sample] )
-                distances_2d = np.linalg.norm(sample_arr-point_arr, axis=1)
+                print(f"sample arr {sample_arr}")
+                distances_2d = np.linalg.norm(sample_arr - point_arr, axis=1)
+                print(f"distances 2d {distances_2d}")
+                print(f"distances hd {distances}")
                 distances_hd = np.array(distances)
                 return np.sum((distances_hd - distances_2d)**2)
 
