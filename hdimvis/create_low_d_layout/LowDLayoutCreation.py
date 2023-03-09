@@ -51,7 +51,10 @@ class LowDLayoutCreation:
                 if metric != 'norm':
                     assert interval > 0, f"Interval of metric collection has to be > 0, got: {interval} "
                     assert metric in algorithm.available_metrics, f"{metric} not available for this algorithm"
-                    print(f"\"{metric.capitalize()}\" will be measured every {interval} iterations")
+                    if interval != 1:
+                        print(f"\"{metric.capitalize()}\" will be measured every {interval} iterations")
+                    else:
+                        print(f"\"{metric.capitalize()}\" will be measured on every iteration")
                     print("#" * 20)
 
         norm = "euclidian"

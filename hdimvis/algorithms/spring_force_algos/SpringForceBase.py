@@ -140,9 +140,17 @@ class SpringForceBase(BaseAlgorithm):
 
         first_term = self.spring_constant * (ld_dist - hd_dist)
 
-        velocity_source = math.hypot(source.ux + source.uy) # damping linearly proportional to
-        velocity_target = math.hypot(target.ux + target.uy) # the sum of current velocities
-        second_term = self.damping_constant * (velocity_source + velocity_target)
+        #calculate source and node speeds in the direction of the distance betwen the two nodes
+        direction_unit_vector = np.array([dist_x, dist_y])/(np.sqrt(sum([dist_x**2, dist_y**2])))
+        speed_source = np.dot(direction_unit_vector, np.array([source.old_ux, source.old_uy]))
+        speed_target = np.dot(direction_unit_vector, np.array([source.old_ux, source.old_uy]))
+
+        # zero negative speeds
+        speed_source = 0 if speed_source < 0 else speed_source
+        speed_target = 0 if speed_target < 0 else speed_target
+
+         # damping linearly proportional to current speeds
+        second_term = self.damping_constant * (speed_source + speed_target)
 
 
         # force magnitude; data_size_factor was included in the 2019 code but not in the original paper,
