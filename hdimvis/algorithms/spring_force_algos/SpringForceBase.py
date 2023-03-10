@@ -25,7 +25,7 @@ class SpringForceBase(BaseAlgorithm):
                  data_size_factor: float = 1, # 2019 calculations parameter;
                  # 2019 default =  0.5 / (neighbour_set_size + sample_set_size)
 
-                 damping_constant: float = 0.01,
+                 damping_constant: float = 0,
                  **kwargs) -> None:
 
         # the base class extracts data from the Dataset object
@@ -134,24 +134,26 @@ class SpringForceBase(BaseAlgorithm):
         Calculate the spring force to apply between two nodes i and j
         """
 
-        dist_x, dist_y = self._low_d_distances_xy(source, target)
+        dist_x, dist_y = self._low_d_distances_xy(source, target) # x,y distance vector from source to target
         ld_dist = math.hypot(dist_x, dist_y)
         hd_dist = self.hd_distance(source, target, cache=cache_distance)
 
         first_term = self.spring_constant * (ld_dist - hd_dist)
 
-        #calculate source and node speeds in the direction of the distance betwen the two nodes
-        direction_unit_vector = np.array([dist_x, dist_y])/(np.sqrt(sum([dist_x**2, dist_y**2])))
-        speed_source = np.dot(direction_unit_vector, np.array([source.old_ux, source.old_uy]))
-        speed_target = np.dot(direction_unit_vector, np.array([source.old_ux, source.old_uy]))
+        if self.damping_constant != 0:
+            #calculate "source" and "target" speeds in the direction of the distance between the two nodes
+            direction_unit_vector = np.array([dist_x, dist_y])/(np.sqrt(sum([dist_x**2, dist_y**2])))
+            speed_source = np.dot(direction_unit_vector, np.array([source.old_ux, source.old_uy]))
+            speed_target = np.dot(-direction_unit_vector, np.array([source.old_ux, source.old_uy]))
 
-        # zero negative speeds
-        speed_source = 0 if speed_source < 0 else speed_source
-        speed_target = 0 if speed_target < 0 else speed_target
+            # zero negative speeds
+            speed_source = 0 if speed_source < 0 else speed_source
+            speed_target = 0 if speed_target < 0 else speed_target
 
-         # damping linearly proportional to current speeds
-        second_term = self.damping_constant * (speed_source + speed_target)
-
+             # damping linearly proportional to the sum of last speed values in the direction of the distance vector
+            second_term = self.damping_constant * (speed_source + speed_target)
+        else:
+            second_term = 0
 
         # force magnitude; data_size_factor was included in the 2019 code but not in the original paper,
         # here it is set to 1 by default

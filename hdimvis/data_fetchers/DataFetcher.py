@@ -57,5 +57,6 @@ class DataFetcher:
         print("#" * 20)
         print("Dataset loaded")
         print(f"Dataset shape: {data.shape[0], data.shape[1]}")
+        print("#" * 20)
         return Dataset(data, labels, dataset_name)
 

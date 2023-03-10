@@ -85,9 +85,12 @@ class Cube:
             return points[:, 2]
 
 
-    def plot_3d(self, title: str = None):
+    def plot_3d(self, title: str = None, axes_labels_off: bool = False, size_inches: int = None ):
         fig = plt.figure()
         fig.suptitle(title)
+
+        if size_inches:
+            fig.set_size_inches(size_inches, size_inches)
 
         ax = fig.add_subplot(projection='3d')
 
@@ -109,8 +112,23 @@ class Cube:
 
         #left
         color = self.get_colour_mapping(3, self.left)
+
+        if axes_labels_off:
+            ax.xaxis.set_ticklabels([])
+            ax.yaxis.set_ticklabels([])
+            ax.zaxis.set_ticklabels([])
+
+            for line in ax.xaxis.get_ticklines():
+                line.set_visible(False)
+            for line in ax.yaxis.get_ticklines():
+                line.set_visible(False)
+            for line in ax.zaxis.get_ticklines():
+                line.set_visible(False)
+
         ax.scatter(self.left[:, 0], self.left[:, 1], self.left[:, 2], c=color, cmap='winter_r')
+
         ax.set_aspect('equal', adjustable='box')
+
 
 
     def get_sample_dataset(self, size: int):

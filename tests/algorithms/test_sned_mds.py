@@ -42,6 +42,12 @@ def test_nesterovs_momentum_v_increases_as_expected():
         assert np.sum(np.abs(previous_v) < np.sum(np.abs(algo.nesterovs_v)))
         previous_v = algo.nesterovs_v
 
+def test_rbf_distance_return_correct_array_format():
+    Dhd_quartet = np.tile(np.array([[1.,3.,5.,4.]]),(4,1))
+    dist_rel = relative_rbf_dists(Dhd_quartet)
+
+    assert np.any(dist_rel[np.triu_indices(4)])
+    assert not np.any(dist_rel[np.tril_indices(4)])
 
 
 
