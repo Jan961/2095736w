@@ -7,7 +7,8 @@ from ..BaseAlgorithm import BaseAlgorithm
 from hdimvis.metrics.distance_measures.euclidian_and_manhattan import euclidean
 from hdimvis.metrics.distance_measures.relative_rbf_dists import relative_rbf_dists
 from .new_distance_calculations import compute_quartet_dhd, compute_quartet_dld
-from .original_calculations import original_dhd_calculation, original_dld_calculation
+from .original_calculations import original_dhd_calculation, original_dld_calculation, compute_quartet_grads_original
+
 
 
 #code adapted and modified from https://github.com/PierreLambert3/SQuaD-MDS
@@ -44,7 +45,8 @@ class SNeD(BaseAlgorithm):
         assert self.distance_fn == euclidean, \
             "For now, Squad only supports euclidian distance with optional rbf adjustment"
         if self.is_test:
-            assert self.ntet_size == 4 # for testing n-tet size must be set to 4
+            assert self.ntet_size == 4, "For comparing the original grad calculation with new vectorised ones," \
+                                        "n-tet size must be set to 4"
 
     def get_positions(self) -> np.ndarray:
         return self.low_d_positions
@@ -74,11 +76,17 @@ class SNeD(BaseAlgorithm):
             Dld_full_matrix, Dld_quartet = compute_quartet_dld(LD_points)
 
             if self.is_test:
-                Dhd_quartet_alt = Dhd_quartet[np.nonzero(Dhd_quartet)] # convert to a form used by the og code
+                Dhd_quartet_alt = Dhd_quartet[np.nonzero(Dhd_quartet)] # convert to the form used by the og code
                 assert np.allclose(Dhd_quartet_alt, original_dhd_calculation(exaggerate_dist, HD_points))
                 print("HD distance equality assertion passed")
 
-                Dld_quartet_alt = Dld_quartet[np.nonzero(Dld_quartet)]  # convert to a form used by the og code
+                # worth keeping in mind that the conversion in the first line above and similar conversions
+                # below are not perfect since if we are very, very unluckily some relevant distances
+                #  in the Dhd_quartet matrix might be zero
+                # but it should be perfectly fine for testing - for perfect conversion see the one in
+                # metrics.distance_measures.rbf_distance
+
+                Dld_quartet_alt = Dld_quartet[np.nonzero(Dld_quartet)]  # convert to the form used by the og code
                 assert np.allclose(Dld_quartet_alt, original_dld_calculation(LD_points))
                 print("LD distance equality assertion passed")
 
@@ -91,7 +99,13 @@ class SNeD(BaseAlgorithm):
                 Dhd_quartet /= np.sum(Dhd_quartet)
 
             quartet_grads = compute_quartet_grads(LD_points, Dhd_quartet,
-                                                  Dld_quartet, Dld_full_matrix, self.is_test)
+                                                  Dld_quartet, Dld_full_matrix)
+
+            if self.is_test:
+                Dhd_1dim = Dhd_quartet[np.nonzero(Dhd_quartet)]  # convert to the format used by the OG grad computation
+                Dld_1dim = Dhd_quartet[np.nonzero(Dhd_quartet)]
+                assert np.allclose(quartet_grads.ravel(), compute_quartet_grads_original(LD_points, Dhd_1dim, Dld_1dim))
+                print("Gradient equality assertion passed")
 
             if self.use_nesterovs_momentum:
                 self.nesterovs_v[quartet] = self.nesterovs_v[quartet]* self.momentum - LR*quartet_grads

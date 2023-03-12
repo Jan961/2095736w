@@ -49,11 +49,11 @@ class SpringForceBase(BaseAlgorithm):
             else:
                 self.knnd_index = None
 
-        if enable_cache:
-            self.distances: Dict[FrozenSet[Node], float] = dict()
-        else:
-            # Change the distance function
-            self.hd_distance = self.hd_distance_no_cache
+        # if enable_cache:
+        #     self.distances: Dict[FrozenSet[Node], float] = dict()
+        # else:
+        #     # Change the distance function
+        #     self.hd_distance = self.hd_distance_no_cache
 
     @abstractmethod
     def one_iteration(self, *args, **kwargs) -> None:
@@ -90,19 +90,19 @@ class SpringForceBase(BaseAlgorithm):
 
     def hd_distance_no_cache(self, source: Node, target: Node, cache: bool = False) -> float:
         """ Distance function to use when self.disable_cache = True """
-        return self.distance_fn(source.datapoint - target.datapoint)
+        return self.distance_fn(target.datapoint - source.datapoint)
 
     def hd_distance(self, source: Node, target: Node, cache: bool = False) -> float:
         """
         Returns the high dimensional distance between two nodes at source and target
         index using self.distance_fn
         """
-        pair = frozenset({source, target})
-        if pair in self.distances:
-            return self.distances[pair]
+        # pair = frozenset({source, target})
+        # if pair in self.distances:
+        #     return self.distances[pair]
         distance = self.distance_fn(source.datapoint - target.datapoint)
-        if cache:
-            self.distances[pair] = distance
+        # if cache:
+        #     self.distances[pair] = distance
         return distance
 
     def create_knnd_index(self):
@@ -123,12 +123,12 @@ class SpringForceBase(BaseAlgorithm):
         x = target.x - source.x
         y = target.y - source.y
         # x and y must be non zero
-        x = x if x else jiggle()
-        y = y if y else jiggle()
+        x = x if x else 1e-12
+        y = y if y else 1e-12
         return x, y
 
 
-    def _calculate_force(self, source: Node, target: Node,
+    def _calculate_force(self, k, source: Node, target: Node,
                          cache_distance: bool = False) -> Tuple[float, float]:
         """
         Calculate the spring force to apply between two nodes i and j
@@ -137,8 +137,10 @@ class SpringForceBase(BaseAlgorithm):
         dist_x, dist_y = self._low_d_distances_xy(source, target) # x,y distance vector from source to target
         ld_dist = math.hypot(dist_x, dist_y)
         hd_dist = self.hd_distance(source, target, cache=cache_distance)
-
-        first_term = self.spring_constant * (ld_dist - hd_dist)
+        # if k%500 == 0:
+        print(f"ld dist: {ld_dist}")
+        print(f"hd dist: {hd_dist}")
+        first_term = self.spring_constant * ( ld_dist - hd_dist)
 
         if self.damping_constant != 0:
             #calculate "source" and "target" speeds in the direction of the distance between the two nodes
@@ -161,10 +163,15 @@ class SpringForceBase(BaseAlgorithm):
         f_x = (dist_x/ld_dist) * force_mag
         f_y = (dist_y/ld_dist) * force_mag
 
+        # if k % 500 == 0:
+        print(f_x, f_y)
+        print(f"source : {source.x} , {source.y}")
+        print(f"target : {target.x} , {target.y}")
+
         return f_x, f_y
 
 
-    def _set_position_update(self, source: Node, target: Node,
+    def _set_position_update(self,k, source: Node, target: Node,
                              cache_distance: bool = False) -> None:
         """
         Calculate the force between two nodes and increment the position update
@@ -173,7 +180,7 @@ class SpringForceBase(BaseAlgorithm):
 
         We simply add all the forces on top of each other as we go
         """
-        f_x, f_y = self._calculate_force(source, target,
+        f_x, f_y = self._calculate_force(k,source, target,
                                        cache_distance=cache_distance)
 
         source.increment_position_update(f_x, f_y)
@@ -189,5 +196,6 @@ class SpringForceBase(BaseAlgorithm):
         for node in self.nodes:
             total += math.hypot(node.ux, node.uy)
             node.apply_position_update()
+            print(f" node: {node.x}, {node.y} ")
         total /= len(self.nodes)
         self._average_speeds.append(total)

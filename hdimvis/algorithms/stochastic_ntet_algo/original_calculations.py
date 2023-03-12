@@ -1,6 +1,8 @@
 import numpy as np
+import numba
 #code copied from https://github.com/PierreLambert3/SQuaD-MDS
 
+@numba.jit(nopython=True)
 def original_dhd_calculation(exaggerat_dist: bool, HD_points: np.ndarray ):
 
     Dhd_quartet_og = np.zeros((6,))
@@ -19,7 +21,7 @@ def original_dhd_calculation(exaggerat_dist: bool, HD_points: np.ndarray ):
     return Dhd_quartet_og
 
 
-
+@numba.jit(nopython=True)
 def original_dld_calculation(LD_points: np.ndarray):
 
     Dld_quartet_og = np.zeros((6,))
@@ -42,6 +44,8 @@ def original_dld_calculation(LD_points: np.ndarray):
 # quartet gradients for a 2D projection, Dhd contains the top-right triangle of the HD distances
 # the points are named a,b,c and d internally to keep track of who is who
 # points shape: (4, 2)
+
+@numba.jit(nopython=True)
 def compute_quartet_grads_original(points, Dhd, Dld):
 
 
@@ -100,6 +104,8 @@ def compute_quartet_grads_original(points, Dhd, Dld):
 
     return np.array([gxA, gyA, gxB, gyB, gxC, gyC, gxD, gyD])
 
+
+@numba.jit(nopython=True)
 def ABCD_grad(xa, ya, xb, yb, xc, yc, xd, yd, dab, dac, dad, dbc, dbd, dcd, pab):
 
     sum_dist = dab + dac + dad + dbc + dbd + dcd

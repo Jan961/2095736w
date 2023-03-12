@@ -1,11 +1,11 @@
 import numpy as np
-from .original_calculations import compute_quartet_grads_original
+import numba
 
 
 
-
+@numba.jit(nopython=True)
 def compute_quartet_grads(points : np.ndarray, Dhd : np.ndarray, Dld : np.ndarray,
-                          Dld_distances_full_matrix: np.ndarray , test: bool):
+                          Dld_distances_full_matrix: np.ndarray ):
 
     sum_dld = np.sum(Dld)
     Dld_relative = Dld/sum_dld     # make the distances in Dld relative
@@ -25,7 +25,7 @@ def compute_quartet_grads(points : np.ndarray, Dhd : np.ndarray, Dld : np.ndarra
 
     while row < diffs.shape[0] - 1:
 
-        helper1[[row, col]] = 1 # performs a similar role to the identity matrix in the gradient formula in the paper
+        helper1[np.array([row, col])] = 1 # performs a similar role to the identity matrix in the gradient formula in the paper
                                 # we set BOTH the element indexed by "row" and "col" indices to 1; the rest are zero
         points_copy = points.copy()
         # computing grads separately for x (i: 0) and y (i: 1)
@@ -33,11 +33,15 @@ def compute_quartet_grads(points : np.ndarray, Dhd : np.ndarray, Dld : np.ndarra
             temp_points = points_copy[:,i]
 
             helper2[row] = temp_points[col] # helper2 allows for subtraction of relevant LD values
-            helper2[col] = temp_points[row] # - see the grad formula in the paper
+            helper2[col] = temp_points[row] # for more details see the grad formula in the paper
 
             first_term = (helper1*(temp_points - helper2))/Dld[row,col]
+
+            temp_points1 = np.expand_dims(temp_points, axis=1) # using this instead of [:,None]
+            temp_points2 = np.expand_dims(temp_points, axis=1).T # to help numba
+
             second_term = Dld_relative[row,col] * \
-                          np.sum((temp_points[:, None] - temp_points[:, None].T)/Dld_distances_full_matrix, axis=1)
+                          np.sum((temp_points1 - temp_points2)/Dld_distances_full_matrix, axis=1)
 
             second_brackets =  first_term - second_term
 
@@ -52,12 +56,6 @@ def compute_quartet_grads(points : np.ndarray, Dhd : np.ndarray, Dld : np.ndarra
             col = row + 1
         else:
             col += 1
-
-    if test:
-        Dhd_1dim = Dhd[np.nonzero(Dhd)] #convert to the format used by the OG grad computation
-        Dld_1dim = Dld[np.nonzero(Dld)]
-        assert np.allclose(gradients.ravel(), compute_quartet_grads_original(points, Dhd_1dim, Dld_1dim))
-        print ("Gradient equality assertion passed")
 
     return gradients
 

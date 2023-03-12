@@ -33,9 +33,16 @@ class LowDLayoutCreation:
 
         elif isinstance(algorithm, Hybrid):
             layout = HybridLayout(*basic_layout_creation_parameters, **additional_parameters)
+            if no_iters is not None:
+                print(f"The passed value of iteration numer \"no_iters\": {no_iters} will be ignored"
+                      "and the total number of iterations calculated as the sum of parameters "
+                      "\"sample_layout_iterations\" and \"refine_layout_iterations\""
+                      "please use those to set the number iterations for this algorithm")
 
         elif isinstance(algorithm, SNeD):
             layout = SQuaDLayout(*basic_layout_creation_parameters, **additional_parameters)
+            if algorithm.is_test:
+                print("Testing mode (i.e. comparing original grad calculations with new ones) is enabled")
 
         else:
             print("Error: unsupported algorithm type")

@@ -73,7 +73,8 @@ def show_layouts(*layouts: LowDLayoutBase, use_labels: bool = False, alpha: floa
     else:
         plt.title(f"{layouts[0].algorithm.dataset.name} - {layouts[0].algorithm.get_name()}")
 
-    plt.axis('off')
+    # plt.axis('off')
+    plt.axis('equal')
 
     if save_to:
         plt.savefig((Path(save_to).joinpath(Path(f"{title}.png"))).resolve())
@@ -83,7 +84,7 @@ def show_layouts(*layouts: LowDLayoutBase, use_labels: bool = False, alpha: floa
 
 
 def show_generation_metrics(layout, stress: bool = True, average_speed: bool = False, quartet_stress: bool = False,
-                            title: str = None, save_to: Path = None):
+                            title: str = None, save_to: Path = None, log_scale: bool = False):
     assert not average_speed or not quartet_stress # those are for different alog so can't both be used
     fig, ax1 = plt.subplots()
 
@@ -108,6 +109,8 @@ def show_generation_metrics(layout, stress: bool = True, average_speed: bool = F
             y2 = layout.collected_metrics[label][1]
             line2 = ax2.plot(x2, y2, c='b', label=label)
             ax2.set_ylabel(label)
+            if log_scale:
+                ax2.yscale("log")
 
 
     elif quartet_stress: # quartet stress alone
@@ -123,6 +126,9 @@ def show_generation_metrics(layout, stress: bool = True, average_speed: bool = F
         line1 = ax1.plot(x1, y1, c='r', label="Average speed")
         ax1.set_xlabel("Iteration number")
         ax1.set_ylabel("Average speed")
+
+    if log_scale:
+        ax1.yscale("log")
 
 
 

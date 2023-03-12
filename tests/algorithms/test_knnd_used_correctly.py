@@ -24,9 +24,10 @@ def test_knnd_created_correctly():
     assert algo96._get_neighbours(2)[0] == knnd_indx.neighbor_graph[0][2][1]
 
 
+# this is also an incredibly useful test for the general operation of the implementation of Chalmers' 96 algorithm
 def test_knnd_used_correctly():
     initial_layout = np.array([[0,0],[6,6],[20,20],[40,40]])
-    algo96 = Chalmers96(dataset=dataset, spring_constant=0.7, damping_constant=0.3, initial_layout=initial_layout,
+    algo96 = Chalmers96(dataset=dataset, spring_constant=0.9, damping_constant=0, initial_layout=initial_layout,
                         distance_fn=euclidean, use_knnd=True,
                         sample_set_size=0, neighbour_set_size=1)
 

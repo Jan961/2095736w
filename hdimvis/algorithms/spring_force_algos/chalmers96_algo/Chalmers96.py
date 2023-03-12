@@ -35,19 +35,19 @@ class Chalmers96(SpringForceBase):
 
             if self.sample_set_size:
                 sample_set = self._get_sample_set(i)
-                for global_index in sample_set: # j tracks the position in self.sample_set_updates
-                    self._set_position_update( source=self.nodes[i], target=self.nodes[global_index])
+                for global_index in sample_set:
+                    self._set_position_update(i, source=self.nodes[i], target=self.nodes[global_index])
 
             if self.neighbour_set_size:
                 neighbour_set = self._get_neighbours(i)
-                for global_index in neighbour_set: # j tracks the position in self.neighbour_set_updates
-                    self._set_position_update( source=self.nodes[i], target=self.nodes[global_index],
+                for global_index in neighbour_set:
+                    self._set_position_update(i, source=self.nodes[i], target=self.nodes[global_index],
                                               cache_distance=True)
 
             if not self.use_knnd and self.neighbour_set_size and self.sample_set_size:
                 self._update_neighbours(i, samples=sample_set)
 
-        self._apply_position_update()
+        self._apply_position_update()   # integration step
 
     def _get_neighbours(self, index: int) -> List[int]:
         """
@@ -94,7 +94,7 @@ class Chalmers96(SpringForceBase):
                     neighbour_distance = self.hd_distance(source, self.nodes[neighbours[n]])
                 neighbours.insert(n + 1, s)
                 distance_key = frozenset({source, self.nodes[neighbours[-1]]})
-                if self.enable_cache and distance_key in self.distances:
-                    del self.distances[distance_key]  # Remove distance from cache to save memory
+                # if self.enable_cache and distance_key in self.distances:
+                #     del self.distances[distance_key]  # Remove distance from cache to save memory
                 del neighbours[-1]
 

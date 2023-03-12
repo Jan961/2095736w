@@ -17,12 +17,6 @@ class HybridLayout(LowDLayoutBase):
         super().__init__(*basic_layout_creation_parameters)
         assert isinstance(self.algorithm, Hybrid)
 
-        if self.no_iters is not None:
-            print(f"The passed value of iteration numer \"no_iters\": {self.no_iters} will be ignored"
-                  "and the total number of iterations calculated as a sum of parameters "
-                  "\"sample_layout_iterations\" and \"refine_layout_iterations\""
-                  "please use those to set the number iterations for this algorithm" )
-
         self.alpha = alpha
         self.no_iters = sample_layout_iterations + refine_layout_iterations + 1
         self.stage_iteration_numbers:    tuple[int, int, int] = (sample_layout_iterations, 1, refine_layout_iterations)

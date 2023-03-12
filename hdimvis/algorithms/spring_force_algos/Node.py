@@ -21,6 +21,7 @@ class Node:
         self.uy += uy
 
     def apply_position_update(self) -> None:
+        # integration step
         self.x += self.ux
         self.y += self.uy
         self.clear_position_update()
