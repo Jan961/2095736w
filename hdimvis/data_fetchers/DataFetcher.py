@@ -10,6 +10,7 @@ from hdimvis.data_fetchers.low_lvl_fetchers.ShuttleFetcher import ShuttleFetcher
 from hdimvis.data_fetchers.low_lvl_fetchers.FlowCytometryFetcher import FlowCytometryFetcher
 from hdimvis.data_fetchers.low_lvl_fetchers.MnistFetcher import MnistFetcher
 from hdimvis.data_fetchers.low_lvl_fetchers.MockDataFetcher import MockDataFetcher
+from hdimvis.data_fetchers.low_lvl_fetchers.GlobeFetcher import GlobeFetcher
 from .Dataset import Dataset
 
 
@@ -50,6 +51,8 @@ class DataFetcher:
             low_lvl_data_fetcher = MnistFetcher()
         elif dataset_name == 'mock data':
             low_lvl_data_fetcher = MockDataFetcher()
+        elif dataset_name == 'globe':
+            low_lvl_data_fetcher = GlobeFetcher()
         else:
             print("Dataset name not recognised")
 
