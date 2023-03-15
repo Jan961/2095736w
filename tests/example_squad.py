@@ -24,12 +24,12 @@ Xld = PCA(n_components=2, whiten=False, copy=True).fit_transform(dataset.data).a
 Xld *= 10/np.std(Xld)
 
 squad = SNeD(dataset=dataset, initial_layout=Xld, use_nesterovs_momentum=False, ntet_size=4,  )
-layout = LowDLayoutCreation().create_layout(squad, optional_metric_collection=metric_collection, no_iters=10)
-# print(layout.collected_metrics)
+layout = LowDLayoutCreation().create_layout(squad, optional_metric_collection=metric_collection, no_iters=2)
+print(layout.collected_metrics)
 show_layouts(layout, use_labels=True, color_map='rainbow', title="  test")
 show_generation_metrics(layout, quartet_stress=True, title="test")
 
-cube.plot_2d(layout=layout, title="test")
+# cube.plot_2d(layout=layout, title="test")
 
 # fig, axis = plt.subplots()
 # axis.scatter(Xld[:,0], Xld[:,1], c=dataset.labels, cmap='rainbow')

@@ -76,24 +76,12 @@ class SNeD(BaseAlgorithm):
             Dld_full_matrix, Dld_quartet = compute_quartet_dld(LD_points)
 
             if self.is_test:
-                Dhd_quartet_alt = Dhd_quartet[np.nonzero(Dhd_quartet)] # convert to the form used by the og code
-                assert np.allclose(Dhd_quartet_alt, original_dhd_calculation(exaggerate_dist, HD_points))
-                print("HD distance equality assertion passed")
-
-                # worth keeping in mind that the conversion in the first line above and similar conversions
-                # below are not perfect since if we are very, very unluckily some relevant distances
-                #  in the Dhd_quartet matrix might be zero
-                # but it should be perfectly fine for testing - for perfect conversion see the one in
-                # metrics.distance_measures.rbf_distance
-
-                Dld_quartet_alt = Dld_quartet[np.nonzero(Dld_quartet)]  # convert to the form used by the og code
-                assert np.allclose(Dld_quartet_alt, original_dld_calculation(LD_points))
-                print("LD distance equality assertion passed")
+                self._test_dist_calc( Dhd_quartet, Dld_quartet, HD_points, LD_points, exaggerate_dist)
 
             # after the below couple of lines the Dhd_quartet contains the relative distances
             # the distances in Dld_quartet are NOT relative and are passed as such to the compute_quartet_grads() funct
             if self.use_rbf_adjustment:
-                Dhd_quartet = relative_rbf_dists(Dhd_quartet)
+                Dhd_quartet = relative_rbf_dists(Dhd_quartet, self.ntet_size)
 
             else:
                 Dhd_quartet /= np.sum(Dhd_quartet)
@@ -102,10 +90,7 @@ class SNeD(BaseAlgorithm):
                                                   Dld_quartet, Dld_full_matrix)
 
             if self.is_test:
-                Dhd_1dim = Dhd_quartet[np.nonzero(Dhd_quartet)]  # convert to the format used by the OG grad computation
-                Dld_1dim = Dhd_quartet[np.nonzero(Dhd_quartet)]
-                assert np.allclose(quartet_grads.ravel(), compute_quartet_grads_original(LD_points, Dhd_1dim, Dld_1dim))
-                print("Gradient equality assertion passed")
+                self._test_grad_calc(LD_points, Dhd_quartet, quartet_grads)
 
             if self.use_nesterovs_momentum:
                 self.nesterovs_v[quartet] = self.nesterovs_v[quartet]* self.momentum - LR*quartet_grads
@@ -127,6 +112,27 @@ class SNeD(BaseAlgorithm):
 
     def get_average_quartet_stress(self):
         return self.last_average_quartet_stress_measurement
+
+    def _test_dist_calc(self, Dhd_quartet, Dld_quartet, HD_points, LD_points, exaggerate_dist):
+        Dhd_quartet_alt = Dhd_quartet[np.nonzero(Dhd_quartet)]  # convert to the form used by the og code
+        assert np.allclose(Dhd_quartet_alt, original_dhd_calculation(exaggerate_dist, HD_points))
+        print("HD distance equality assertion passed")
+
+        # worth keeping in mind that the conversion in the first line above and similar conversions
+        # below are not perfect since if we are very, very unluckily some relevant distances
+        #  in the Dhd_quartet matrix might be zero
+        # but it should be perfectly fine for testing - for perfect conversion see the one in
+        # metrics.distance_measures.rbf_distance
+
+        Dld_quartet_alt = Dld_quartet[np.nonzero(Dld_quartet)]  # convert to the form used by the og code
+        assert np.allclose(Dld_quartet_alt, original_dld_calculation(LD_points))
+        print("LD distance equality assertion passed")
+
+    def _test_grad_calc(self, LD_points, Dhd_quartet, quartet_grads):
+        Dhd_1dim = Dhd_quartet[np.nonzero(Dhd_quartet)]  # convert to the format used by the OG grad computation
+        Dld_1dim = Dhd_quartet[np.nonzero(Dhd_quartet)]
+        assert np.allclose(quartet_grads.ravel(), compute_quartet_grads_original(LD_points, Dhd_1dim, Dld_1dim))
+        print("Gradient equality assertion passed")
 
 
 

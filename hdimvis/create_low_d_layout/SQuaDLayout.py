@@ -28,7 +28,7 @@ class SQuaDLayout(LowDLayoutBase):
 
         print(f" \"N-tet\" size: {self.algorithm.ntet_size}")
 
-        calculate_quartet_stress = False
+
         bar = IncrementalBar("Creating layout", max=self.no_iters)
         decay = self.decay if self.decay is not None else np.exp(np.log(1e-3) / self.no_iters)
         if self.exaggerate_D:  # exaggeration of HD distances by squaring
@@ -37,21 +37,28 @@ class SQuaDLayout(LowDLayoutBase):
             stop_d_exa = 0
 
         for i in range(self.no_iters):
+            print(self.iteration_number)
+            calculate_quartet_stress = False
+
+            # the below conditional allows us to avoid calculating avg quartet stress (which is best
+            # measured alongside other calculations during one iteration run)  on every iteration
             if self.optional_metric_collection is not None:
-                if self.iteration_number == self.no_iters:
+                if i == self.no_iters - 1:
                     calculate_quartet_stress = True
 
                 if self.optional_metric_collection.get('Average quartet stress') and \
-                        self.iteration_number % self.optional_metric_collection['Average quartet stress'] == 0 :
+                        self._check_collection_interval('Average quartet stress') :
                     calculate_quartet_stress = True
 
             if i == stop_d_exa:
                 self.LR *= decay
-                exaggerate_D = False
+                self.exaggerate_D = False
 
-            self.algorithm.one_iteration(exaggerate_D, self.LR, calculate_quartet_stress)
+            print(calculate_quartet_stress)
+            self.algorithm.one_iteration(self.exaggerate_D, self.LR, calculate_quartet_stress)
             if self.optional_metric_collection is not None:
                 self.collect_metrics()
+
             bar.next()
             self.iteration_number += 1
             self.final_positions = self.algorithm.get_positions()
