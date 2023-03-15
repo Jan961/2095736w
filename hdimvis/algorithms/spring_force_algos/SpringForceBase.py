@@ -22,9 +22,8 @@ class SpringForceBase(BaseAlgorithm):
                  neighbour_set_size: int = 5,
                  sample_set_size: int = 10,
                  spring_constant: float = 0.1,
-                 data_size_factor: float = 1, # 2019 calculations parameter;
-                 # 2019 default =  0.5 / (neighbour_set_size + sample_set_size)
-
+                 sc_scaling_factor: float = None,
+                 integrate_sum : bool = True, # consider the sum of all forces on a node at integration step
                  damping_constant: float = 0,
                  **kwargs) -> None:
 
@@ -38,9 +37,11 @@ class SpringForceBase(BaseAlgorithm):
         self.sample_set_size:    int = sample_set_size
         self._average_speeds: List[float] = list()
         self.enable_cache: bool = enable_cache
-        self.data_size_factor: float = data_size_factor
+        self.sc_scaling_factor: float = sc_scaling_factor if sc_scaling_factor \
+                                        else 0.5/(self.sample_set_size + self.neighbour_set_size)
         self.spring_constant = spring_constant
         self.damping_constant = damping_constant
+        self.integrate_sum = integrate_sum
         self.knnd_parameters = knnd_parameters
         self.use_knnd = use_knnd
         if self.use_knnd:
@@ -49,11 +50,11 @@ class SpringForceBase(BaseAlgorithm):
             else:
                 self.knnd_index = None
 
-        # if enable_cache:
-        #     self.distances: Dict[FrozenSet[Node], float] = dict()
-        # else:
-        #     # Change the distance function
-        #     self.hd_distance = self.hd_distance_no_cache
+        if enable_cache:
+            self.distances: Dict[FrozenSet[Node], float] = dict()
+        else:
+            # Change the distance function
+            self.hd_distance = self.hd_distance_no_cache
 
     @abstractmethod
     def one_iteration(self, *args, **kwargs) -> None:
@@ -77,9 +78,6 @@ class SpringForceBase(BaseAlgorithm):
     def get_positions(self) -> np.ndarray:
         return np.array([(n.x, n.y) for n in self.nodes])
 
-    # def get_available_metrics(self):
-    #     return self._available_metrics
-
     def set_positions(self, positions: np.ndarray) -> None:
         for pos, node in zip(positions, self.nodes):
             node.x, node.y = pos
@@ -97,12 +95,12 @@ class SpringForceBase(BaseAlgorithm):
         Returns the high dimensional distance between two nodes at source and target
         index using self.distance_fn
         """
-        # pair = frozenset({source, target})
-        # if pair in self.distances:
-        #     return self.distances[pair]
+        pair = frozenset({source, target})
+        if pair in self.distances:
+            return self.distances[pair]
         distance = self.distance_fn(source.datapoint - target.datapoint)
-        # if cache:
-        #     self.distances[pair] = distance
+        if cache:
+            self.distances[pair] = distance
         return distance
 
     def create_knnd_index(self):
@@ -159,11 +157,10 @@ class SpringForceBase(BaseAlgorithm):
 
         # force magnitude; data_size_factor was included in the 2019 code but not in the original paper,
         # here it is set to 1 by default
-        force_mag = (first_term - second_term) * self.data_size_factor
+        force_mag = (first_term - second_term) * self.sc_scaling_factor
         f_x = (dist_x/ld_dist) * force_mag
         f_y = (dist_y/ld_dist) * force_mag
 
-        # if k % 500 == 0:
         print(f_x, f_y)
         print(f"source : {source.x} , {source.y}")
         print(f"target : {target.x} , {target.y}")
