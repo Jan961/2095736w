@@ -39,6 +39,7 @@ class SpringForceBase(BaseAlgorithm):
         self.enable_cache: bool = enable_cache
         self.sc_scaling_factor: float = sc_scaling_factor if sc_scaling_factor \
                                         else 0.5/(self.sample_set_size + self.neighbour_set_size)
+        print(f" scaling factor: {self.sc_scaling_factor}")
         self.spring_constant = spring_constant
         self.damping_constant = damping_constant
         self.integrate_sum = integrate_sum
@@ -136,8 +137,8 @@ class SpringForceBase(BaseAlgorithm):
         ld_dist = math.hypot(dist_x, dist_y)
         hd_dist = self.hd_distance(source, target, cache=cache_distance)
         # if k%500 == 0:
-        print(f"ld dist: {ld_dist}")
-        print(f"hd dist: {hd_dist}")
+        # print(f"ld dist: {ld_dist}")
+        # print(f"hd dist: {hd_dist}")
         first_term = self.spring_constant * ( ld_dist - hd_dist)
 
         if self.damping_constant != 0:
@@ -161,9 +162,9 @@ class SpringForceBase(BaseAlgorithm):
         f_x = (dist_x/ld_dist) * force_mag
         f_y = (dist_y/ld_dist) * force_mag
 
-        print(f_x, f_y)
-        print(f"source : {source.x} , {source.y}")
-        print(f"target : {target.x} , {target.y}")
+        # print(f_x, f_y)
+        # print(f"source : {source.x} , {source.y}")
+        # print(f"target : {target.x} , {target.y}")
 
         return f_x, f_y
 
@@ -193,6 +194,6 @@ class SpringForceBase(BaseAlgorithm):
         for node in self.nodes:
             total += math.hypot(node.ux, node.uy)
             node.apply_position_update()
-            print(f" node: {node.x}, {node.y} ")
+            # print(f" node: {node.x}, {node.y} ")
         total /= len(self.nodes)
         self._average_speeds.append(total)

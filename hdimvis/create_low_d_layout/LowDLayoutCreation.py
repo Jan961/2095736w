@@ -83,6 +83,7 @@ class LowDLayoutCreation:
             layout.algorithm.build_nodes()
             print(f"Spring constant is set to  {layout.algorithm.spring_constant} ")
             print(f"Damping constant is set to {layout.algorithm.damping_constant} ")
+            print(f"Spring constant scaling factor is set to {layout.algorithm.sc_scaling_factor} ")
             print("#" * 20)
 
         layout.run()

@@ -4,6 +4,7 @@ from hdimvis.algorithms.spring_force_algos.SpringForceBase import SpringForceBas
 from ..utils import random_sample_set
 from ....data_fetchers.Dataset import Dataset
 from typing import List, Dict
+import math
 
 
 # code adapted and modified from 2019 Project by Iain Cattermole
@@ -30,6 +31,8 @@ class Chalmers96(SpringForceBase):
         assert self.data is not None or self.nodes is not None, "must provide dataset or nodes"
 
         n = len(self.nodes)
+        velocities_sum = 0 # used to calculate average velocity in case intergation step is performed
+        velocities_count =0 # for each force individually
 
         for i in range(n):
 
@@ -38,16 +41,33 @@ class Chalmers96(SpringForceBase):
                 for global_index in sample_set:
                     self._set_position_update(i, source=self.nodes[i], target=self.nodes[global_index])
 
+                    if not self.integrate_sum:  # integration step for each force in turn
+                        for node in [self.nodes[i], self.nodes[global_index]]:
+                            velocities_sum += math.hypot(node.ux, node.uy)
+                            velocities_count += 2
+                            node.apply_position_update()
+                            node.clear_position_update()
+
             if self.neighbour_set_size:
                 neighbour_set = self._get_neighbours(i)
                 for global_index in neighbour_set:
                     self._set_position_update(i, source=self.nodes[i], target=self.nodes[global_index],
                                               cache_distance=True)
+                    if not self.integrate_sum:
+                        for node in [self.nodes[i], self.nodes[global_index]]:
+                            velocities_sum += math.hypot(node.ux, node.uy)
+                            velocities_count += 2
+                            node.apply_position_update()
+                            node.clear_position_update()
+
 
             if not self.use_knnd and self.neighbour_set_size and self.sample_set_size:
                 self._update_neighbours(i, samples=sample_set)
 
-        self._apply_position_update()   # integration step
+        if self.integrate_sum:
+            self._apply_position_update()   # integration step for the sum of all forces
+        else:
+            self._average_speeds.append(velocities_sum/velocities_count)
 
     def _get_neighbours(self, index: int) -> List[int]:
         """

@@ -31,11 +31,11 @@ Xld *= 10/np.std(Xld)
 zero_initial = np.zeros((dataset.data.shape[0], 2))
 
 algo96 = Chalmers96(dataset=cube_dataset, initial_layout=Xld,  distance_fn=euclidean,
-                    damping_constant=0, spring_constant=0.1,
-                    use_knnd=False, sample_set_size=10, neighbour_set_size=5)
+                    damping_constant=0, spring_constant=1, integrate_sum=True, sc_scaling_factor=0,
+                    use_knnd=False, sample_set_size=6, neighbour_set_size=4)
 
 
-layout = LowDLayoutCreation().create_layout(algo96, optional_metric_collection=metric_collection, no_iters=100)
+layout = LowDLayoutCreation().create_layout(algo96, optional_metric_collection=metric_collection, no_iters=50)
 
 # print(f"iterations stress: {layout.collected_metrics['stress'][0]} \n")
 # print(f"iterations velocity: {layout.collected_metrics['average speed'][0]} \n")
