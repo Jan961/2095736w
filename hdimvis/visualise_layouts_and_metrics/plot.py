@@ -38,6 +38,8 @@ def show_layouts(*layouts: LowDLayoutBase, use_labels: bool = False, alpha: floa
     idx_r = 0
     idx_c = 0
     for i, layout in enumerate(layouts):
+
+
         pos: np.ndarray = layout.get_final_positions()
 
         x = pos[:, 0]
