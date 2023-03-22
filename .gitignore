@@ -1,6 +1,6 @@
 
 #compiled
-out/
+\out
 *.pyc
 
 
