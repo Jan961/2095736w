@@ -26,9 +26,6 @@ class SQuaDLayout(LowDLayoutBase):
 
     def run(self):
 
-        print(f" \"N-tet\" size: {self.algorithm.ntet_size}")
-
-
         bar = IncrementalBar("Creating layout", max=self.no_iters)
         decay = self.decay if self.decay is not None else np.exp(np.log(1e-3) / self.no_iters)
         if self.exaggerate_D:  # exaggeration of HD distances by squaring
@@ -37,7 +34,6 @@ class SQuaDLayout(LowDLayoutBase):
             stop_d_exa = 0
 
         for i in range(self.no_iters):
-            print(self.iteration_number)
             calculate_quartet_stress = False
 
             # the below conditional allows us to avoid calculating avg quartet stress (which is best
@@ -54,7 +50,6 @@ class SQuaDLayout(LowDLayoutBase):
                 self.LR *= decay
                 self.exaggerate_D = False
 
-            print(calculate_quartet_stress)
             self.algorithm.one_iteration(self.exaggerate_D, self.LR, calculate_quartet_stress)
             if self.optional_metric_collection is not None:
                 self.collect_metrics()

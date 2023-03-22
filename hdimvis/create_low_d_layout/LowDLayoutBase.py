@@ -63,7 +63,6 @@ class LowDLayoutBase:
 
         if 'Average quartet stress' in self.optional_metric_collection:
             if final or self._check_collection_interval('Average quartet stress'):
-                print("collecting aqs")
                 self.collected_metrics['Average quartet stress'][0].append(self.iteration_number)
                 self.collected_metrics['Average quartet stress'][1].append(self.algorithm.get_average_quartet_stress())
 

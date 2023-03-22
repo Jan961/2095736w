@@ -14,7 +14,7 @@ def vectorised_stress(data: np.ndarray, ld_positions: np.ndarray, distance_funct
     if denominator == 0:
         return np.inf
     else:
-        return numerator/denominator
+        return np.sqrt(numerator/denominator)
 
 
 def unvectorised_stress(data: np.ndarray, ld_positions: np.ndarray, distance_function: Callable):
@@ -28,4 +28,4 @@ def unvectorised_stress(data: np.ndarray, ld_positions: np.ndarray, distance_fun
         denominator += low_d_distance ** 2
     if denominator == 0:
         return math.inf
-    return numerator / denominator
+    return math.sqrt(numerator / denominator)

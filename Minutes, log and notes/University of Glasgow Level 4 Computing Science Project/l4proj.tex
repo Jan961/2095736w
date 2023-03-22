@@ -98,25 +98,35 @@
 % text in the final copy, and you will also get warnings when you compile (so you don't
 % forget to take them out!)
 
-\section{Motivation}
+\section{Overview and motivation}
 
-With the continually increasing volume of data available in many academic as well as commercial contexts, there is a great demand for tools to effectively and efficiently process and extract useful information from multidimensional data sets. One interesting problem in this area is high-dimensional data visualisation. Since approaches such mosaic/pair plots or using shape, colour etc. to represent dimensions above 2, can only be useful for a small number of dimensions, this almost always involves some form of dimension reduction.   While many of the state-of-the art solutions to problems in this area involve the use of neural networks... \citep{nn_vis1, nn_vis2, nn_vis3, nn_vis4, nn_vis5}
+With the continually increasing volume of data available in many academic as well as commercial contexts, there is a great demand for tools to efficiently process and extract useful information from multidimensional data sets. One interesting problem in this area is high-dimensional data visualisation. Since approaches such mosaic/pair plots or using shape, colour etc. to represent dimensions above 2, can only be useful for a small number of dimensions, this almost always involves some form of dimension reduction and generation of a 2D plot. 
 
+As many state-of-the-art solutions to problems involving mapping high-dimensional inputs to lower-dimensional outputs make use of neural networks and deep learning, it is not surprising that a number of attempts have been made to apply these tools, notably Variational Autoencoder architectures, to visualisation \citep{ nn_vis1, nn_vis2, nn_vis3, nn_vis4, nn_vis5, nn_vis6, nn_vis7}. At least in some instances, however, the disadvantages of these approaches, while not unique to neural networks, can, nonetheless, include long processing times \citep{nn_vis5}, the need to tune multiple hyper-parameters that can radically alter the resulting 2D layouts \citep{nn_vis5, nn_vis6} and, potentially, lack of genralisablity as the network architecture might have to be altered and hyper-parameters readjusted for different data types.
+
+The alternative, more popular, approach is to use one of a large number of available algorithms that do not require training a neural network. One of the most commonly used dimensionality reduction procedures  - linear Principal Component Analysis (PCA) \citep{pca} while useful in visualisation, necessarily produces restricted, considerably simplified plots when treated as a standalone visualisation technique. Another linear methods - class MDS prodce good quality but 
+
+Among non-linear methods, one class of algorithms, containing all three that are the main focus of this project, performs Multidimensional Scaling (MDS) \citep{mds} of the input data. This means that the algorithms attempt to preserve the pairwise distance relationships between the high-dimensional data points when creating their low-dimensional representations. 
+Such algorithms tend to represent both local and global structures of the data fairly accurately when bhasdajkd but may strugglwe when not linear (section 2). 
+
+In contrast 
 
 
 \begin{figure}[htb]
     \centering
     \includegraphics[width=0.3\linewidth]{images/3dcube.png} \\
+    \includegraphics[width=0.4\linewidth]{images/PCA.png}
+    \includegraphics[width=0.4\linewidth]{images/Laplacian eigenmaps.png} \\
     \includegraphics[width=0.4\linewidth]{images/Chalmers' 96.png}
     \includegraphics[width=0.4\linewidth]{images/umap_cube.png} \\
     \includegraphics[width=0.4\linewidth]{images/Stochastic quartet descent.png}
     \includegraphics[width=0.4\linewidth]{images/tsne_cube.png}
 
-    \caption{An illustration (with reduced point density) of a set of 5x10\textsuperscript{4} non-overlapping, 3-dimensional points forming 5 faces of a cube and 2D embeddings produced by passing the same 3000 points sampled from the cube to various dimension reducing algorithms. For those algorithms that have parameters allowing to adjust the degree of preservation of global structure, the values of the most important ones are displayed.
+    \caption{An illustration (with reduced point density) of a set of 5x10\textsuperscript{4} non-overlapping, 3-dimensional points forming 5 faces of a cube and 2D embeddings produced by passing the same 3000 points sampled from the cube to various dimension reducing algorithms. UMAP was initialised with Laplacian Eigenmaps \citep{laplacian_eigen}, t-SNE and Stochastic quartet MDS with PCA. Chalmers' 96 MDS used a random initialisation.
     }
 
     % use the notation fig:name to cross reference a figure
-    \label{fig:relu} 
+    \label{fig:init_demo} 
 \end{figure}
 
 

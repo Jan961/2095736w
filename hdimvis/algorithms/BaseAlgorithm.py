@@ -4,6 +4,7 @@ from ..data_fetchers.Dataset import Dataset
 from ..metrics.stress.stress import vectorised_stress, unvectorised_stress
 import numpy as np
 from hdimvis.metrics.distance_measures.euclidian_and_manhattan import euclidean, manhattan
+import copy
 
 class BaseAlgorithm:
 
@@ -14,8 +15,8 @@ class BaseAlgorithm:
                  initial_layout: np.ndarray = None,
                  distance_fn = euclidean,
                  **kwargs):
-        self.dataset = dataset if dataset is not None else None
-        self.data = dataset.data if dataset is not None else None
+        self.dataset = copy.deepcopy(dataset) if dataset is not None else None
+        self.data = self.dataset.data if self.dataset is not None else None
         self.initial_layout = initial_layout.copy() if initial_layout is not None else self.initialise_layout()
         self.distance_fn = distance_fn
         self.additional_name = additional_name

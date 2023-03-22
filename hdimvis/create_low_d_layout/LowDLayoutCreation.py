@@ -38,11 +38,14 @@ class LowDLayoutCreation:
                       "and the total number of iterations calculated as the sum of parameters "
                       "\"sample_layout_iterations\" and \"refine_layout_iterations\""
                       "please use those to set the number iterations for this algorithm")
+                print("#" * 20)
 
         elif isinstance(algorithm, SNeD):
             layout = SQuaDLayout(*basic_layout_creation_parameters, **additional_parameters)
+            print(f" \"N-tet\" size: {algorithm.ntet_size}")
             if algorithm.is_test:
                 print("Testing mode (i.e. comparing original grad calculations with new ones) is enabled")
+            print("#" * 20)
 
         else:
             print("Error: unsupported algorithm type")
@@ -69,7 +72,6 @@ class LowDLayoutCreation:
             norm = optional_metric_collection["norm"]
         print(f"All stress calculations will be performed using the {norm} norm")
         print("#" * 20)
-
 
         if np.all(np.where(algorithm.initial_layout==0, 1,0)):
             print("#"*20)

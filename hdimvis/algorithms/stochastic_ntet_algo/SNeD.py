@@ -20,7 +20,7 @@ class SNeD(BaseAlgorithm):
     name = 'Stochastic N-tet Descent MDS'
 
     def __init__(self, dataset: Dataset | None, ntet_size: int = 4, use_nesterovs_momentum: bool = False,
-                 momentum: float = 0.6, is_test: bool = False, use_rbf_adjustment: bool = True, **kwargs):
+                 momentum: float = 0.6, is_test: bool = False, use_rbf_adjustment: bool = False, **kwargs):
         super().__init__(dataset, **kwargs)
 
         assert ntet_size > 2, "Only n-tet sizes of 3 or greater are available"
@@ -98,7 +98,7 @@ class SNeD(BaseAlgorithm):
                 self.grad_acc[quartet] += quartet_grads
 
             if calculate_average_stress:
-                quartet_stress += np.sum((Dhd_quartet/np.sum(Dhd_quartet) - Dld_quartet/np.sum(Dld_quartet))**2)
+                quartet_stress += np.sum((Dhd_quartet - Dld_quartet/np.sum(Dld_quartet))**2)
 
         if calculate_average_stress:
             self.last_average_quartet_stress_measurement = quartet_stress/self.batch_indices.shape[0]
