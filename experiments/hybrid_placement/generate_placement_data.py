@@ -1,7 +1,7 @@
 import numpy as np
 
 from hdimvis.algorithms.spring_force_algos.chalmers96_algo.Chalmers96 import Chalmers96
-from hdimvis.create_low_d_layout.LowDLayoutCreation import LowDLayoutCreation
+from hdimvis.create_low_d_layout.LayoutCreation import LowDLayoutCreation
 from hdimvis.data_fetchers.DataFetcher import DataFetcher
 from hdimvis.data_fetchers.Dataset import Dataset
 from hdimvis.metrics.distance_measures.euclidian_and_manhattan import euclidean

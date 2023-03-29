@@ -1,6 +1,6 @@
 from pathlib import Path
 from typing import Tuple, Optional, Callable, List
-from ..create_low_d_layout.LowDLayoutBase import LowDLayoutBase
+from ..create_low_d_layout.LayoutBase import LowDLayoutBase
 import numpy as np
 import  matplotlib.pyplot as plt
 import math
@@ -75,7 +75,7 @@ def show_layouts(*layouts: LowDLayoutBase, use_labels: bool = False, alpha: floa
     else:
         plt.title(f"{layouts[0].algorithm.dataset.name} - {layouts[0].algorithm.get_name()}")
 
-    # plt.axis('off')
+    plt.axis('off')
     plt.axis('equal')
 
     if save_to:

@@ -20,12 +20,11 @@ class DataFetcher:
     all_datasets_list = ['poker', 'mnist', 'bonds', 'coil20', 'rna N3k', 'airfoil', 'wine quality', 'fashion mnist'
                          'shuttle', 'flow cytometry']
 
-
     @staticmethod
-    def fetch_data( dataset_name='rna N3k', for_bhtsne: bool = False, **kwargs):
+    def fetch_data( dataset_name_raw: str='rna N3k', for_bhtsne: bool = False, **kwargs):
 
         low_lvl_data_fetcher : LowLevelDataFetcherBase | None = None
-        dataset_name = dataset_name.strip()
+        dataset_name = dataset_name_raw.strip()
         print("#"*20)
         print(f"Fetching the \"{dataset_name}\" dataset")
 

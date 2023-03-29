@@ -1,16 +1,16 @@
 from typing import List, Tuple
 from ..data_fetchers.Dataset import Dataset
 from progress.bar import IncrementalBar
-from .LowDLayoutBase import LowDLayoutBase
+from .LayoutBase import LowDLayoutBase
 from ..algorithms.spring_force_algos.chalmers96_algo.Chalmers96 import Chalmers96
 import numpy as np
 import matplotlib.pyplot as plt
 
 class Chalmers96Layout(LowDLayoutBase):
 
-    def __init__(self, no_iters: int = 100, *basic_layout_creation_parameters,
+    def __init__(self, num_iters: int = 100, *basic_layout_creation_parameters,
                  target_node_speed: float = 0.0, alpha: float=1):
-        super().__init__(no_iters, *basic_layout_creation_parameters)
+        super().__init__(num_iters, *basic_layout_creation_parameters)
         assert isinstance(self.algorithm, Chalmers96)
 
         self.target_node_speed = target_node_speed
@@ -27,16 +27,16 @@ class Chalmers96Layout(LowDLayoutBase):
         """
         bar = None
 
-        if self.no_iters is not None:
-            assert self.no_iters >= 0
+        if self.num_iters is not None:
+            assert self.num_iters >= 0
             if self.target_node_speed == 0:
-                bar = IncrementalBar("Creating layout", max=self.no_iters)
+                bar = IncrementalBar("Creating layout", max=self.num_iters)
 
         assert self.target_node_speed >= 0
-        assert self.no_iters is not None or self.target_node_speed > 0
+        assert self.num_iters is not None or self.target_node_speed > 0
 
         while True:
-            if self.no_iters is not None and self.iteration_number >= self.no_iters:
+            if self.num_iters is not None and self.iteration_number >= self.num_iters:
                 if self.optional_metric_collection is not None:
                     self.collect_metrics(final=True)
                 bar.finish()

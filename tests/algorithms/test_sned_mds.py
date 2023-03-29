@@ -12,7 +12,7 @@ mock_dataset = Dataset(mock_data, None, "mock data")
 
 mock_data_2 = np.array([[0, 0, 0, 0], [1, 1, 1, 1], [40, 39, 39, 39], [40, 40, 40, 40]])
 initial_positions_2 = 20*np.random.rand(4,2)
-mock_dataset_2 = Dataset(mock_data_2, np.array([0,1,2,3]), 'mock data')
+mock_dataset_2 = Dataset(mock_data_2, np.array([0,1,2,3]), 'mock data 2')
 
 def test_one_iteration_correctly_performed():
     algo = SNeD(dataset=mock_dataset, initial_layout=initial_positions)

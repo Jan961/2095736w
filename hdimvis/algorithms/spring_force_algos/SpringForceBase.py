@@ -127,7 +127,7 @@ class SpringForceBase(BaseAlgorithm):
         return x, y
 
 
-    def _calculate_force(self, k, source: Node, target: Node,
+    def _calculate_force(self, source: Node, target: Node,
                          cache_distance: bool = False) -> Tuple[float, float]:
         """
         Calculate the spring force to apply between two nodes i and j
@@ -169,7 +169,7 @@ class SpringForceBase(BaseAlgorithm):
         return f_x, f_y
 
 
-    def _set_position_update(self,k, source: Node, target: Node,
+    def _set_position_update(self, source: Node, target: Node,
                              cache_distance: bool = False) -> None:
         """
         Calculate the force between two nodes and increment the position update
@@ -178,7 +178,7 @@ class SpringForceBase(BaseAlgorithm):
 
         We simply add all the forces on top of each other as we go
         """
-        f_x, f_y = self._calculate_force(k,source, target,
+        f_x, f_y = self._calculate_force(source, target,
                                        cache_distance=cache_distance)
 
         source.increment_position_update(f_x, f_y)

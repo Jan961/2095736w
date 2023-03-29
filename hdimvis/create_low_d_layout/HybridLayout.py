@@ -1,6 +1,6 @@
 from progress.bar import IncrementalBar
 
-from .LowDLayoutBase import LowDLayoutBase
+from .LayoutBase import LowDLayoutBase
 from ..algorithms.spring_force_algos.hybrid_algo.Hybrid import Hybrid
 from ..algorithms.spring_force_algos.hybrid_algo.HybridStage import HybridStage
 from ..algorithms.spring_force_algos.chalmers96_algo.Chalmers96 import Chalmers96

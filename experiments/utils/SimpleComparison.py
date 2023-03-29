@@ -2,7 +2,7 @@ from typing import Dict
 
 import numpy as np
 
-from hdimvis.create_low_d_layout.LowDLayoutCreation import LowDLayoutCreation
+from hdimvis.create_low_d_layout.LayoutCreation import LowDLayoutCreation
 from hdimvis.data_fetchers.DataFetcher import DataFetcher
 from hdimvis.algorithms.BaseAlgorithm import BaseAlgorithm
 from hdimvis.algorithms.spring_force_algos.SpringForceBase import SpringForceBase

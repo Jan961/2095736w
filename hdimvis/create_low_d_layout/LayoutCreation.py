@@ -15,7 +15,8 @@ from ..data_fetchers.Dataset import Dataset
 
 class LowDLayoutCreation:
 
-    def create_layout(self, algorithm: BaseAlgorithm, no_iters: int = None ,
+    @staticmethod
+    def create_layout(algorithm: BaseAlgorithm, no_iters: int = None ,
                       optional_metric_collection: dict[str: int] = None,
                        **additional_parameters):
 

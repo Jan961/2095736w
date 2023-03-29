@@ -39,7 +39,7 @@ class Chalmers96(SpringForceBase):
             if self.sample_set_size:
                 sample_set = self._get_sample_set(i)
                 for global_index in sample_set:
-                    self._set_position_update(i, source=self.nodes[i], target=self.nodes[global_index])
+                    self._set_position_update(source=self.nodes[i], target=self.nodes[global_index])
 
                     if not self.integrate_sum:  # integration step for each force in turn
                         for node in [self.nodes[i], self.nodes[global_index]]:
@@ -51,7 +51,7 @@ class Chalmers96(SpringForceBase):
             if self.neighbour_set_size:
                 neighbour_set = self._get_neighbours(i)
                 for global_index in neighbour_set:
-                    self._set_position_update(i, source=self.nodes[i], target=self.nodes[global_index],
+                    self._set_position_update( source=self.nodes[i], target=self.nodes[global_index],
                                               cache_distance=True)
                     if not self.integrate_sum:
                         for node in [self.nodes[i], self.nodes[global_index]]:

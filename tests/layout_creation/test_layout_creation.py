@@ -1,4 +1,4 @@
-from hdimvis.create_low_d_layout.LowDLayoutCreation import LowDLayoutCreation
+from hdimvis.create_low_d_layout.LayoutCreation import LowDLayoutCreation
 from hdimvis.algorithms.spring_force_algos.chalmers96_algo.Chalmers96 import Chalmers96
 from hdimvis.algorithms.stochastic_ntet_algo.SNeD import SNeD
 from hdimvis.create_low_d_layout.Chalmers96Layout import Chalmers96Layout

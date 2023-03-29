@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from hdimvis.data_fetchers.Dataset import Dataset
-from hdimvis.create_low_d_layout.LowDLayoutBase import LowDLayoutBase
+from hdimvis.create_low_d_layout.LayoutBase import LowDLayoutBase
 import pathlib
 from pathlib import Path
 

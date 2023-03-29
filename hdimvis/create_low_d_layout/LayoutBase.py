@@ -8,10 +8,10 @@ from ..data_fetchers.Dataset import Dataset
 
 class LowDLayoutBase:
 
-    def __init__(self, algorithm, optional_metric_collection: dict[str: int]= None, no_iters: int = None):
+    def __init__(self, algorithm, optional_metric_collection: dict[str: int]= None, num_iters: int = None):
         self.algorithm = algorithm
         self.final_positions = None
-        self.no_iters = no_iters  #number of iterations to be performed
+        self.num_iters = num_iters  #number of iterations to be performed
         self.optional_metric_collection = optional_metric_collection # a dict specifying what metrics to collect
         # the below is a dict where each value - a tuple- contains a list of iteration numbers at pos 0
         # and a list of collected values of a metric measured at the corresponding iteration number

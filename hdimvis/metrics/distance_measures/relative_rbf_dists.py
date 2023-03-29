@@ -5,10 +5,11 @@ import numba
 # set the "use_rbf_adjustment" to true for Sned if required instead
 
 
-def relative_rbf_dists(Dhd_quartet: np.ndarray, ntet_size: int):
+def relative_rbf_dists(Dhd_quartet: np.ndarray):
 
     # use np.longdouble because float64 overflows in exp a few lines below
     # and float128 is not available in this project setup for some reason
+    ntet_size = Dhd_quartet.shape[0]
     Dhd_quartet_triu_entries =  np.longdouble(Dhd_quartet.copy())
     Dhd_quartet_triu_entries[np.tril_indices(ntet_size)] = np.nan
     Dhd_quartet_triu_entries = Dhd_quartet_triu_entries[np.nonzero(np.invert(np.isnan(Dhd_quartet_triu_entries)))]

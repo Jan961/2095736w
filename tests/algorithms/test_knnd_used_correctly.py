@@ -1,6 +1,6 @@
 import numpy as np
 from hdimvis.algorithms.spring_force_algos.chalmers96_algo.Chalmers96 import Chalmers96
-from hdimvis.create_low_d_layout.LowDLayoutCreation import LowDLayoutCreation
+from hdimvis.create_low_d_layout.LayoutCreation import LowDLayoutCreation
 from hdimvis.data_fetchers.Dataset import Dataset
 from hdimvis.metrics.distance_measures.euclidian_and_manhattan import euclidean
 
@@ -31,7 +31,7 @@ def test_knnd_used_correctly():
                         distance_fn=euclidean, use_knnd=True,
                         sample_set_size=0, neighbour_set_size=1)
 
-    layout = LowDLayoutCreation().create_layout(algo96, no_iters=1)
+    layout = LowDLayoutCreation.create_layout(algo96, no_iters=1)
     lowd_layout = layout.get_final_positions()
 
     # check if similar points move closer and dissimilar farther away

@@ -1,6 +1,6 @@
 import numpy as np
 
-from hdimvis.create_low_d_layout.LowDLayoutBase import LowDLayoutBase
+from hdimvis.create_low_d_layout.LayoutBase import LowDLayoutBase
 from experiments.utils.LayoutHistogram import LayoutHistogram
 
 

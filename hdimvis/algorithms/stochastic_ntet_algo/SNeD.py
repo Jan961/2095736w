@@ -81,7 +81,7 @@ class SNeD(BaseAlgorithm):
             # after the below couple of lines the Dhd_quartet contains the relative distances
             # the distances in Dld_quartet are NOT relative and are passed as such to the compute_quartet_grads() funct
             if self.use_rbf_adjustment:
-                Dhd_quartet = relative_rbf_dists(Dhd_quartet, self.ntet_size)
+                Dhd_quartet = relative_rbf_dists(Dhd_quartet)
 
             else:
                 Dhd_quartet /= np.sum(Dhd_quartet)
@@ -90,7 +90,7 @@ class SNeD(BaseAlgorithm):
                                                   Dld_quartet, Dld_full_matrix)
 
             if self.is_test:
-                self._test_grad_calc(LD_points, Dhd_quartet, quartet_grads)
+                self._test_grad_calc(LD_points, Dhd_quartet, Dld_quartet, quartet_grads)
 
             if self.use_nesterovs_momentum:
                 self.nesterovs_v[quartet] = self.nesterovs_v[quartet]* self.momentum - LR*quartet_grads
@@ -128,9 +128,13 @@ class SNeD(BaseAlgorithm):
         assert np.allclose(Dld_quartet_alt, original_dld_calculation(LD_points))
         print("LD distance equality assertion passed")
 
-    def _test_grad_calc(self, LD_points, Dhd_quartet, quartet_grads):
+    def _test_grad_calc(self, LD_points, Dhd_quartet, Dld_quartet, quartet_grads):
         Dhd_1dim = Dhd_quartet[np.nonzero(Dhd_quartet)]  # convert to the format used by the OG grad computation
-        Dld_1dim = Dhd_quartet[np.nonzero(Dhd_quartet)]
+        Dld_1dim = Dld_quartet[np.nonzero(Dld_quartet)]
+        print(Dhd_1dim)
+        print(Dld_1dim)
+        print(f"new {quartet_grads.ravel()}")
+        print(f"old {compute_quartet_grads_original(LD_points, Dhd_1dim, Dld_1dim)}")
         assert np.allclose(quartet_grads.ravel(), compute_quartet_grads_original(LD_points, Dhd_1dim, Dld_1dim))
         print("Gradient equality assertion passed")
 

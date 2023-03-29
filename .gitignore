@@ -6,6 +6,7 @@
 
 #large data files
 hdimvis/data/fashion-mnist_train.csv
+\result_data
 
 # Editors
 .vscode/

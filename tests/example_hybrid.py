@@ -1,7 +1,7 @@
 from hdimvis.data_fetchers.DataFetcher import DataFetcher
 from hdimvis.metrics.distance_measures.euclidian_and_manhattan import euclidean
 from hdimvis.algorithms.spring_force_algos.hybrid_algo.Hybrid import Hybrid
-from hdimvis.create_low_d_layout.LowDLayoutCreation import LowDLayoutCreation
+from hdimvis.create_low_d_layout.LayoutCreation import LowDLayoutCreation
 from hdimvis.visualise_layouts_and_metrics.plot import show_layouts, show_generation_metrics
 from sklearn.decomposition import PCA
 import numpy as np
