@@ -19,22 +19,35 @@ class GlobeFetcher(LowLevelDataFetcherBase):
     continents = ['Africa.png', 'Europe.png', 'Asia.png', 'Australia.png', 'SouthAmerica.png', 'NorthAmerica.png']
     labels = [1, 2, 3, 4, 5, 6]
 
-    def load_dataset(self, size: int = 10000, **kwargs) -> (np.ndarray, np.ndarray):
+    def load_dataset(self, size: int = 10000,
+                     swiss_roll: bool = False, revolutions: float = 3, tightness: float = 1,  # swiss roll parameters
+                     **kwargs)->(np.ndarray, np.ndarray):
 
+        # col 0 is latitude and col 0 longitude !!!!
         sampled_2d_points  = self._get_sample_2d_points(size)
         # print(f"sampled: {sampled_2d_points}")
 
-        pitch = sampled_2d_points[:, 0]/1  # radius = 1 in this case because of scaling in _get_sample_2d_points
-        yaw = sampled_2d_points[:, 1]/1
+        if swiss_roll:
+            max_x = sampled_2d_points[:,1].max()
+            min_x = sampled_2d_points[:,1].min()
+            range = max_x - min_x
+            angles = ((sampled_2d_points[:,1] - min_x)/range) * 2*np.pi * revolutions
+            z = sampled_2d_points[:,0]
+            y = tightness * angles * np.cos(angles)
+            x = tightness * angles * np.sin(angles)
 
-        # print("radius")
-        # print(radius)
-        # print("scaled_points[:, 1")
-        # print(sampled_2d_points[:, 1].max())
+        else:
+            pitch = sampled_2d_points[:, 0]/1  # radius = 1 in this case because of scaling in _get_sample_2d_points
+            yaw = sampled_2d_points[:, 1]/1
 
-        z = np.sin(pitch)
-        x = np.cos(pitch)*np.sin(yaw)
-        y = np.cos(pitch) *np.cos(yaw)
+            # print("radius")
+            # print(radius)
+            # print("scaled_points[:, 1")
+            # print(sampled_2d_points[:, 1].max())
+
+            z = np.sin(pitch)
+            x = np.cos(pitch)*np.sin(yaw)
+            y = np.cos(pitch) *np.cos(yaw)
 
         points_3d = np.vstack((x,y,z)).T
         labels = sampled_2d_points[:,2]
@@ -96,5 +109,5 @@ class GlobeFetcher(LowLevelDataFetcherBase):
         # plt.axvline(x=0, c='black')
         # plt.axhline(y=0, c='black')
 
-        return points_2d_one_arr
+        return points_2d_one_arr  # col 0 is latitude and col 0 longitude !!!!
 
