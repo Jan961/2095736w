@@ -2,7 +2,7 @@ from typing import Dict
 
 import numpy as np
 
-from hdimvis.create_low_d_layout.LayoutCreation import LowDLayoutCreation
+from hdimvis.create_low_d_layout.LayoutCreation import LayoutCreation
 from hdimvis.data_fetchers.DataFetcher import DataFetcher
 from hdimvis.algorithms.BaseAlgorithm import BaseAlgorithm
 from hdimvis.algorithms.spring_force_algos.SpringForceBase import SpringForceBase
@@ -85,7 +85,7 @@ class SimpleComparison(ComparisonBase):
             if isinstance(algorithm, SpringForceBase):
                 self._initialise_nodes_or_knn_index(algorithm)
 
-            layout = LowDLayoutCreation().create_layout(algorithm,
+            layout = LayoutCreation().create_layout(algorithm,
                                                     optional_metric_collection=filtered_metric_collection,
                                                     no_iters=self.iterations)
             basic_metrics['baseline memory'], basic_metrics['peak memory'] = tracemalloc.get_traced_memory()
@@ -98,9 +98,9 @@ class SimpleComparison(ComparisonBase):
             if isinstance(algorithm, SpringForceBase):
                 self._initialise_nodes_or_knn_index(algorithm)
 
-            layout = LowDLayoutCreation().create_layout(algorithm,
-                                                        optional_metric_collection=filtered_metric_collection,
-                                                        no_iters=self.iterations)
+            layout = LayoutCreation().create_layout(algorithm,
+                                                    optional_metric_collection=filtered_metric_collection,
+                                                    no_iters=self.iterations)
             basic_metrics['time'] = perf_counter() - t1
 
         basic_metrics['final stress'] = layout.get_final_stress()

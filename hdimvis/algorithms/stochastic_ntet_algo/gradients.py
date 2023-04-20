@@ -14,7 +14,7 @@ def compute_quartet_grads(points : np.ndarray, Dhd : np.ndarray, Dld : np.ndarra
 
     # accumulate gradients from ech part of the sum here
     gradients = np.zeros_like(points)
-
+    return gradients
 
     # iterate over the upper triangle of entries of the diffs matrix
     # computing parts of the sum for each distance
@@ -57,7 +57,7 @@ def compute_quartet_grads(points : np.ndarray, Dhd : np.ndarray, Dld : np.ndarra
         else:
             col += 1
 
-    return gradients
+
 
 
 

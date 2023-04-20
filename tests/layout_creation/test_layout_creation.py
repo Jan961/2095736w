@@ -1,4 +1,4 @@
-from hdimvis.create_low_d_layout.LayoutCreation import LowDLayoutCreation
+from hdimvis.create_low_d_layout.LayoutCreation import LayoutCreation
 from hdimvis.algorithms.spring_force_algos.chalmers96_algo.Chalmers96 import Chalmers96
 from hdimvis.algorithms.stochastic_ntet_algo.SNeD import SNeD
 from hdimvis.create_low_d_layout.Chalmers96Layout import Chalmers96Layout
@@ -27,15 +27,15 @@ mock_dataset_3 = DataFetcher().fetch_data("mock data")
 def test_low_lvl_layout_created_correctly_for_chalmers96():
         algo =algorithms[0]
         layout_class = layout_classes[0]
-        layout = LowDLayoutCreation().create_layout(algo, optional_metric_collection={'Stress': 2, 'Average speed': 1},
-                                                    no_iters=4)
+        layout = LayoutCreation().create_layout(algo, optional_metric_collection={'Stress': 2, 'Average speed': 1},
+                                                no_iters=4)
         assert isinstance(layout, layout_class)
         assert layout.optional_metric_collection['Stress'] == 2
         assert layout.optional_metric_collection['Average speed'] == 1
 
 def test_low_lvl_layout_created_correctly_for_squad():
     algo = SNeD(dataset=mock_dataset_2, initial_layout=initial_positions)
-    layout = LowDLayoutCreation().create_layout(algo, no_iters=2)
+    layout = LayoutCreation().create_layout(algo, no_iters=2)
 
     assert np.allclose(initial_positions, layout.get_final_positions()) #tests if the correspondence between low D and high D
     # in the internal representation is maintained and the points are not shuffled
@@ -46,7 +46,7 @@ def test_low_lvl_layout_created_correctly_for_hybrid():
     algo = Hybrid(dataset=dataset, initial_layout=mock_data_initial_positions,
                   sample_set_size=1, neighbour_set_size=1,
                   interpolation_adjustment_sample_size = 1)
-    layout = LowDLayoutCreation().create_layout(algo)
+    layout = LayoutCreation().create_layout(algo)
 
     assert not np.allclose(mock_data_initial_positions, layout.get_final_positions()) #tests if the correspondence between low D and high D
     assert np.allclose(mock_data, layout.data)
@@ -64,8 +64,8 @@ def test_stress_collected_correctly():
             norm_name = norms[j]
             norm_fn = norm_fns[j]
             for i in [1,2,3]:
-                layout = LowDLayoutCreation().create_layout(algo, no_iters=4,
-                                                            optional_metric_collection={'Stress': i, "norm": norm_name})
+                layout = LayoutCreation().create_layout(algo, no_iters=4,
+                                                        optional_metric_collection={'Stress': i, "norm": norm_name})
                 if i != 3:
                     assert len(layout.collected_metrics['Stress'][0]) == 4//i + 1
                     assert len(layout.collected_metrics['Stress'][1]) == 4 // i + 1
@@ -86,9 +86,9 @@ def test_stress_decreases_as_expected():
     algo = SNeD(dataset=mock_dataset_3, initial_layout=initial_positions)
     stress_normal_1 = algo.get_vectorised_stress(euclidean)
     measurements = {'Stress': 1, "Average quartet stress": 1}
-    layout1 = LowDLayoutCreation().create_layout(algo, optional_metric_collection=measurements, no_iters=1,)
+    layout1 = LayoutCreation().create_layout(algo, optional_metric_collection=measurements, no_iters=1, )
     stress_quartet_1 = algo.get_average_quartet_stress()
-    layout2 = LowDLayoutCreation().create_layout(algo, optional_metric_collection=measurements, no_iters=4, )
+    layout2 = LayoutCreation().create_layout(algo, optional_metric_collection=measurements, no_iters=4, )
     stress_quartet_2 = algo.get_average_quartet_stress()
     stress_normal_2 = algo.get_vectorised_stress(euclidean)
     print(layout2.collected_metrics)

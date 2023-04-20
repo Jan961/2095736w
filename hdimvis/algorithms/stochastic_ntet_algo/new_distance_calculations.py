@@ -4,9 +4,8 @@ import numpy as np
 import numba
 
 
-
+# HD_points is an np array of size (n-tet_size, num_dimensions)
 def compute_quartet_dhd(exaggerate_dist: bool, HD_points: np.ndarray, distance_fn :Callable):
-
     Dhd_full_matrix = distance_fn(HD_points[:, :, np.newaxis] - HD_points[:, :, np.newaxis].T, 1)
 
     if exaggerate_dist:     # during exaggeration: don't take the square root of the distances

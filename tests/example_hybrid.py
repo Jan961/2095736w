@@ -1,7 +1,7 @@
 from hdimvis.data_fetchers.DataFetcher import DataFetcher
 from hdimvis.metrics.distance_measures.euclidian_and_manhattan import euclidean
 from hdimvis.algorithms.spring_force_algos.hybrid_algo.Hybrid import Hybrid
-from hdimvis.create_low_d_layout.LayoutCreation import LowDLayoutCreation
+from hdimvis.create_low_d_layout.LayoutCreation import LayoutCreation
 from hdimvis.visualise_layouts_and_metrics.plot import show_layouts, show_generation_metrics
 from sklearn.decomposition import PCA
 import numpy as np
@@ -26,7 +26,7 @@ hybrid = Hybrid(dataset=dataset, initial_layout=zero_initial, alpha=0.7,  distan
                     use_knnd=False, sample_set_size=10, neighbour_set_size=20)
 
 
-layout = LowDLayoutCreation().create_layout(hybrid, optional_metric_collection=None)
+layout = LayoutCreation().create_layout(hybrid, optional_metric_collection=None)
 print(tracemalloc.get_traced_memory())
 tracemalloc.stop()
 

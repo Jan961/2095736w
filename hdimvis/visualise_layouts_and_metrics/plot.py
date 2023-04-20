@@ -132,9 +132,6 @@ def show_generation_metrics(layout, stress: bool = True, average_speed: bool = F
     if log_scale:
         ax1.yscale("log")
 
-
-
-
     lines = line1 + line2 + line3
     labels = [l.get_label() for l in lines]
     if title:

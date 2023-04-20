@@ -13,7 +13,7 @@ from .HybridLayout import HybridLayout
 from ..data_fetchers.Dataset import Dataset
 
 
-class LowDLayoutCreation:
+class LayoutCreation:
 
     @staticmethod
     def create_layout(algorithm: BaseAlgorithm, no_iters: int = None ,

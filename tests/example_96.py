@@ -1,7 +1,7 @@
 from hdimvis.data_fetchers.DataFetcher import DataFetcher
 from hdimvis.metrics.distance_measures.euclidian_and_manhattan import manhattan,euclidean
 from hdimvis.algorithms.spring_force_algos.chalmers96_algo.Chalmers96 import Chalmers96
-from hdimvis.create_low_d_layout.LayoutCreation import LowDLayoutCreation
+from hdimvis.create_low_d_layout.LayoutCreation import LayoutCreation
 from hdimvis.visualise_layouts_and_metrics.plot import show_layouts, show_generation_metrics
 from sklearn.decomposition import PCA
 import numpy as np
@@ -35,7 +35,7 @@ algo96 = Chalmers96(dataset=cube_dataset, initial_layout=Xld,  distance_fn=eucli
                     use_knnd=False, sample_set_size=6, neighbour_set_size=4)
 
 
-layout = LowDLayoutCreation().create_layout(algo96, optional_metric_collection=metric_collection, no_iters=50)
+layout = LayoutCreation().create_layout(algo96, optional_metric_collection=metric_collection, no_iters=50)
 
 # print(f"iterations stress: {layout.collected_metrics['stress'][0]} \n")
 # print(f"iterations velocity: {layout.collected_metrics['average speed'][0]} \n")

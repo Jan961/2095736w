@@ -20,7 +20,7 @@ class GlobeFetcher(LowLevelDataFetcherBase):
     labels = [1, 2, 3, 4, 5, 6]
 
     def load_dataset(self, size: int = 10000,
-                     swiss_roll: bool = False, revolutions: float = 3, tightness: float = 1,  # swiss roll parameters
+                     swiss_roll: bool = False, revolutions: float = 2, tightness: float = 1,  # swiss roll parameters
                      **kwargs)->(np.ndarray, np.ndarray):
 
         # col 0 is latitude and col 0 longitude !!!!

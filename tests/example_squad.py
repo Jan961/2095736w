@@ -1,6 +1,6 @@
 from sklearn.decomposition import PCA
 from hdimvis.algorithms.stochastic_ntet_algo.SNeD import SNeD
-from hdimvis.create_low_d_layout.LayoutCreation import LowDLayoutCreation
+from hdimvis.create_low_d_layout.LayoutCreation import LayoutCreation
 from hdimvis.data_fetchers.DataFetcher import DataFetcher
 from hdimvis.visualise_layouts_and_metrics.plot import show_layouts, show_generation_metrics
 from hdimvis.metrics.distance_measures.euclidian_and_manhattan import manhattan
@@ -17,19 +17,19 @@ cube = Cube(num_points=100, side=30, angle=0.4)
 dataset_cube= cube.get_sample_dataset(3000)
 
 
-metric_collection = {'Average quartet stress': 5}
+metric_collection = {'Average quartet stress': 1}
 dataset = DataFetcher.fetch_data('rna N3k')
 
-Xld = PCA(n_components=2, whiten=False, copy=True).fit_transform(dataset_cube.data).astype(np.float64)
+Xld = PCA(n_components=2, whiten=False, copy=True).fit_transform(dataset.data).astype(np.float64)
 Xld *= 10/np.std(Xld)
 
-squad = SNeD(dataset=dataset_cube, initial_layout=Xld, use_nesterovs_momentum=False, ntet_size=4, use_rbf_adjustment=True )
-layout = LowDLayoutCreation().create_layout(squad, optional_metric_collection=metric_collection, no_iters=1000)
-print(layout.collected_metrics)
+squad = SNeD(dataset=dataset, initial_layout=Xld, use_nesterovs_momentum=False, ntet_size=4, use_rbf_adjustment=False )
+layout = LayoutCreation().create_layout(squad, optional_metric_collection=metric_collection, no_iters=1)
+print(layout.collected_metrics['Average quartet stress'])
 show_layouts(layout, use_labels=True, color_map='rainbow', title="  test")
-show_generation_metrics(layout, quartet_stress=True, title="test rbf")
+show_generation_metrics(layout, quartet_stress=True, title="test ")
 
-cube.plot_2d(layout=layout, title="test rbf")
+# cube.plot_2d(layout=layout, title="test ")
 
 # fig, axis = plt.subplots()
 # axis.scatter(Xld[:,0], Xld[:,1], c=dataset.labels, cmap='rainbow')

@@ -1,7 +1,7 @@
 import numpy as np
 
 from hdimvis.algorithms.spring_force_algos.chalmers96_algo.Chalmers96 import Chalmers96
-from hdimvis.create_low_d_layout.LayoutCreation import LowDLayoutCreation
+from hdimvis.create_low_d_layout.LayoutCreation import LayoutCreation
 from hdimvis.data_fetchers.DataFetcher import DataFetcher
 from hdimvis.data_fetchers.Dataset import Dataset
 from hdimvis.metrics.distance_measures.euclidian_and_manhattan import euclidean
@@ -20,7 +20,7 @@ def get_data(dataset_name):
     sample = Dataset(dataset.data[sample_indx], None, "sample")
 
     algo96 = Chalmers96(dataset=sample, alpha=0.7, distance_fn=euclidean, use_knnd=False)
-    layout = LowDLayoutCreation().create_layout(algo96, optional_metric_collection=None, no_iters=50)
+    layout = LayoutCreation().create_layout(algo96, optional_metric_collection=None, no_iters=50)
 
     diffs = np.broadcast_to(dataset.data[:,:,None], shape=(dataset.data.shape[0], dataset.data.shape[1],
                                                  sample.data.shape[0])) - sample.data.T[None,:,:]
