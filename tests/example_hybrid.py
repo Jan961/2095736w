@@ -2,7 +2,7 @@ from hdimvis.data_fetchers.DataFetcher import DataFetcher
 from hdimvis.metrics.distance_measures.euclidian_and_manhattan import euclidean
 from hdimvis.algorithms.spring_force_algos.hybrid_algo.Hybrid import Hybrid
 from hdimvis.create_low_d_layout.LayoutCreation import LayoutCreation
-from hdimvis.visualise_layouts_and_metrics.plot import show_layouts, show_generation_metrics
+from hdimvis.visualise_layouts_and_metrics.plot import show_layout, show_generation_metrics
 from sklearn.decomposition import PCA
 import numpy as np
 import tracemalloc
@@ -36,5 +36,5 @@ tracemalloc.stop()
 # print(f"velocity: {layout.collected_metrics['average speed'][1]} \n")
 # print(f" stress: {layout.collected_metrics['stress'][1]} \n")
 # print("total time: {}")
-show_layouts(layout, use_labels=True, color_map='rainbow', title="Hybrid")
+show_layout(layout, use_labels=True, color_map='rainbow', title="Hybrid")
 show_generation_metrics(layout, title="Hybrid ")

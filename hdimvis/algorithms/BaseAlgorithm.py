@@ -38,11 +38,13 @@ class BaseAlgorithm:
 
         try:
             stress = self.get_vectorised_stress(distance_fn)
+            print(f"\n Computing vectorised {distance_fn.__name__} stress \n")
             return stress
 
         except np.core._exceptions._ArrayMemoryError:
             print("Not enough memory to allocate for a numpy array for stress calculation. \n"
                   "Stress will be calculated with a Python loop")
+            print(f"\n Computing vectorised {distance_fn.__name__} stress \n")
             stress = self.get_unvectorised_stress(distance_fn)
             return stress
 
@@ -65,12 +67,10 @@ class BaseAlgorithm:
             return self.name + ' - ' + self.additional_name
 
     def get_vectorised_stress(self, distance_function: Callable):
-        print(f"\n Vectorised {distance_function.__name__} stress \n")
         return vectorised_stress(self.data, self.get_positions(), distance_function)
 
 
     def get_unvectorised_stress(self, distance_function: Callable):
-        print(f"\n Un-vectorised {distance_function.__name__} stress \n")
         return unvectorised_stress(self.data, self.get_positions(), distance_function)
 
     def initialise_layout(self):

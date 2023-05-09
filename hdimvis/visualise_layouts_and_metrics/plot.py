@@ -8,11 +8,12 @@ import os
 import pathlib
 
 
-def show_layouts(*layouts: LowDLayoutBase, use_labels: bool = False, alpha: float = None,
+def show_layout(layout: LowDLayoutBase =None, use_labels: bool = False, alpha: float = None,
                 color_by: Callable[[np.ndarray],float] = None,
                 color_map: str = 'rainbow', size: float = 3, title: str = None,
-                sub_titles: List[str] = None,
-                save_to: Path  =None) -> None:
+                save_to: Path  =None,
+                positions: np.ndarray =None,
+                labels: np.ndarray= None) -> None:
 
     """
 
@@ -22,58 +23,35 @@ def show_layouts(*layouts: LowDLayoutBase, use_labels: bool = False, alpha: floa
     this can be used to colour the datapoints on the layout by for example
     one of the dimensions of the original high-d dataset
     """
+    assert layout is not None or positions is not None
 
-    no_layouts = len(layouts)
-    assert no_layouts > 0
+    fig, ax = plt.subplots()
 
-    if no_layouts == 1:
-        fig, axes = plt.subplots()
+    if layout:
+        pos= layout.get_final_positions()
     else:
-        r = math.floor(no_layouts/2)
-        c = math.ceil(no_layouts/2)
-        fig, axes = plt.subplots(r,c)
+        pos = positions
 
-    # Get positions of nodes
+    x = pos[:, 0]
+    y = pos[:, 1]
 
-    idx_r = 0
-    idx_c = 0
-    for i, layout in enumerate(layouts):
+    # Color nodes
+    colors = 'b'
+    cmap = None
 
+    if labels is not None:
+        colors = labels
+    elif layout and use_labels:
+        colors = layout.labels
+    elif layout and color_by and layout.data is not None:
+        colors = np.apply_along_axis(color_by, axis=1, arr=layout.data)
 
-        pos: np.ndarray = layout.get_final_positions()
+    if color_map is not None:
+        cmap = plt.cm.get_cmap(color_map)
 
-        x = pos[:, 0]
-        y = pos[:, 1]
-
-        # Color nodes
-        colors = 'b'
-        cmap = None
-
-        if use_labels:
-            colors = layout.labels
-        elif color_by is not None and layout.data is not None:
-            colors = np.apply_along_axis(color_by, axis=1, arr=layout.data)
-
-        if color_map is not None:
-            cmap = plt.cm.get_cmap(color_map)
-
-        if no_layouts == 1:
-            axis = axes
-        else:
-            if idx_c == c-1:
-                idx_r += 1
-            axis = axes[idx_r, idx_c]
-            idx_c += 1
-
-        axis.scatter(x, y, alpha=alpha, s=size, c=colors, cmap=cmap)
-
-        if sub_titles is not None and len(sub_titles) >= i+1:
-            axis.title.set_text(sub_titles[i])
-
+    ax.scatter(x, y, alpha=alpha, s=size, c=colors, cmap=cmap)
     if title:
         plt.title(title)
-    else:
-        plt.title(f"{layouts[0].algorithm.dataset.name} - {layouts[0].algorithm.get_name()}")
 
     plt.axis('off')
     plt.axis('equal')
@@ -146,6 +124,9 @@ def show_generation_metrics(layout, stress: bool = True, average_speed: bool = F
         plt.savefig((Path(save_to).joinpath(Path(f"{title}.png"))).resolve())
 
     plt.show()
+
+
+
 
 
 

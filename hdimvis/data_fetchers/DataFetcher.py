@@ -11,6 +11,7 @@ from hdimvis.data_fetchers.low_lvl_fetchers.FlowCytometryFetcher import FlowCyto
 from hdimvis.data_fetchers.low_lvl_fetchers.MnistFetcher import MnistFetcher
 from hdimvis.data_fetchers.low_lvl_fetchers.MockDataFetcher import MockDataFetcher
 from hdimvis.data_fetchers.low_lvl_fetchers.GlobeFetcher import GlobeFetcher
+from hdimvis.data_fetchers.low_lvl_fetchers.CancerRNAFetcher import CancerRNAFetcher
 from .Dataset import Dataset
 
 
@@ -52,6 +53,8 @@ class DataFetcher:
             low_lvl_data_fetcher = MockDataFetcher()
         elif dataset_name == 'globe':
             low_lvl_data_fetcher = GlobeFetcher()
+        elif dataset_name == 'cancer RNA':
+            low_lvl_data_fetcher = CancerRNAFetcher()
         else:
             print("Dataset name not recognised")
 

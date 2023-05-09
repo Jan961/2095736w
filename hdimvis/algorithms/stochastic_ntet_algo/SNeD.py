@@ -55,7 +55,7 @@ class SNeD(BaseAlgorithm):
 
         assert self.data is not None
 
-        # np.random.shuffle(self.perms)
+        np.random.shuffle(self.perms)
         self.grad_acc.fill(0.)
         quartet_stress = 0
 
@@ -101,8 +101,6 @@ class SNeD(BaseAlgorithm):
                 quartet_stress += np.sum((Dhd_quartet - (Dld_quartet/np.sum(Dld_quartet)))**2)
 
         if calculate_average_stress:
-            print(f"shape: {self.batch_indices.shape[0]}")
-            print(f"stress{quartet_stress}")
             self.last_average_quartet_stress_measurement = quartet_stress/self.batch_indices.shape[0]
 
         if self.use_nesterovs_momentum:

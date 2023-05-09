@@ -36,7 +36,8 @@ class LowDLayoutBase:
         if self.optional_metric_collection and 'norm' in self.optional_metric_collection:
             norm = self.optional_metric_collection['norm']
 
-        if self.optional_metric_collection is None or 'Stress' not in self.optional_metric_collection:
+        if not self.collected_metrics["Stress"][1]:
+            self.collected_metrics['Stress'][0].append(self.iteration_number)
             self.collected_metrics['Stress'][1].append(self.algorithm.get_stress(norm=norm))
             return self.collected_metrics['Stress'][1][-1]
         else:
