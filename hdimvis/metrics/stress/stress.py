@@ -9,8 +9,8 @@ def vectorised_stress(data: np.ndarray, ld_positions: np.ndarray, distance_funct
 
     hd_dist = distance_function(data[:,:,None] - data[:,:,None].T, 1)
     ld_dist = distance_function(ld_positions[:,:,None] - ld_positions[:,:,None].T, 1)
-    numerator = np.sum((hd_dist - ld_dist)**2)/4
-    denominator = np.sum(ld_dist**2)/4
+    numerator = np.sum((hd_dist - ld_dist)**2)
+    denominator = np.sum(ld_dist**2)
     if denominator == 0:
         return np.inf
     else:

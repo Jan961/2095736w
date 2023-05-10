@@ -7,7 +7,7 @@
 % You can add any packages you want, as long as it does not alter
 % the overall format (e.g. don't change the margins or the reference style).
 %
-\usepackage{pdfpages} % if you want to include a PDF for an ethics checklist, for example
+\usepackage{pdfpages} % if you want to include a PDF for an ethics checklist,
 %
 %
 
@@ -98,136 +98,103 @@
 % text in the final copy, and you will also get warnings when you compile (so you don't
 % forget to take them out!)
 
-\section{Overview and motivation}
+\section{Overview and context}
 
 With the continually increasing volume of data available in many academic as well as commercial contexts, there is a great demand for tools to efficiently process and extract useful information from multidimensional data sets. One interesting problem in this area is high-dimensional data visualisation. Since approaches such mosaic/pair plots or using shape, colour etc. to represent dimensions above 2, can only be useful for a small number of dimensions, this almost always involves some form of dimension reduction and generation of a 2D plot. 
 
-As many state-of-the-art solutions to problems involving mapping high-dimensional inputs to lower-dimensional outputs make use of neural networks and deep learning, it is not surprising that a number of attempts have been made to apply these tools, notably Variational Autoencoder architectures, to visualisation \citep{ nn_vis1, nn_vis2, nn_vis3, nn_vis4, nn_vis5, nn_vis6, nn_vis7}. At least in some instances, however, the disadvantages of these approaches, while not unique to neural networks, can, nonetheless, include long processing times \citep{nn_vis5}, the need to tune multiple hyper-parameters that can radically alter the resulting 2D layouts \citep{nn_vis5, nn_vis6} and, potentially, lack of genralisablity as the network architecture might have to be altered and hyper-parameters readjusted for different data types.
+As many state-of-the-art solutions to problems involving mapping high-dimensional inputs to lower-dimensional outputs make use of neural networks and deep learning, it is not surprising that a number of attempts have been made to apply these tools, notably Variational Autoencoder architectures, to visualisation \citep{ nn_vis1, nn_vis2, nn_vis3, nn_vis4, nn_vis5, nn_vis6, nn_vis7}. At least in some instances, however, the disadvantages of these approaches, while not unique to neural networks, can, nonetheless, include long processing times \citep{nn_vis5}, the need to tune multiple hyper-parameters that can radically alter the resulting 2D layouts \citep{nn_vis5, nn_vis6} and, potentially, lack of genralisablity as the network architecture might have to be altered and hyper-parameters readjusted for different data types. (examples to add)
 
-The alternative, more popular, approach is to use one of a large number of available algorithms that do not require training a neural network. One of the most commonly used dimensionality reduction procedures  - linear Principal Component Analysis (PCA) \citep{pca} while useful in visualisation, necessarily produces restricted, considerably simplified plots when treated as a standalone visualisation technique. Another linear methods - class MDS prodce good quality but 
+The alternative, more popular, approach is to use one of the incredibly large number of available algorithms that do not require training a neural network. These can be, broadly, split into at least two major groups. The first - containing linear algorithms - includes one of the most commonly used dimensionality reduction procedures  - Principal Component Analysis (PCA) \citep{pca}, which, while useful in visualisation, necessarily produces restricted, considerably simplified plots when treated as a standalone visualisation technique. Another linear method - classical Multidimensional Scaling (MDS) \citep{mds} was designed to preserve all pairwise distance relationships between the high-dimensional data points. It often outputs layouts of much better quality, representing both local and global structures fairly accurately. This however comes at the cost of processing time, which has the complexity of O(n\textsuperscript{3}) or O(n\textsuperscript{4}) for most classical MDS algorithms, making this technique impractical to use on large data sets.
 
-Among non-linear methods, one class of algorithms, containing all three that are the main focus of this project, performs Multidimensional Scaling (MDS) \citep{mds} of the input data. This means that the algorithms attempt to preserve the pairwise distance relationships between the high-dimensional data points when creating their low-dimensional representations. 
-Such algorithms tend to represent both local and global structures of the data fairly accurately when bhasdajkd but may strugglwe when not linear (section 2). 
+Among non-linear methods, one class of iterative algorithms, which includes all three that are the main focus of this project - \citet{Chalmers96}, \citet{hyrid} and \citet{squad} introduces various heuristics and elements of stochasticity to the basic non-metric MDS procedure in an attempt to reduce its prohibitively large time complexity, without sacrificing layout quality. While largely successful in this task, like all visualisation algorithms based on MDS or other linear methods, these techniques tend to perform worse when the high-dimensional structures (manifolds) they aim to represent cannot be regarded as linearly or approximately linearly embedded in the observation space \citep{swissroll} - such as for example a world map rolled into a 3d swiss roll - see section 428742adasfa - to be added).  
 
-In contrast 
+The two most popular visualisation algorithms - UMAP \citep{umap} and especially t-SNE \citep{tsne} - as well as accelerated versions of the latter by \citet{barneshutsne} and \citet{fitsne}, are also non-linear. In contrast to the roughly equivalent focus on global and local structures of the MDS-based techniques, the above two algorithms tend to favour the latter at the expense of the former, requiring a suitable initialisation to achieve a reasonable degree of global structure preservation \citep{initialisationcritical} - Figure \ref{fig:init_demo}. At least due to their local focus the two algorithms should also be able to better handle nonlinear data manifolds \citep{swissroll}.
 
 
 \begin{figure}[htb]
     \centering
     \includegraphics[width=0.3\linewidth]{images/3dcube.png} \\
-    \includegraphics[width=0.4\linewidth]{images/PCA.png}
-    \includegraphics[width=0.4\linewidth]{images/Laplacian eigenmaps.png} \\
-    \includegraphics[width=0.4\linewidth]{images/Chalmers' 96.png}
-    \includegraphics[width=0.4\linewidth]{images/umap_cube.png} \\
-    \includegraphics[width=0.4\linewidth]{images/Stochastic quartet descent.png}
-    \includegraphics[width=0.4\linewidth]{images/tsne_cube.png}
+    \includegraphics[width=0.3\linewidth]{images/PCA.png}
+    \includegraphics[width=0.3\linewidth]{images/scikit-learn's MDS.png} 
+    \includegraphics[width=0.3\linewidth]{images/Chalmers' 96.png}\\
+    \includegraphics[width=0.3\linewidth]{images/umap_cube.png} 
+    \includegraphics[width=0.3\linewidth]{images/Stochastic quartet descent.png}
+    \includegraphics[width=0.3\linewidth]{images/tsne_cube.png}\\
 
-    \caption{An illustration (with reduced point density) of a set of 5x10\textsuperscript{4} non-overlapping, 3-dimensional points forming 5 faces of a cube and 2D embeddings produced by passing the same 3000 points sampled from the cube to various dimension reducing algorithms. UMAP was initialised with Laplacian Eigenmaps \citep{laplacian_eigen}, t-SNE and Stochastic quartet MDS with PCA. Chalmers' 96 MDS used a random initialisation.
+    \caption{An illustration (with reduced point density) of a set of 5x10\textsuperscript{4} non-overlapping, 3-dimensional points forming 5 faces of a cube and 2D embeddings produced by passing the same 3000 points sampled from the cube to various dimension reducing algorithms. UMAP was initialised with Laplacian Eigenmaps \citep{laplacian_eigen}, t-SNE and Stochastic quartet MDS with PCA. Chalmers' 96 MDS and scikit-learn's classical SMACOF MDS used random initialisations.
     }
 
     % use the notation fig:name to cross reference a figure
     \label{fig:init_demo} 
 \end{figure}
 
+\section{Motivation}
 
+The aim of this project was jnjjfkjakbdsahbsdkajsb
 
-\section{Writing guidance}
-\subsection{Who is the reader?}
-
-This is the key question for any writing. Your reader:
-
-\begin{itemize}
-    \item
-    is a trained computer scientist: \emph{don't explain basics}.
-    \item
-    has limited time: \emph{keep on topic}.
-    \item
-    has no idea why anyone would want to do this: \emph{motivate clearly}
-    \item
-    might not know \emph{anything} about your project in particular:
-    \emph{explain your project}.
-    \item
-    but might know precise details and check them: \emph{be precise and
-    strive for accuracy.}
-    \item
-    doesn't know or care about you: \emph{personal discussions are
-    irrelevant}.
-\end{itemize}
-
-Remember, you will be marked by your supervisor and one or more members
-of staff. You might also have your project read by a prize-awarding
-committee or possibly a future employer. Bear that in mind.
-
-\subsection{References and style guides}
-There are many style guides on good English writing. You don't need to
-read these, but they will improve how you write.
-
-\begin{itemize}
-    \item
-    \emph{How to write a great research paper} \cite{Pey17} (\textbf{recommended}, even though you aren't writing a research paper)
-    \item
-    \emph{How to Write with Style} \cite{Von80}. Short and easy to read. Available online.
-    \item
-    \emph{Style: The Basics of Clarity and Grace} \cite{Wil09} A very popular modern English style guide.
-    \item
-    \emph{Politics and the English Language} \cite{Orw68}  A famous essay on effective, clear writing in English.
-    \item
-    \emph{The Elements of Style} \cite{StrWhi07} Outdated, and American, but a classic.
-    \item
-    \emph{The Sense of Style} \cite{Pin15} Excellent, though quite in-depth.
-\end{itemize}
-
-\subsubsection{Citation styles}
-
-\begin{itemize}
-\item If you are referring to a reference as a noun, then cite it as: ``\citet{Orw68} discusses the role of language in political thought.''
-\item If you are referring implicitly to references, use: ``There are many good books on writing \citep{Orw68, Wil09, Pin15}.''
-\end{itemize}
-
-There is a complete guide on good citation practice by Peter Coxhead available here: \url{http://www.cs.bham.ac.uk/~pxc/refs/index.html}. 
-If you are unsure about how to cite online sources, please see \citet{UNSWWebsite}. 
-\footnote{Specifying an online resource like \url{https://developer.android.com/studio}
-in a footnote sometimes makes more sense than including it as a formal reference.}
-
-\subsection{Plagiarism warning}
-
-\begin{highlight_title}{WARNING}
-    
-    If you include material from other sources without full and correct attribution, you are commiting plagiarism. The penalties for plagiarism are severe.
-    Quote any included text and cite it correctly. Cite all images, figures, etc. clearly in the caption of the figure.
-\end{highlight_title}
-
-\subsection{Quoting text}
-
-If you are quoting a long passage, use a \texttt{quote} environment:
-
-\begin{quote}
-     If you scribble your thoughts any which way, your readers will surely feel that you care nothing about them. They will mark you down as an egomaniac or a chowderhead -or, worse, they will stop reading you. The most damning revelation you can make about yourself is that you do not know what is interesting and what is not.
-\end{quote} \citep{Von80}
-
-If you are quoting inline, like Simon Peyton-Jones' following remark, use quotation marks ``Conveying the intuition is primary, not
-secondary'' \citep{Pey17}.
-
-
+Given the large number of parameters and settings governing the behaviour of each algorithm only the effect of more interesting or significant adjustments was formally tested and many others especially those whose effect was unambiguously detrimental were only investigated by manually running the algorithm on a few datasets. 
 %==================================================================================================================================
 \chapter{Background}
-What did other people do, and how is it relevant to what you want to do?
-\section{Guidance}
-\begin{itemize}    
-    \item
-      Don't give a laundry list of references.
-    \item
-      Tie everything you say to your problem.
-    \item
-      Present an argument.
-    \item Think critically; weigh up the contribution of the background and put it in context.    
-    \item
-      \textbf{Don't write a tutorial}; provide background and cite
-      references for further information.
-\end{itemize}
+
+\section{Stress and other metrics.}
+
+Like most MDS-based dimensionlity reduction methods the three considered algorithms use some variant of the loss function called "stress", first proposed by \citet{og_stress} and defined as: 
+
+\begin{equation}
+\label{tab:stress}
+    Stress = \sqrt{\frac{\sum_{i<j}(\delta_{ij} - d_{ij})^2 }{\sum_{i<j}d_{ij}^2}},
+\end{equation}    
+where $\delta_{ij}$ is the high-dimensional distance between data points i and j and $d_{ij}$ is the distance between their low-dimensional representations. It is worth noting that, while enormously informative, such defined "stress" is not a perfect measure for assessing the quality of the 2D layouts, not least because this quality depends in part on the subjective judgement of the viewer and the purpose of visualisation (some systematic limitations are briefly illustrated in section 823492sss). This is one reason why it is common in  high-dimensional data visualisation literature to include qualitative evaluation of algorithms, often on simplified, synthetic data-sets, as part of the overall assessment of the algorithms' performance. For quantitative assessment a wide variety of, not infrequently custom designed, metrics is used. Many of those metrics highlight different aspects of the produced layouts. 
+
+In this project three synthetic data sets were used: a 3d cube, a 3d globe and a 2d world map rolled into a 3d Swiss roll \footnote{"Swiss roll world map" idea from: \url{https://github.com/NikolayOskolkov/tSNE_vs_UMAP_GlobalStructure}}. Apart from Stress the layouts were quantitatively evaluated by comparing their accuracy with k-NND algorithm - as in (reference to dig out) and by (nabsjnfanakan to add)
+
+\section{Algorithms}
+
+
+\subsection{\cite{Chalmers96}}
+
+This algorithm relies on a spring force model to translate the high-dimensional distance structure of a data-set into two dimensions. To reduce the number of comparisons performed in the classical MDS, each data-point (or node) $i$ is assigned two non-intersecting sets of other nodes: a neighbour set $V_i$ and random sample set $S_i$. At each iteration a new sample is drawn for each node $i$ and the neighbour set $V_i$ is updated in case any closer neighbours are found. A force equal to the sum of all forces between the node i and each node j in either $S_i$ or $V_i$ is computed. Force between nodes i and j is defined as:
+\begin{equation}
+        F_{ij} = ()
+\end{equation}  
+where $(k_{s}$ is a spring constant, is $(k_{d}$ a damping constant l is bla blah and $v_{ij}$ is the sum of the magnitudes of components of velocities of i and j in the direction of l. The implementation of the algorithm used in this project \citep{2019} did not include a spring force between each node the 2D plane onto which the layout is projected, unlike in the original paper \citep{Chalmers96}. As noticed by \citet{2019} in this implementation the 2D layouts stop evolving after around 100 (much smaller than N) iterations for most data-sets and thus, since the sizes of $S_i$ and $V_i$ are kept constant, the algorithm effectively operates in linear time rather than $O(N^2)$ as described by \citet{Chalmers96}. 
+
+The role of $k_{d}$ is to prevent the system from becoming unstable (see section 412311) by reducing the overall force on a node. Nonetheless it was found that best results where produced when $k_{d}$ was set to zero and $k_{s}$ was directly decreased instead, as in the original implementation by \citet{2019}. Similarly, initial experiments revealed that  thus this setting was also left unchanged. Finally,  again as in the original implementation, for simplicity, the integration stop is set to one, so that force, velocity and position update of a node become equal. 
+
+\subsection{\cite{hyrid}}
+
+Here the runtime of \citet{Chalmers96} is further reduced by only applying the full layout algorithm on a $\sqrt{N}$ subset of the dataset, interpolatin the remaining datapoints into the layout and finally gghhg. During interpolation stage for each datapoint not yet placed on the 2D layout ghhgg. Further details are discussed in (ghghjhu). As before since the original specification assumes \citet{Chalmers96} to run in $O(n^2)$ time this modification reduced the time complexity to $O(n\log n)$ but in \citet{2019} implementation it reduces it to a shorter linear time.
+
+\subsection{\cite{squad} - Stochastic Quartet Descent MDS (SQuaD)}
+
+This is, in many ways, a similar approach to reducing the time complexity of classical MDS to that employed by \citet{Chalmers96}. Instead of using a heuristic of spring forces based on $V_i$ and $S_i$, however, at each iteration this algorithm randomly partitions the dataset into groups of four (quartets) and updates the low dimensional position of each datapoint in a quartet simultaneously, directly based on the gradients of the stress function calculated for the quartet, which is defined as:
+\begin{equation}
+\label{tab:quartet_stress}
+    Stress_{quartet} = \sum_{a\, =\, 1}^{3} \sum_{b\, =\, a\, +\, 1}^{4} (\delta_{ij}^{\,r} - d_{ij}^{\,r})^2,
+\end{equation} 
+Here $\delta^{r}$ and $d^{r}$ are matrices of relative, that is normalised by the sum of all distances in the quartet, respectively high- and low-dimensional distances between datapoints i and j. The total stress of the layout is then defied as the average of all quartet stresses. Since the number of iterations required for convergence is around 500 and independent of N (?) this is, again, a linear time algorithm. The code provided by the authors \footnote{ \url{https://github.com/PierreLambert3/SQuaD-MDS}} served a the starting point for the implementation used in this project.
+
 
 %==================================================================================================================================
-\chapter{Analysis/Requirements}
+\chapter{Design}
+
+
+
+\begin{figure}[htb]
+    \centering
+    \includegraphics[width=1\linewidth]{images/class diag.png} \\
+ 
+    \caption{A simplified class diagram for the project showing the key classes and the separation of concerns. Red classes are responsible for data pre-processing and loading, blue contain the main logic of all algorithms and green create layouts as well as collect various measurements during the process.
+    }
+
+    % use the notation fig:name to cross reference a figure
+    \label{fig:uml} 
+\end{figure}
+
+
+
+
+
 What is the problem that you want to solve, and how did you arrive at it?
 \section{Guidance}
 Make it clear how you derived the constrained form of your problem via a clear and logical process. 
@@ -241,13 +208,61 @@ the work established in the background, and stating how the space of possible pr
 sensibly narrowed down to what you have done.
 
 %==================================================================================================================================
-\chapter{Design}
-How is this problem to be approached, without reference to specific implementation details? 
-\section{Guidance}
-Design should cover the abstract design in such a way that someone else might be able to do what you did, 
-but with a different language or library or tool. This might include overall system architecture diagrams,
-user interface designs (wireframes/personas/etc.), protocol specifications, algorithms, data set design choices,
-among others. Specific languages, technical choices, libraries and such like should not usually appear in the design. These are implementation details.
+\chapter{Experiments}
+
+\section{Measurement Challenges and Scope of the Project}
+
+A comparison between any two high-dimensional data visualisation algorithms could focus on many aspects of their performance. One such important aspect is memory use. However, despite the existence of various measurement tools for Python, obtaining accurate figures is not easy \footnote{ \url{https://pythonspeed.com/articles/measuring-memory-python/}}. Some tools only measure RSS memory use, others limit themselves to memory blocks allocated by Python interpreter itself, not including those used by libraries written in different languages, while yet others are only available for specific platforms, such as Linux. This is why early on in the project it was decided that memory use measurement will not be a major focus of this work.
+
+More broadly, given that the algorithm implementations by \citet{2019} and the \citet{squad} were written using different styles, the sheer number of possible tiny alteration which might or might not improve efficiency of either of them and the fact that the algorithms were broadly equally efficient in their existing implementations; it seemed that the project could take at least three main approaches to comparing the algorithms.
+
+First, in order to make the comparison between SQuaD and the spring forces algorithms implemented by \citet{2019} fairer, would involve completely rewriting the for code either of them - e.g. the latter to use a popular Python acceleration library Numba \footnote{ \url{https://numba.pydata.org/}}.
+
+Second would explicitly focus on making both algorithms' implementations as efficient as possible, perhaps with the restriction of only using Python API and Python libraries, and then measuring their relative performance.
+
+Third would generally only alter the high-level logic of the algorithms, focus on the quality of the produced embedding/layouts rather than efficiency and use the existing implementations as baselines.
+
+It was decided the the last option would be the most interesting and useful one to take.
+
+\section{Stress Vectorisation with Numpy}
+
+Despite the aforementioned lack of specific focus on efficiency, one aspect of the computations performed where a decrease in execution time presented significant benefits was calculation of Stress (\ref{tab:stress}) of a layout. Stress calculation is an expensive $O(n^2)$ operation which if performed periodically during layout creation tended to take up the majority of runtime. Thus the original implementation using the itertools library \footnote{ \url{https://docs.python.org/3/library/itertools.html}} and a Python loop, was rewritten with Numpy \footnote{ \url{https://numpy.org/}} as in Listing \ref{lst:vectorised_stress}. This provided an interesting opportunity to compare resource use by the two methods. The experiment was performed on a machine with 32.0 GB (31.7 GB usable) physical RAM, using the Python tool tracemalloc which, as related to the discussion in the previous section, does track memory allocated to Numpy {\footnote{\url{https://docs.python.org/3/library/tracemalloc.html}}. As expected the vectorised method used much more - up to 3 orders of magnitude - memory but was significantly faster. However at the level of memory usage of around 26 GB the Numpy method performance begins to degrade rapidly - which must be caused primarily by the increasing use of swap space - until finally at levels above around 40GB an insufficient memory exception is thrown. In such cases, in this project, the original calculation method is used as a fallback.
+
+\begin{lstlisting}[language=python, float, caption={Python code to calculate vectorised Stress. A "distance\_function" retruns a norm of a numpy array (1st parameter) calculated along the specified axis (2nd parameter).}, label=lst:vectorised_stress]
+def vectorised_stress(data: np.ndarray, ld_positions: np.ndarray, distance_function: Callable):
+    
+    hd_dist = distance_function(data[:,:,None] - data[:,:,None].T, 1)
+    ld_dist = distance_function(ld_positions[:,:,None] - ld_positions[:,:,None].T, 1)
+    numerator = np.sum((hd_dist - ld_dist)**2)
+    denominator = np.sum(ld_dist**2)
+    if denominator == 0:
+        return np.inf
+    else:
+        return np.sqrt(numerator/denominator)
+    
+\end{lstlisting}
+
+\section{Stochastic "N-tet" Descent MDS}
+
+In this experiment the effect of changing the original size  (four) of the base unit used for layout creation by SQuaD was explored. Thus the SQuaD algorithm adapted for an arbitrary unit size greater than 3 was named Stochastic "N-tet" Descent (SNeD) - where "n-tet" stands for: trio, quartet, quintet, sextet and so on.  
+
+Taking the partial derivative of one part of the loss function sum (\ref{tab:quartet_stress}) adapted for a an arbitrary n-tet size $k$, with respect to one of the two dimensions on the 2D layout, e.g. $x$, of the $q^{th}$ point in the n-tet, results in: 
+
+\begin{equation}
+\label{tab:adapted quartet stress}
+    \frac{\partial (\delta_{ij}^{\,r} - d_{ij}^{\,r})^2}{\partial x_q} = \frac{2}{\sum_{i<j}d_{ij}}(\delta_{ij}^{\,r} - d_{ij}^{\,r})\left(\frac{\partial d_{ij}}{\partial x_q} +  \frac{\partial \sum_{i<j}}{\partial x_q}d_{ij}^{\,r}\right), 
+\end{equation}
+
+\begin{center} which can be further reduced and re-arranged to: \end{center}
+
+\begin{equation}
+\label{tab:adapted quartet stress expanded}
+     \frac{2}{\sum_{i<j}d_{ij}}(\delta_{ij}^{\,r} - d_{ij}^{\,r}) \left(\frac{I_{qi}(x_q - x_j) + I_{qj}(x_q - x_i)}{d_{ij}}  -  d_{ij}^{\,r} \sum_{b\in\{1,...,k\}\setminus q} \frac{x_q - x_b}{d_{qb}} \right), 
+\end{equation} 
+
+as in \citet{squad}. $\delta$ and $d$ represent the matrices of respectively, high- and low-dimensional distances between n-tet points and, as before,  $\delta^{r}$ and $d^{r}$ are their relativized equivalents. The identity matrix $I$, of dimensions $k$x$k$, is a concise way of representing how the formula changes depending on whether $q$ is equal to either $i$ or $j$. While adapting the gradient formula for an arbitrary $k$ was trivial this modification required much more substantial changes to the code base. The
+
+
 
 
 %==================================================================================================================================
@@ -322,7 +337,7 @@ Algorithms can be set using \texttt{algorithm2e}, as in Algorithm \ref{alg:metro
 % NOTE: line ends are denoted by \; in algorithm2e
 \begin{algorithm}
     \DontPrintSemicolon
-    \KwData{$f_X(x)$, a probability density function returing the density at $x$.\; $\sigma$ a standard deviation specifying the spread of the proposal distribution.\;
+    \KwData{$f_X(x)$, a probability density function returning the density at $x$.\; $\sigma$ a standard deviation specifying the spread of the proposal distribution.\;
     $x_0$, an initial starting condition.}
     \KwResult{$s=[x_1, x_2, \dots, x_n]$, $n$ samples approximately drawn from a distribution with PDF $f_X(x)$.}
     \Begin{

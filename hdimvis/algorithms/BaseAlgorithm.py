@@ -42,9 +42,9 @@ class BaseAlgorithm:
             return stress
 
         except np.core._exceptions._ArrayMemoryError:
-            print("Not enough memory to allocate for a numpy array for stress calculation. \n"
+            print("\nNot enough memory to allocate for a numpy array for stress calculation. \n"
                   "Stress will be calculated with a Python loop")
-            print(f"\n Computing vectorised {distance_fn.__name__} stress \n")
+            print(f"\n Computing un-vectorised {distance_fn.__name__} stress \n")
             stress = self.get_unvectorised_stress(distance_fn)
             return stress
 

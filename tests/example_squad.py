@@ -23,7 +23,7 @@ dataset = DataFetcher.fetch_data('cancer RNA')
 Xld = PCA(n_components=2, whiten=False, copy=True).fit_transform(dataset.data).astype(np.float64)
 Xld *= 10/np.std(Xld)
 
-squad = SNeD(dataset=dataset, initial_layout=Xld, use_nesterovs_momentum=False, ntet_size=4, use_rbf_adjustment=False )
+squad = SNeD(dataset=dataset, initial_layout=Xld, use_nesterovs_momentum=False, ntet_size=3, use_rbf_adjustment=False )
 layout = LayoutCreation().create_layout(squad, optional_metric_collection=metric_collection, no_iters=1000)
 print(layout.collected_metrics['Stress'])
 show_layout(layout, use_labels=True, color_map='rainbow', title="  big rna")
