@@ -55,6 +55,4 @@
 
 <p class="done">https://numpy.org/devdocs/release/1.13.0-notes.html - numpy supports tracemalloc </p>
 
-<p class="not_read">https://www.mdpi.com/1099-4300/22/10/1105 - Fractional Norms and Quasinorms Do Not Help to Overcome the Curse of Dimensionality </p>
-
-<p class="to_use"> Improving the efficiency of multidimensional scaling in the analysis of high-dimensional data using singular value decomposition - uses knn for evaluation</p>
+<p class="not_read">https://www.mdpi.com/1099-4300/22/10/1105 - Fractional Norms and 
