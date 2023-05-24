@@ -6,7 +6,7 @@ from pathlib import Path
 colours = ['yellow', 'limegreen', 'r', 'b', 'fuchsia', 'orange']
 label_types = [1, 2, 3, 4, 5, 6]
 
-def show_original_globe(globe : Dataset, show_oceans: bool = True):
+def show_original_globe(globe : Dataset):
     fig = plt.figure()
     ax = fig.add_subplot(projection='3d')
     for i in label_types:

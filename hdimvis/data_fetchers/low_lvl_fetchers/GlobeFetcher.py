@@ -98,7 +98,7 @@ class GlobeFetcher(LowLevelDataFetcherBase):
         points_2d_one_arr[:, 1] = np.pi * (points_2d_one_arr[:, 1] - zero_meridian)/ (circumference/2)
         points_2d_one_arr[:, 0] = np.pi * (points_2d_one_arr[:, 0] - equator) / (2*(half_meridian_length/2))
 
-
+        # plot 2d map
         # fig = plt.figure()
         # ax = fig.add_subplot()
         # for i in self.labels:
