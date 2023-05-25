@@ -6,48 +6,32 @@ from ..algorithms.spring_force_algos.chalmers96_algo.Chalmers96 import Chalmers9
 import numpy as np
 import matplotlib.pyplot as plt
 
-class Chalmers96Layout(LowDLayoutBase):
 
+class Chalmers96Layout(LowDLayoutBase):
     def __init__(self, num_iters: int = 100, *basic_layout_creation_parameters,
-                 target_node_speed: float = 0.0, alpha: float=1):
+                 target_node_speed: float = None, alpha: float=1):
         super().__init__(num_iters, *basic_layout_creation_parameters)
         assert isinstance(self.algorithm, Chalmers96)
 
         self.target_node_speed = target_node_speed
         self.alpha =alpha
 
+        assert self.num_iters is not None or self.target_node_speed is not None, "Must provide a termination condition"
 
-
-    def run(self, ) -> None:
+    def run(self ) -> None:
         """
         Method to perform the main spring layout calculation, move the nodes iterations
         number of times unless return_after is given.
         If return_after is specified then the nodes will be moved the value of return_after
         times.
         """
+
         bar = None
+        if self.target_node_speed is None:
+            bar = IncrementalBar("Creating layout", max=self.num_iters)
 
-        if self.num_iters is not None:
-            assert self.num_iters >= 0
-            if self.target_node_speed == 0:
-                bar = IncrementalBar("Creating layout", max=self.num_iters)
-
-        assert self.target_node_speed >= 0
-        assert self.num_iters is not None or self.target_node_speed > 0
-
-        while True:
-            if self.num_iters is not None and self.iteration_number >= self.num_iters:
-                if self.optional_metric_collection is not None:
-                    self.collect_metrics(final=True)
-                bar.finish()
-                return
-
-            average_speed = self.algorithm.get_average_speed()
-            if self.target_node_speed >0 and self.target_node_speed >= average_speed:
-                if self.optional_metric_collection is not None:
-                    self.collect_metrics(final=True)
-                return
-
+        terminated = False
+        while not terminated:
 
             if self.optional_metric_collection is not None:
                 self.collect_metrics()
@@ -56,6 +40,23 @@ class Chalmers96Layout(LowDLayoutBase):
             self.final_positions = self.algorithm.get_positions()
             if bar:
                 bar.next()
+
+
+
+            if self.num_iters is not None and self.iteration_number >= self.num_iters:
+                terminated = True
+
+            average_speed = self.algorithm.get_average_speed()
+            if self.target_node_speed is not None \
+                    and self.target_node_speed >0 \
+                    and self.target_node_speed >= average_speed:
+                terminated =True
+
+            if terminated:
+                if self.optional_metric_collection is not None:
+                    self.collect_metrics(final=True)
+                if bar:
+                    bar.finish()
 
 
             # stress_og = self.algorithm.get_stress()

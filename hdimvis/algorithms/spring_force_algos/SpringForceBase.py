@@ -39,7 +39,7 @@ class SpringForceBase(BaseAlgorithm):
         self.enable_cache: bool = enable_cache
         self.sc_scaling_factor: float = sc_scaling_factor if sc_scaling_factor \
                                         else 0.5/(self.sample_set_size + self.neighbour_set_size)
-        print(f" scaling factor: {self.sc_scaling_factor}")
+
         self.spring_constant = spring_constant
         self.damping_constant = damping_constant
         self.integrate_sum = integrate_sum

@@ -12,10 +12,8 @@ from definitions import PROJECT_ROOT
 
 
 
-def get_layout_kmeans_f1(layout: LowDLayoutBase):
+def get_kmeans_f1(positions: np.ndarray, labels: np.ndarray):
 
-    positions = layout.get_final_positions()
-    labels = layout.labels
     unique_labels = np.unique(labels)
 
     kmeans = KMeans(n_clusters=unique_labels.size, ).fit(positions)

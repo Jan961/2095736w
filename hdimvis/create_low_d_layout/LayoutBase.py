@@ -20,6 +20,12 @@ class LowDLayoutBase:
         self.labels = algorithm.dataset.labels
         self.iteration_number = 0 # current number of iterations performed
 
+        if self.num_iters is not None:
+            assert self.num_iters >= 0, "Number of iterations must be greater than 0"
+
+
+
+
     # method to create the layout - it repeatedly calls "collect_metrics" as it runs
     # and increments self.iteration_number after each call to the one_iteration method of self.algorithm
     @abstractmethod
@@ -62,10 +68,10 @@ class LowDLayoutBase:
                 self.collected_metrics['Average speed'][0].append(self.iteration_number)
                 self.collected_metrics['Average speed'][1].append(self.algorithm.get_average_speed())
 
-        if 'Average quartet stress' in self.optional_metric_collection:
-            if final or self._check_collection_interval('Average quartet stress'):
-                self.collected_metrics['Average quartet stress'][0].append(self.iteration_number)
-                self.collected_metrics['Average quartet stress'][1].append(self.algorithm.get_average_quartet_stress())
+        if 'Average n-tet stress' in self.optional_metric_collection:
+            if final or self._check_collection_interval('Average n-tet stress'):
+                self.collected_metrics['Average n-tet stress'][0].append(self.iteration_number)
+                self.collected_metrics['Average n-tet stress'][1].append(self.algorithm.get_average_quartet_stress())
 
 
     # this is separated from metric collection to allow the calculation of metrics not to influence memory

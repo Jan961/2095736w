@@ -16,7 +16,7 @@ from .all_original_calculations import original_dhd_calculation, original_dld_ca
 
 class SNeD(BaseAlgorithm):
 
-    available_metrics = ['Stress', 'Average quartet stress']
+    available_metrics = ['Stress', 'Average n-tet stress']
     name = 'Stochastic N-tet Descent MDS'
 
     def __init__(self, dataset: Dataset | None, ntet_size: int = 4, use_nesterovs_momentum: bool = False,

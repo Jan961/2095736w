@@ -25,14 +25,14 @@ cube_dataset= cube.get_sample_dataset(3000)
 
 metric_collection = {'Average speed': 1}
 
-dataset = DataFetcher.fetch_data('globe')
-Xld = PCA(n_components=2, whiten=False, copy=True).fit_transform(cube_dataset.data).astype(np.float64)
+dataset = DataFetcher.fetch_data('rna N3k')
+Xld = PCA(n_components=2, whiten=False, copy=True).fit_transform(dataset.data).astype(np.float64)
 Xld *= 10/np.std(Xld)
 
 zero_initial = np.zeros((dataset.data.shape[0], 2))
 
-algo96 = Chalmers96(dataset=dataset, initial_layout=None,  distance_fn=euclidean,
-                    damping_constant=0, spring_constant=0.5, integrate_sum=True,
+algo96 = Chalmers96(dataset=dataset, initial_layout=Xld,  distance_fn=euclidean,
+                    damping_constant=0, spring_constant=0.5,
                     use_knnd=False, sample_set_size=10, neighbour_set_size=5)
 
 
