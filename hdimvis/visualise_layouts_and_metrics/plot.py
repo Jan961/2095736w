@@ -82,7 +82,7 @@ def show_generation_metrics(layout, stress: bool = True, average_speed: bool = F
             if average_speed:
                 label = 'Average speed'
             else:
-                label = 'Average quartet stress'
+                label = 'Average n-tet stress'
 
             ax2 = ax1.twinx()
             x2 = layout.collected_metrics[label][0]
@@ -94,11 +94,11 @@ def show_generation_metrics(layout, stress: bool = True, average_speed: bool = F
 
 
     elif quartet_stress: # quartet stress alone
-        x1 = layout.collected_metrics['Average quartet stress'][0]
-        y1 = layout.collected_metrics['Average quartet stress'][1]
-        line1 = ax1.plot(x1, y1, c='r', label="Average quartet stress")
+        x1 = layout.collected_metrics['Average n-tet stress'][0]
+        y1 = layout.collected_metrics['Average n-tet stress'][1]
+        line1 = ax1.plot(x1, y1, c='r', label="Average n-tet stress")
         ax1.set_xlabel("Iteration number")
-        ax1.set_ylabel("Average quartet stress")
+        ax1.set_ylabel("Average n-tet stress")
 
     elif average_speed: # velocity alone
         x1 = layout.collected_metrics['Average speed'][0]

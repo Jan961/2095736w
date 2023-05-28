@@ -46,11 +46,14 @@ class Chalmers96Layout(LowDLayoutBase):
             if self.num_iters is not None and self.iteration_number >= self.num_iters:
                 terminated = True
 
-            average_speed = self.algorithm.get_average_speed()
-            if self.target_node_speed is not None \
-                    and self.target_node_speed >0 \
-                    and self.target_node_speed >= average_speed:
-                terminated =True
+
+            if self.target_node_speed is not None:
+                average_speed = self.algorithm.get_average_speed()
+                print(f"Iteration number: {self.iteration_number}")
+                print(f"Average force/speed/position update: {average_speed}")
+
+                if self.target_node_speed >0 and self.target_node_speed >= average_speed:
+                    terminated =True
 
             if terminated:
                 if self.optional_metric_collection is not None:

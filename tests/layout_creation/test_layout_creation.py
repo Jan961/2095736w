@@ -2,7 +2,7 @@ from hdimvis.create_low_d_layout.LayoutCreation import LayoutCreation
 from hdimvis.algorithms.spring_force_algos.chalmers96_algo.Chalmers96 import Chalmers96
 from hdimvis.algorithms.stochastic_ntet_algo.SNeD import SNeD
 from hdimvis.create_low_d_layout.Chalmers96Layout import Chalmers96Layout
-from hdimvis.create_low_d_layout.SQuaDLayout import SQuaDLayout
+from hdimvis.create_low_d_layout.SNeDLayout import SNeDLayout
 from hdimvis.algorithms.spring_force_algos.hybrid_algo.Hybrid import Hybrid
 from hdimvis.data_fetchers.Dataset import Dataset
 from hdimvis.data_fetchers.DataFetcher import DataFetcher
@@ -14,7 +14,7 @@ mock_data = np.random.randint(0,10, (40,3))
 mock_data_initial_positions = np.random.randint(0,5, (40,2))
 dataset = Dataset(mock_data, None, 'mock data')
 algorithms = [Chalmers96(dataset=dataset), SNeD(dataset=dataset), Hybrid(dataset=dataset)]
-layout_classes = [Chalmers96Layout, SQuaDLayout]
+layout_classes = [Chalmers96Layout, SNeDLayout]
 
 mock_data_2= np.array([[0,0],[0,10],[10,10],[10,0]], dtype='float64')
 initial_positions = np.array([[0,0],[0,10],[10,10],[10,0]], dtype='float64')

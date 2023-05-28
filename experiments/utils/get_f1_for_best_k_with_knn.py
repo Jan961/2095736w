@@ -14,9 +14,15 @@ from sklearn.decomposition import PCA
 from sklearn.metrics import f1_score
 from pathlib import Path
 from definitions import PROJECT_ROOT
+import matplotlib.pyplot as plt
 
 
-def get_f1_for_best_k_with_knn(lower_bound: int, upper_bound: int, cross_validation_folds: int, data:np.ndarray, labels: np.ndarray):
+def get_f1_for_best_k_with_knn(lower_bound: int, upper_bound: int,
+                               cross_validation_folds: int,
+                               data:np.ndarray,
+                               labels: np.ndarray,
+                               show_averages: bool = False):
+
     kf = KFold(n_splits=cross_validation_folds)
 
     averages = np.zeros((upper_bound- lower_bound, 2))
@@ -43,6 +49,14 @@ def get_f1_for_best_k_with_knn(lower_bound: int, upper_bound: int, cross_validat
 
         averages[index,0] = j
         averages[index, 1] = cross_val_avg
+
+    if show_averages:
+        fig, ax = plt.subplots()
+        ax.plot(averages[:,0], averages[:,1])
+        ax.ylabel("F1 score")
+        ax.xlabel("k")
+
+
 
     index_best = np.argmax(averages[:,1])
     return averages[index_best][0], averages[index_best][1]

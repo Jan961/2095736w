@@ -17,19 +17,18 @@ cube = Cube(num_points=100, side=30, angle=0.4)
 dataset_cube= cube.get_sample_dataset(3000)
 
 
-metric_collection = {'Stress': 200, "Average quartet stress": 20}
-dataset = DataFetcher.fetch_data('flow cytometry')
+metric_collection = { "Average n-tet stress": 1}
+dataset = DataFetcher.fetch_data('globe', size=1000000)
 
 Xld = PCA(n_components=2, whiten=False, copy=True).fit_transform(dataset.data).astype(np.float64)
 Xld *= 10/np.std(Xld)
 
-squad = SNeD(dataset=dataset, initial_layout=Xld, use_nesterovs_momentum=False, ntet_size=4, use_rbf_adjustment=False )
-layout = LayoutCreation().create_layout(squad, optional_metric_collection=metric_collection, no_iters=1000)
-print(layout.collected_metrics['Stress'])
-show_layout(layout, use_labels=True, color_map='rainbow', title="  f m 4")
-show_generation_metrics(layout, quartet_stress=True, title="f m 4 ")
+squad = SNeD(dataset=dataset, initial_layout=Xld, use_nesterovs_momentum=False, ntet_size=4)
+layout = LayoutCreation.create_layout(squad, no_iters=500,optional_metric_collection=metric_collection, use_decay=False)
+show_layout(layout, use_labels=True, color_map='rainbow', title="no decay")
+show_generation_metrics(layout, quartet_stress=True, title=" n ")
 
-# cube.plot_2d(layout=layout, title="test ")
+# cube.plot_2d(layout=layout, title="no decay ")
 
 # fig, axis = plt.subplots()
 # axis.scatter(Xld[:,0], Xld[:,1], c=dataset.labels, cmap='rainbow')

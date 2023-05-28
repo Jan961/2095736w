@@ -3,6 +3,10 @@ from hdimvis.algorithms.stochastic_ntet_algo.SNeD import SNeD
 from hdimvis.data_fetchers.DataFetcher import DataFetcher
 from hdimvis.metrics.distance_measures.relative_rbf_dists import relative_rbf_dists
 from hdimvis.data_fetchers.Dataset import Dataset
+from hdimvis.algorithms.stochastic_ntet_algo.new_distance_calculations import compute_quartet_dhd,compute_quartet_dld
+from hdimvis.algorithms.stochastic_ntet_algo.new_gradient_calculations import compute_quartet_grads
+from hdimvis.metrics.distance_measures.euclidian_and_manhattan import euclidean
+from hdimvis.create_low_d_layout.LayoutCreation import LayoutCreation
 
 
 dataset = DataFetcher().fetch_data('coil20', size=50)
@@ -48,6 +52,35 @@ def test_rbf_distance_return_correct_array_format():
 
     assert np.any(dist_rel[np.triu_indices(4)])
     assert not np.any(dist_rel[np.tril_indices(4)])
+
+
+def test_nesterovs_momentum_calculated_correctly():
+    momentum = 0.6
+    LR_not_decayed = 550.0
+    decay = np.exp(np.log(1e-3)/1) # decay used by the original squad
+    LR = LR_not_decayed * decay
+    # (semi-) manually compute the updated positions using mock data and the Nesterov formula
+
+    dHD = compute_quartet_dhd(False, mock_data_2, euclidean)
+    dLD_full_matrix, dLD = compute_quartet_dld(initial_positions)
+    dHD /= np.sum(dHD)
+
+    vt = np.zeros_like(initial_positions)
+    projection = initial_positions + momentum*vt
+    vt1 = vt * momentum - LR*compute_quartet_grads(projection, dHD, dLD, dLD_full_matrix)
+    updated_points = initial_positions.copy() + vt1
+
+
+    #compute the update using the algorithm
+    sned = SNeD(dataset=mock_dataset_2, initial_layout=initial_positions, momentum=momentum,
+                use_nesterovs_momentum=True,
+                LR=LR_not_decayed)
+    layout = LayoutCreation.create_layout(sned, no_iters=1)
+    # sort as these get reordered inside the algo
+    sorted_manual = np.sort(updated_points,axis=0)
+    sorted_sned = np.sort(layout.get_final_positions(),axis=0)
+    assert np.allclose(sorted_sned,sorted_manual )
+
 
 
 

@@ -7,7 +7,7 @@ from ..algorithms.spring_force_algos.SpringForceBase import SpringForceBase
 from ..algorithms.spring_force_algos.chalmers96_algo.Chalmers96 import Chalmers96
 from .Chalmers96Layout import Chalmers96Layout
 from ..algorithms.stochastic_ntet_algo.SNeD import SNeD
-from .SQuaDLayout import SQuaDLayout
+from .SNeDLayout import SNeDLayout
 from ..algorithms.spring_force_algos.hybrid_algo.Hybrid import Hybrid
 from .HybridLayout import HybridLayout
 from ..data_fetchers.Dataset import Dataset
@@ -42,7 +42,7 @@ class LayoutCreation:
                 print("#" * 20)
 
         elif isinstance(algorithm, SNeD):
-            layout = SQuaDLayout(*basic_layout_creation_parameters, **additional_parameters)
+            layout = SNeDLayout(*basic_layout_creation_parameters, **additional_parameters)
             print(f" \"N-tet\" size: {algorithm.ntet_size}")
             if algorithm.is_test:
                 print("Testing mode (i.e. comparing original grad calculations with new ones) is enabled")
