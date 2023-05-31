@@ -25,29 +25,37 @@ cube_dataset= cube.get_sample_dataset(3000)
 
 metric_collection = {'Average speed': 1}
 
-dataset = DataFetcher.fetch_data('globe', size=1000000)
-Xld = PCA(n_components=2, whiten=False, copy=True).fit_transform(dataset.data).astype(np.float64)
+dataset = DataFetcher.fetch_data('rna N3k')
+Xld = PCA(n_components=2, whiten=False, copy=True).fit_transform(cube_dataset.data).astype(np.float64)
 Xld *= 10/np.std(Xld)
 
-zero_initial = np.zeros((dataset.data.shape[0], 2))
+# show_layout(positions=Xld, labels=dataset.labels, title="PCA")
 
-algo96 = Chalmers96(dataset=dataset, initial_layout=Xld,  distance_fn=euclidean,
+zero_initial = np.zeros((dataset.data.shape[0], 2))
+random_initial =  10*np.random.randn(dataset.data.shape[0], 2)
+
+algo96 = Chalmers96(dataset=cube_dataset,  distance_fn=euclidean, initial_layout=Xld,
                     damping_constant=0, spring_constant=0.5,
                     use_knnd=False, sample_set_size=10, neighbour_set_size=5)
 
 
-layout = LayoutCreation.create_layout(algo96, optional_metric_collection=metric_collection, no_iters=100)
+layout = LayoutCreation.create_layout(algo96, optional_metric_collection=metric_collection, no_iters=200)
+#
+
+
+
+
 
 # print(f"iterations stress: {layout.collected_metrics['stress'][0]} \n")
 # print(f"iterations velocity: {layout.collected_metrics['average speed'][0]} \n")
 # print(f"velocity: {layout.collected_metrics['Average speed'][1]} \n")
 # print(f" stress: {layout.collected_metrics['Stress'][1]} \n")
 # print("total time: {}")
-show_layout(layout, use_labels=True, color_map='rainbow', title="Chalmers' 96 - airfoil")
+# show_layout(layout, use_labels=True, color_map='rainbow', title=f"damp: {algo96.damping_constant}, sk: {algo96.spring_constant},\
+# #  n: {algo96.neighbour_set_size}, s:{algo96.sample_set_size}, iters: {layout.iteration_number}")
 show_generation_metrics(layout, average_speed=True, stress=True, title=f"damp: {algo96.damping_constant}, sk: {algo96.spring_constant},\
- n: {algo96.neighbour_set_size}, s:{algo96.sample_set_size}, iters: {layout.iteration_number}")
+#  n: {algo96.neighbour_set_size}, s:{algo96.sample_set_size}, iters: {layout.iteration_number}")
 
-# cube.plot_2d(layout)
+cube.plot_2d(layout, title="Chalmers' 96")
 
-f"damp: {algo96.damping_constant}, sk: {algo96.spring_constant},\
-#  n: {algo96.neighbour_set_size}, s:{algo96.sample_set_size}, iters: {layout.iteration_number}"
+show_layout(layout, use_labels=True, color_map='rainbow', title=f'Chalmers\' {layout.iteration_number}')

@@ -134,9 +134,13 @@ class Hybrid(SpringForceBase):
 
             if correct_error_calc:
                 point_arr = np.array(point)
+                print(f"point arr {point_arr}")
                 sample_arr = np.array([[node.x, node.y] for node in self.sample] )
+                print(f"sample arr {sample_arr}")
                 distances_2d = np.linalg.norm(sample_arr - point_arr, axis=1)
+                print(f"ld dist algo: {distances_2d}")
                 distances_hd = np.array(distances)
+                print(f"hd dist algo: {distances_hd}")
                 return np.sum((distances_hd - distances_2d)**2)
 
             else:
@@ -160,7 +164,9 @@ class Hybrid(SpringForceBase):
         """
         angles = [0, 90, 180, 270]
         distance_errors = [error_fn(angle) for angle in angles]
-        # determine angle with lowest error and choose neighbour quadrant angle with lowest error
+        print(f"distance errors {distance_errors}")
+
+            # determine angle with lowest error and choose neighbour quadrant angle with lowest error
         best_angle_id = np.argmin(distance_errors)
         neighbour_angle_ids = (best_angle_id - 1) % 4, (best_angle_id + 1) % 4
 
@@ -175,6 +181,7 @@ class Hybrid(SpringForceBase):
             lower_bound_angle, upper_bound_angle = sorted((angles[best_angle_id], angles[closest_neighbour_id]))
 
         return lower_bound_angle, upper_bound_angle
+
 
 
     def _binary_search_angle(self, lower_angle: int, upper_angle: int,

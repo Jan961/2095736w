@@ -64,16 +64,17 @@ def show_layout(layout: LowDLayoutBase =None, use_labels: bool = False, alpha: f
 
 
 def show_generation_metrics(layout, stress: bool = True, average_speed: bool = False, quartet_stress: bool = False,
-                            title: str = None, save_to: Path = None, log_scale: bool = False):
+                            title: str = None, save_to: Path = None, log_scale: bool = False,
+                            iters_from: int = None, iters_to: int = None):
     assert not average_speed or not quartet_stress # those are for different alog so can't both be used
     fig, ax1 = plt.subplots()
 
     line1, line2, line3 = [], [], []
 
-
     if stress:
-        x1 = layout.collected_metrics['Stress'][0]
-        y1 = layout.collected_metrics['Stress'][1]
+        start_idx, stop_idx = find_index_range(layout.collected_metrics['Stress'][0],iters_from, iters_to)
+        x1 = layout.collected_metrics['Stress'][0][start_idx:stop_idx]
+        y1 = layout.collected_metrics['Stress'][1][start_idx:stop_idx]
         line1 = ax1.plot(x1, y1, c='r', label="Stress")
         ax1.set_xlabel("Iteration number")
         ax1.set_ylabel("Stress")
@@ -85,8 +86,9 @@ def show_generation_metrics(layout, stress: bool = True, average_speed: bool = F
                 label = 'Average n-tet stress'
 
             ax2 = ax1.twinx()
-            x2 = layout.collected_metrics[label][0]
-            y2 = layout.collected_metrics[label][1]
+            start_idx, stop_idx = find_index_range(layout.collected_metrics[label][0], iters_from, iters_to)
+            x2 = layout.collected_metrics[label][0][start_idx:stop_idx]
+            y2 = layout.collected_metrics[label][1][start_idx:stop_idx]
             line2 = ax2.plot(x2, y2, c='b', label=label)
             ax2.set_ylabel(label)
             if log_scale:
@@ -94,15 +96,18 @@ def show_generation_metrics(layout, stress: bool = True, average_speed: bool = F
 
 
     elif quartet_stress: # quartet stress alone
-        x1 = layout.collected_metrics['Average n-tet stress'][0]
-        y1 = layout.collected_metrics['Average n-tet stress'][1]
+        start_idx, stop_idx = find_index_range(layout.collected_metrics['Average n-tet stress'][0], iters_from, iters_to)
+        x1 = layout.collected_metrics['Average n-tet stress'][0][start_idx:stop_idx]
+        y1 = layout.collected_metrics['Average n-tet stress'][1][start_idx:stop_idx]
         line1 = ax1.plot(x1, y1, c='r', label="Average n-tet stress")
         ax1.set_xlabel("Iteration number")
         ax1.set_ylabel("Average n-tet stress")
 
     elif average_speed: # velocity alone
-        x1 = layout.collected_metrics['Average speed'][0]
-        y1 = layout.collected_metrics['Average speed'][1]
+        start_idx, stop_idx = find_index_range(layout.collected_metrics['Average speed'][0], iters_from,
+                                               iters_to)
+        x1 = layout.collected_metrics['Average speed'][0][start_idx:stop_idx]
+        y1 = layout.collected_metrics['Average speed'][1][start_idx:stop_idx]
         line1 = ax1.plot(x1, y1, c='r', label="Average speed")
         ax1.set_xlabel("Iteration number")
         ax1.set_ylabel("Average speed")
@@ -128,7 +133,36 @@ def show_generation_metrics(layout, stress: bool = True, average_speed: bool = F
 
 
 
+def find_index_range(iter_numbers: List, iters_from: int|None = None, iters_to:int|None = None):
 
+    start_idx, stop_idx = 0, len(iter_numbers)-1
 
+    i= 0
+    finished_i = False
+    while not finished_i and iters_from:
+        if not iters_from:
+            finished_i =True
+        if i >= len(iter_numbers):
+            finished_i = True
 
+        if iters_from <= iter_numbers[i]:
+            start_idx = i
+            finished_i = True
+        i += 1
+
+    j = len(iter_numbers)-1
+    finished_j = False
+    while not finished_j and iters_to:
+        if j <= 0:
+            finished_j = True
+
+        if iters_to >= iter_numbers[j]:
+            stop_idx = j
+            finished_j = True
+        j -= 1
+
+    print(f"len {len(iter_numbers)}")
+    print(f"stop {stop_idx}")
+    print(f"start {start_idx}")
+    return start_idx, stop_idx +1
 

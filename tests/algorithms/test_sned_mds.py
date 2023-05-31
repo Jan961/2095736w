@@ -76,7 +76,8 @@ def test_nesterovs_momentum_calculated_correctly():
                 use_nesterovs_momentum=True,
                 LR=LR_not_decayed)
     layout = LayoutCreation.create_layout(sned, no_iters=1)
-    # sort as these get reordered inside the algo
+    # sort as these get reordered inside the algo - but of course - see test first test here
+    print(layout.get_final_positions())
     sorted_manual = np.sort(updated_points,axis=0)
     sorted_sned = np.sort(layout.get_final_positions(),axis=0)
     assert np.allclose(sorted_sned,sorted_manual )

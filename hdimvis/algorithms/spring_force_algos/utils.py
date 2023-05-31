@@ -47,7 +47,9 @@ def point_on_circle(x: float, y: float, angle: float, radius: float) -> Tuple[fl
     Find the point on a circle centered at (x, y) with
     given radius and angle
     """
+    print(f"parent x {x}, parent y {y}, radius {radius}")
     rad = math.radians(angle)
+    print(   f" x{ x + radius * math.cos(rad)},  y{y + radius * math.sin(rad)}")
     return (
         x + radius * math.cos(rad),
         y + radius * math.sin(rad),
