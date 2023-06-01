@@ -17,12 +17,14 @@ class Chalmers96(SpringForceBase):
     """
     name = 'Chalmers\' 1996'
 
-    def __init__(self, dataset: Dataset | None, **kwargs):
+    def __init__(self, dataset: Dataset | None, record_neighbour_updates = False, **kwargs):
 
         # the base class extracts data from the Dataset object
         super().__init__( dataset, **kwargs)
 
         self.neighbours: Dict[int, List[int]] = dict() # dictionary used when no k-nnd is not used
+        self.record_neighbour_updates = record_neighbour_updates
+        self.neighbour_updates = [] if record_neighbour_updates else None
 
     def one_iteration(self, alpha: float=1) -> None:
         """
@@ -33,6 +35,7 @@ class Chalmers96(SpringForceBase):
         n = len(self.nodes)
         velocities_sum = 0 # used to calculate average velocity in case intergation step is performed
         velocities_count =0 # for each force individually
+        updates_count = 0 # number of neighbour updates
 
         for i in range(n):
 
@@ -62,13 +65,17 @@ class Chalmers96(SpringForceBase):
 
 
             if not self.use_knnd and self.neighbour_set_size and self.sample_set_size:
-                self._update_neighbours(i, samples=sample_set)
+                count = self._update_neighbours(i, samples=sample_set)
+                if self.record_neighbour_updates:
+                    updates_count += count
 
         if self.integrate_sum:
             self._apply_position_update()   # integration step for the sum of all forces
         else:
             self._average_speeds.append(velocities_sum/velocities_count)
 
+        if self.record_neighbour_updates:
+            self.neighbour_updates.append(updates_count)
     def _get_neighbours(self, index: int) -> List[int]:
         """
         Get the list of neighbour indices for a given node index sorted by distance.
@@ -93,12 +100,13 @@ class Chalmers96(SpringForceBase):
         exclude = {i}.union(set(self._get_neighbours(i)))
         return list(random_sample_set(self.sample_set_size, len(self.nodes), exclude))
 
-    def _update_neighbours(self, i: int, samples: List[int]) -> None:
+    def _update_neighbours(self, i: int, samples: List[int]) -> int:
         """
         Update the neighbour set for a given index from a sample set.
         Sample nodes are added to the neighbour set in sorted order if
         they are closer than the furthest current neighbour.
         """
+        updates_count = 0
         source = self.nodes[i]
         neighbours = self._get_neighbours(i)
         furthest_neighbour = self.hd_distance(source, self.nodes[neighbours[-1]])
@@ -113,8 +121,10 @@ class Chalmers96(SpringForceBase):
                         break
                     neighbour_distance = self.hd_distance(source, self.nodes[neighbours[n]])
                 neighbours.insert(n + 1, s)
+                updates_count +=1
                 distance_key = frozenset({source, self.nodes[neighbours[-1]]})
                 # if self.enable_cache and distance_key in self.distances:
                 #     del self.distances[distance_key]  # Remove distance from cache to save memory
                 del neighbours[-1]
 
+        return updates_count

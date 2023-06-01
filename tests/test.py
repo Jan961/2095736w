@@ -12,12 +12,12 @@ import pickle
 #%%
 rna = DataFetcher.fetch_data('rna N3k')
 coli20 =  DataFetcher.fetch_data('coil20')
-globe = DataFetcher.fetch_data('globe', size=100)
+globe = DataFetcher.fetch_data('globe_and_tsne_umap_compare', size=100)
 fmnist = DataFetcher.fetch_data('fashion mnist', size=100)
 mnist = DataFetcher.fetch_data('mnist', size=100)
 
 datasets = [rna, coli20,globe,fmnist, mnist]
-dataset_names = ['rna N3k', 'coli20', 'globe', 'fashion mnist', 'mnist']
+dataset_names = ['rna N3k', 'coli20', 'globe_and_tsne_umap_compare', 'fashion mnist', 'mnist']
 #%%
 n_neigh = 1
 n_sample = 1

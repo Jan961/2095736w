@@ -10,7 +10,7 @@ from pathlib import Path
 
 # code to create the continent png images used by this fetcher, with cartopy, and the idea of a using 3d points
 # sampled from a world map - from https://github.com/NikolayOskolkov/tSNE_vs_UMAP_GlobalStructure
-# 3d globe (rather than a 2d map rolled into a "swiss roll" as in the code above) and its implementation mine
+# 3d globe_and_tsne_umap_compare (rather than a 2d map rolled into a "swiss roll" as in the code above) and its implementation mine
 colours = ['yellow', 'limegreen', 'r', 'b', 'fuchsia', 'orange']
 
 

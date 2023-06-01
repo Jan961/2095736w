@@ -53,10 +53,11 @@ def get_f1_for_best_k_with_knn(lower_bound: int, upper_bound: int,
     if show_averages:
         fig, ax = plt.subplots()
         ax.plot(averages[:,0], averages[:,1])
-        ax.ylabel("F1 score")
-        ax.xlabel("k")
+        plt.ylabel("F1 score")
+        plt.xlabel("k")
+        plt.show()
 
 
 
     index_best = np.argmax(averages[:,1])
-    return averages[index_best][0], averages[index_best][1]
+    return averages[index_best][0], averages[index_best][1] #return best k, and the corresponding f1
