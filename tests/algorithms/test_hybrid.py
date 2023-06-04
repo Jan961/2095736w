@@ -113,13 +113,13 @@ def test_binary_search_angle_finds_best_angle_with_original_error():
 
 def test_sample_distances_sum_returns_correct_sum():
     sample_indexes = [1, 2, 3]
+    data = dataset.data
     algorithm = Hybrid(dataset=dataset,
                        preset_sample=np.array(sample_indexes),
                        random_sample_size=1)
     set_node_positions(algorithm)
 
-    assert algorithm._sample_distances_sum(3, 0) == 6
-    assert algorithm._sample_distances_sum(-1, 0) == 6
-    assert algorithm._sample_distances_sum(1, 0) == 2
-    one_one_distance = 1 + 2 * math.sqrt(2)
-    assert_almost_equal(algorithm._sample_distances_sum(1, 1), one_one_distance)
+    assert algorithm._sample_distances_sum(3, 0) == np.sum(np.linalg.norm(data[1:4] - np.array([3,0]), axis=1))
+    assert algorithm._sample_distances_sum(-1, 0) == np.sum(np.linalg.norm(data[1:4] - np.array([-1,0]), axis=1))
+    assert algorithm._sample_distances_sum(1, 0) == np.sum(np.linalg.norm(data[1:4] - np.array([1,0]), axis=1))
+

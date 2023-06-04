@@ -21,7 +21,7 @@ class SpringForceBase(BaseAlgorithm):
                  use_knnd: bool = False, knnd_parameters: Dict = None,  # k-nn descent algorithm parameters
                  neighbour_set_size: int = 5,
                  sample_set_size: int = 10,
-                 spring_constant: float = 0.1,
+                 spring_constant: float = 0.5,
                  sc_scaling_factor: float = None,
                  integrate_sum : bool = True, # consider the sum of all forces on a node at integration step
                  damping_constant: float = 0,

@@ -1,7 +1,7 @@
 import numpy as np
 
 
-# running mean with smoothed-out boundary effects of convolution
+# running mean with np.convolve with custom smoothing-out of boundary effects
 # takes 1d numpy arr as input
 
 def smooth_running_mean(input: np.ndarray, window_size: int):
