@@ -17,20 +17,22 @@ cube = Cube(num_points=100, side=30, angle=0.4)
 dataset_cube= cube.get_sample_dataset(3000)
 
 
-metric_collection = { "Average n-tet stress": 1, 'Stress': 500}
+
+metric_collection = { "Average n-tet stress": 1}
 dataset = DataFetcher.fetch_data('rna N3k')
 
-Xld = PCA(n_components=2, whiten=False, copy=True).fit_transform(dataset.data).astype(np.float64)
+Xld = PCA(n_components=2, whiten=False, copy=True).fit_transform(dataset_cube.data).astype(np.float64)
 Xld *= 10/np.std(Xld)
 random_initial =  10*np.random.randn(dataset.data.shape[0], 2)
 
 
-squad = SNeD(dataset=dataset, initial_layout=Xld, use_nesterovs_momentum=False, ntet_size=4, momentum=0.1)
-layout = LayoutCreation.create_layout(squad, no_iters=6000,optional_metric_collection=metric_collection, use_decay=False)
+squad = SNeD(dataset=dataset_cube, initial_layout=Xld, use_nesterovs_momentum=False, ntet_size=20, use_relative_dist=True)
+layout = LayoutCreation.create_layout(squad, no_iters=100,optional_metric_collection=metric_collection, use_decay=False)
 show_layout(layout, use_labels=True, color_map='rainbow', title=f"SNeD - {layout.iteration_number}")
-show_generation_metrics(layout, quartet_stress=True, title=f"iters {layout.iteration_number} ", iters_from = 10)
+show_generation_metrics(layout, quartet_stress=True, title=f"iters {layout.iteration_number}" )
+print(layout.get_final_positions())
 
-# cube.plot_2d(layout=layout, title="no decay ")
+cube.plot_2d(hd_points=layout.get_data(), layout_points=layout.get_final_positions(), title="no shuffle")
 # print(layout.collected_metrics)
 # fig, axis = plt.subplots()
 # axis.scatter(Xld[:,0], Xld[:,1], c=dataset.labels, cmap='rainbow')

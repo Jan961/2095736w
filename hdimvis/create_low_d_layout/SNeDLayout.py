@@ -12,6 +12,7 @@ class SNeDLayout(LowDLayoutBase):
                  exaggerate_D: bool = False, stop_exaggeration: float = 0.6,
                  decay: float = None, use_decay: bool = False,
                  LR: float = 550.0,
+                 record_avg_grad,
                  terminate_at: float = None, # threshold average n-tet stress value
                  #  below which layout generation is terminated
                  ):
@@ -26,6 +27,7 @@ class SNeDLayout(LowDLayoutBase):
         self.decay = decay if decay is not None else np.exp(np.log(1e-3) / self.num_iters) if self.num_iters is not None \
                     else np.exp(np.log(1e-3) / 200)
         self.terminate_at = terminate_at
+
 
         if self.terminate_at is not None:
             assert self.optional_metric_collection is not None
@@ -75,9 +77,10 @@ class SNeDLayout(LowDLayoutBase):
             if self.iteration_number == stop_d_exa:
                 self.exaggerate_D = False
 
-            self.algorithm.one_iteration(self.exaggerate_D, self.LR, calculate_ntet_stress)
+            self.algorithm.one_iteration(self.exaggerate_D, self.LR, calculate_ntet_stress, self.record_avg_grad)
             if self.optional_metric_collection is not None:
                 self.collect_metrics()
+
             if bar:
                 bar.next()
             self.iteration_number += 1

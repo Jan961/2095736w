@@ -73,6 +73,11 @@ class LowDLayoutBase:
                 self.collected_metrics['Average n-tet stress'][0].append(self.iteration_number)
                 self.collected_metrics['Average n-tet stress'][1].append(self.algorithm.get_average_quartet_stress())
 
+        if 'Average grad' in self.optional_metric_collection:
+            if final or self._check_collection_interval('Average n-tet stress'):
+                self.collected_metrics['Average grad'][0].append(self.iteration_number)
+                self.collected_metrics['Average grad'][1].append(self.algorithm.get_avg_grad())
+
 
     # this is separated from metric collection to allow the calculation of metrics not to influence memory
     # usage, speed etc measurements

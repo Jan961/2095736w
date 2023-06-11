@@ -1,13 +1,12 @@
 from typing import Callable
-
 import numpy as np
 import numba
 
 
-# HD_points is an np array of size (n-tet_size, num_dimensions)
+# HD_points is a np array of size (n-tet_size, num_dimensions)
 def compute_quartet_dhd(exaggerate_dist: bool, HD_points: np.ndarray, distance_fn :Callable):
     Dhd_full_matrix = distance_fn(HD_points[:, :, np.newaxis] - HD_points[:, :, np.newaxis].T, 1)
-
+    # print(Dhd_full_matrix)
     if exaggerate_dist:     # during exaggeration: don't take the square root of the distances
         Dhd_full_matrix = Dhd_full_matrix**2
 
@@ -20,9 +19,12 @@ def compute_quartet_dhd(exaggerate_dist: bool, HD_points: np.ndarray, distance_f
 
 def compute_quartet_dld(LD_points: np.ndarray):
 
+    temp = (LD_points[:, :, None] - LD_points[:, :, None].T) ** 2
     Dld_full_matrix = np.sqrt(np.sum(
-        (LD_points[:, :, None] - LD_points[:, :, None].T) ** 2, axis=1))
-    Dld_full_matrix += 1e-12 # add a small number just in case - to avoid zero division
+        temp, axis=1, dtype=np.longdouble))
+
+    Dld_full_matrix += 1e-164  # add a small number just in case - to
+    # avoid zero division
     zeroed_diag_ld = Dld_full_matrix.copy()
     np.fill_diagonal(zeroed_diag_ld, 0)
     Dld_quartet = np.triu(zeroed_diag_ld)

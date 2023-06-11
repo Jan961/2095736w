@@ -6,10 +6,13 @@ import numba
 # with x- and y-direction partial derivatives for each point in the n-tet
 @numba.jit(nopython=True)
 def compute_quartet_grads(points : np.ndarray, Dhd : np.ndarray, Dld : np.ndarray,
-                          Dld_distances_full_matrix: np.ndarray ):
+                          Dld_distances_full_matrix: np.ndarray, use_relative_dist: bool ):
 
     sum_dld = np.sum(Dld)
-    Dld_relative = Dld/sum_dld     # make the distances in Dld relative
+    if use_relative_dist:
+        Dld_relative = Dld/sum_dld  # make the distances in Dld relative
+    else:
+        Dld_relative = Dld
     diffs = Dld_relative - Dhd
     first_brackets = (2/sum_dld) * diffs # first bracket of the grad formula from the Squad paper
 

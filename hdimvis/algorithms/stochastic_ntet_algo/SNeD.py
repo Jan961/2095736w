@@ -16,11 +16,12 @@ from .all_original_calculations import original_dhd_calculation, original_dld_ca
 
 class SNeD(BaseAlgorithm):
 
-    available_metrics = ['Stress', 'Average n-tet stress']
+    available_metrics = ['Stress', 'Average n-tet stress', "Average grad"]
     name = 'Stochastic N-tet Descent MDS'
 
     def __init__(self, dataset: Dataset | None, ntet_size: int = 4, use_nesterovs_momentum: bool = False,
-                 momentum: float = 0.6, is_test: bool = False, use_rbf_adjustment: bool = False, **kwargs):
+                 momentum: float = 0.6, is_test: bool = False, use_rbf_adjustment: bool = False,
+                 use_relative_dist: bool = True,  record_avg_grad: bool = False,**kwargs):
         super().__init__(dataset, **kwargs)
 
         assert ntet_size > 2, "Only n-tet sizes of 3 or greater are available"
@@ -39,6 +40,8 @@ class SNeD(BaseAlgorithm):
         self.use_rbf_adjustment = use_rbf_adjustment
         self.use_nesterovs_momentum = use_nesterovs_momentum
         self.momentum = momentum
+        self.use_relative_dist = use_relative_dist
+        self.avg_iter_grad = 0
         if self.use_nesterovs_momentum:
             self.nesterovs_v = np.zeros((self.N, 2)) if self.N is not None else None
 
@@ -47,6 +50,7 @@ class SNeD(BaseAlgorithm):
         if self.is_test:
             assert self.ntet_size == 4, "For comparing the original grad calculation with new vectorised ones," \
                                         "n-tet size must be set to 4"
+            assert self.use_relative_dist == True, "Must use relative distances for testing"
 
     def get_positions(self) -> np.ndarray:
         return self.low_d_positions
@@ -83,11 +87,11 @@ class SNeD(BaseAlgorithm):
             if self.use_rbf_adjustment:
                 Dhd_quartet = relative_rbf_dists(Dhd_quartet)
 
-            else:
+            elif self.use_relative_dist:
                 Dhd_quartet /= np.sum(Dhd_quartet)
 
             quartet_grads = compute_quartet_grads(LD_points, Dhd_quartet,
-                                                  Dld_quartet, Dld_full_matrix)
+                                                  Dld_quartet, Dld_full_matrix, self.use_relative_dist)
 
             if self.is_test:
                 self._test_grad_calc(LD_points, Dhd_quartet, Dld_quartet, quartet_grads)
@@ -97,11 +101,13 @@ class SNeD(BaseAlgorithm):
             else:
                 self.grad_acc[quartet] += quartet_grads
 
-            if calculate_average_stress:
-                quartet_stress += np.sum((Dhd_quartet - (Dld_quartet/np.sum(Dld_quartet)))**2)
+
+            quartet_stress += np.sum((Dhd_quartet - (Dld_quartet/np.sum(Dld_quartet)))**2, dtype=np.longdouble)
 
         if calculate_average_stress:
             self.last_average_quartet_stress_measurement = quartet_stress/self.batch_indices.shape[0]
+
+        self.avg_iter_grad = np.sum(np.linalg.norm(self.grad_acc, axis=1))/self.grad_acc.shape[0]
 
         if self.use_nesterovs_momentum:
             self.low_d_positions += self.nesterovs_v
@@ -112,6 +118,8 @@ class SNeD(BaseAlgorithm):
 
     def get_average_quartet_stress(self):
         return self.last_average_quartet_stress_measurement
+    def get_avg_grad(self):
+        return self.avg_iter_grad
 
     def _test_dist_calc(self, Dhd_quartet, Dld_quartet, HD_points, LD_points, exaggerate_dist):
         Dhd_quartet_alt = Dhd_quartet[np.nonzero(Dhd_quartet)]  # convert to the form used by the og code

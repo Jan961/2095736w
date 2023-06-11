@@ -39,7 +39,7 @@ algo96 = Chalmers96(dataset=cube_dataset,  distance_fn=euclidean, initial_layout
                     use_knnd=False, sample_set_size=10, neighbour_set_size=5)
 
 
-layout = LayoutCreation.create_layout(algo96, optional_metric_collection=metric_collection, no_iters=200)
+layout = LayoutCreation.create_layout(algo96, optional_metric_collection=metric_collection, no_iters=10)
 #
 
 
