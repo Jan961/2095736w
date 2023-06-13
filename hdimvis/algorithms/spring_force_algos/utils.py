@@ -47,9 +47,9 @@ def point_on_circle(x: float, y: float, angle: float, radius: float) -> Tuple[fl
     Find the point on a circle centered at (x, y) with
     given radius and angle
     """
-    print(f"parent x {x}, parent y {y}, radius {radius}")
+    # print(f"parent x {x}, parent y {y}, radius {radius}")
     rad = math.radians(angle)
-    print(   f" x{ x + radius * math.cos(rad)},  y{y + radius * math.sin(rad)}")
+    # print(   f" x{ x + radius * math.cos(rad)},  y{y + radius * math.sin(rad)}")
     return (
         x + radius * math.cos(rad),
         y + radius * math.sin(rad),
@@ -122,3 +122,34 @@ def get_size(obj: Any, seen: Set[int] = None):
 def convert_nodes_to_dataset(nodes: List[Node]):
     points = [node.datapoint for node in nodes]
     return np.array(points)
+
+
+def stratified_sample(data: np.ndarray, sample_size: int, num_strata: int):
+
+    sample_indices= []
+    N = data.shape[0]
+    stratified_indices = np.arange((N - N % num_strata)).reshape((num_strata, -1))
+
+    variances = np.zeros(num_strata)
+
+    for i,indices in enumerate(stratified_indices):
+        variances[i] = np.average(np.var(data[indices], axis=0))
+
+    remaining_to_sample = sample_size
+    for i,var in enumerate(variances):
+        num_to_sample = np.floor(sample_size *(var/ np.sum(variances))).astype(int)
+        sampled_indices = np.random.choice(stratified_indices[i], num_to_sample).ravel()
+        sample_indices += sampled_indices.tolist()
+        remaining_to_sample -= num_to_sample
+
+    if remaining_to_sample > 0:
+        top_up_sample = np.random.choice(stratified_indices[np.argmax(variances)],
+                                         remaining_to_sample).ravel()
+        sample_indices += top_up_sample.tolist()
+
+    print(sample_indices)
+    print(len(sample_indices))
+    print(f"remaing: {remaining_to_sample}")
+    print(len(sample_indices) == len(set(sample_indices)))
+
+    return sample_indices

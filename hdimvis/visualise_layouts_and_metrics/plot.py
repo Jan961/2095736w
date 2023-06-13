@@ -161,8 +161,8 @@ def find_index_range(iter_numbers: List, iters_from: int|None = None, iters_to:i
             finished_j = True
         j -= 1
 
-    print(f"len {len(iter_numbers)}")
-    print(f"stop {stop_idx}")
-    print(f"start {start_idx}")
+    # print(f"len {len(iter_numbers)}")
+    # print(f"stop {stop_idx}")
+    # print(f"start {start_idx}")
     return start_idx, stop_idx +1
 

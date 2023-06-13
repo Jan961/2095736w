@@ -44,7 +44,7 @@ class HybridLayout(LowDLayoutBase):
 
         for stage, num_iters in zip([enum for enum in HybridStage],self.stage_iteration_numbers):
             self.algorithm.set_stage(stage)
-            print(f"\n Stage: {stage.name} \n")
+            # print(f"\n Stage: {stage.name} \n")
 
             for i in range(num_iters):
                 if self.optional_metric_collection is not None:

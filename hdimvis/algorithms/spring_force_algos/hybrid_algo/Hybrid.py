@@ -1,7 +1,7 @@
 from ..Node import Node
 from ..SpringForceBase import SpringForceBase
 from ..chalmers96_algo.Chalmers96 import Chalmers96
-from ..utils import point_on_circle, random_sample_set
+from ..utils import point_on_circle, random_sample_set, stratified_sample
 from typing import Callable, Tuple, List
 from .HybridStage import HybridStage
 import numpy as np
@@ -25,14 +25,18 @@ class Hybrid(SpringForceBase):
     def __init__(self, preset_sample : np.ndarray = None,
                  interpolation_adjustment_sample_size: int = 15,
                  use_correct_interpolation_error: bool = True,
+                 use_random_sample: bool = False,
+                 num_strata: int = 20,
                  **kwargs) -> None:
 
         super().__init__(**kwargs)
 
         self.use_correct_interpolation_error = use_correct_interpolation_error
+        self.use_random_sample = use_random_sample
+        self.num_strata = num_strata
         self.preset_sample = preset_sample  # node indices - we can manually set the sample used for interpolation here
         self.initial_sample_size:             int = preset_sample.size if preset_sample is not None \
-                                                 else round(math.sqrt(len(self.nodes)))
+                                                 else round(math.sqrt(len(self.nodes))) + 200
 
         self.interpolation_adjustment_sample_size:       int = interpolation_adjustment_sample_size
         self.sample_indices:        List[int] = self.create_sample_indices() # use preset_sample or select random
@@ -50,14 +54,19 @@ class Hybrid(SpringForceBase):
                                                  neighbour_set_size=self.neighbour_set_size)
 
         self.stage:               HybridStage = HybridStage.PLACE_SAMPLE
-
+        print( f" sample:{len(self.sample)}")
+        print(f" idices: {len(self.sample_indices)}")
+        print(f"sample size {self.initial_sample_size}")
 
     def create_sample_indices(self):
         if self.preset_sample is not None:
             return self.preset_sample.tolist()
-        else:
+        elif self.use_random_sample:
             return random_sample_set(self.initial_sample_size,
                                      len(self.nodes))
+        else:
+            return stratified_sample(self.data,self.initial_sample_size, self.num_strata)
+
 
     def set_stage(self, stage: HybridStage):
         self.stage = stage
@@ -134,13 +143,13 @@ class Hybrid(SpringForceBase):
 
             if correct_error_calc:
                 point_arr = np.array(point)
-                print(f"point arr {point_arr}")
+                # print(f"point arr {point_arr}")
                 sample_arr = np.array([[node.x, node.y] for node in self.sample] )
-                print(f"sample arr {sample_arr}")
+                # print(f"sample arr {sample_arr}")
                 distances_2d = np.linalg.norm(sample_arr - point_arr, axis=1)
-                print(f"ld dist algo: {distances_2d}")
+                # print(f"ld dist algo: {distances_2d}")
                 distances_hd = np.array(distances)
-                print(f"hd dist algo: {distances_hd}")
+                # print(f"hd dist algo: {distances_hd}")
                 return np.sum((distances_hd - distances_2d)**2)
 
             else:
@@ -164,7 +173,7 @@ class Hybrid(SpringForceBase):
         """
         angles = [0, 90, 180, 270]
         distance_errors = [error_fn(angle) for angle in angles]
-        print(f"distance errors {distance_errors}")
+        # print(f"distance errors {distance_errors}")
 
             # determine angle with lowest error and choose neighbour quadrant angle with lowest error
         best_angle_id = np.argmin(distance_errors)

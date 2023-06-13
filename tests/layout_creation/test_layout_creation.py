@@ -85,7 +85,7 @@ def test_stress_decreases_as_expected():
 
     algo = SNeD(dataset=mock_dataset_3, initial_layout=initial_positions)
     stress_normal_1 = algo.get_vectorised_stress(euclidean)
-    measurements = {'Stress': 1, "Average quartet stress": 1}
+    measurements = {'Stress': 1, "Average n-tet stress": 1}
     layout1 = LayoutCreation().create_layout(algo, optional_metric_collection=measurements, no_iters=1, )
     stress_quartet_1 = algo.get_average_quartet_stress()
     layout2 = LayoutCreation().create_layout(algo, optional_metric_collection=measurements, no_iters=4, )

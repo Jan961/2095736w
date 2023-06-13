@@ -156,8 +156,7 @@ class SpringForceBase(BaseAlgorithm):
         else:
             second_term = 0
 
-        # force magnitude; data_size_factor was included in the 2019 code but not in the original paper,
-        # here it is set to 1 by default
+        # force magnitude;
         force_mag = (first_term - second_term) * self.sc_scaling_factor
         f_x = (dist_x/ld_dist) * force_mag
         f_y = (dist_y/ld_dist) * force_mag

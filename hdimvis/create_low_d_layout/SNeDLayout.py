@@ -12,7 +12,6 @@ class SNeDLayout(LowDLayoutBase):
                  exaggerate_D: bool = False, stop_exaggeration: float = 0.6,
                  decay: float = None, use_decay: bool = False,
                  LR: float = 550.0,
-                 record_avg_grad,
                  terminate_at: float = None, # threshold average n-tet stress value
                  #  below which layout generation is terminated
                  ):
@@ -77,7 +76,7 @@ class SNeDLayout(LowDLayoutBase):
             if self.iteration_number == stop_d_exa:
                 self.exaggerate_D = False
 
-            self.algorithm.one_iteration(self.exaggerate_D, self.LR, calculate_ntet_stress, self.record_avg_grad)
+            self.algorithm.one_iteration(self.exaggerate_D, self.LR, calculate_ntet_stress)
             if self.optional_metric_collection is not None:
                 self.collect_metrics()
 
@@ -96,8 +95,8 @@ class SNeDLayout(LowDLayoutBase):
                 if math.isclose(self.terminate_at, latest_running_mean) or self.terminate_at > latest_running_mean:
                     terminated = True
 
-            elif self.iteration_number > 3000:
-                terminated = True
+            # elif self.iteration_number > 3000:
+            #     terminated = True
 
             # if terminated get the final measurements and wrap up the display
             if terminated and self.optional_metric_collection is not None:

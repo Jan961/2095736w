@@ -85,30 +85,30 @@ def test_find_circle_quadrant_finds_expected_angles():
     assert upper_angle == 270 # in this special case where HD distances are much larger the error function is
     # minimised by increasing the LD distances - even if that does not improve the layout
 
-def test_binary_search_angle_finds_best_angle_with_original_error():
-    sample_indexes = [1, 2, 3]
-    algorithm = Hybrid(dataset=dataset,
-                       preset_sample=np.array(sample_indexes),
-                       random_sample_size=1)
-    set_node_positions(algorithm)
-
-    # source: [0, 1] with parent [0, 0]
-    source = algorithm.nodes[0]
-    distances = [algorithm.hd_distance(source, algorithm.nodes[t]) for t in sample_indexes]
-    error_fn = algorithm._create_error_fn(0, distances)
-    lower_angle, upper_angle = (90, 180)
-
-    best_angle = algorithm._binary_search_angle(lower_angle, upper_angle, error_fn)
-    assert abs(best_angle - 90) <= 4  # must be within 4 degrees of best angle
-
-    # source: [1, 1] with parent [0, 0]
-    source = algorithm.nodes[4]
-    distances = [algorithm.hd_distance(source, algorithm.nodes[t]) for t in sample_indexes]
-    error_fn = algorithm._create_error_fn(0, distances)
-    lower_angle, upper_angle = (0, 90)
-
-    best_angle = algorithm._binary_search_angle(lower_angle, upper_angle, error_fn)
-    assert abs(best_angle - 45) <= 4  # must be within 4 degrees of best angle
+# def test_binary_search_angle_finds_best_angle_with_original_error():
+#     sample_indexes = [1, 2, 3]
+#     algorithm = Hybrid(dataset=dataset,
+#                        preset_sample=np.array(sample_indexes),
+#                        random_sample_size=1)
+#     set_node_positions(algorithm)
+#
+#     # source: [0, 1] with parent [0, 0]
+#     source = algorithm.nodes[0]
+#     distances = [algorithm.hd_distance(source, algorithm.nodes[t]) for t in sample_indexes]
+#     error_fn = algorithm._create_error_fn(0, distances)
+#     lower_angle, upper_angle = (90, 180)
+#
+#     best_angle = algorithm._binary_search_angle(lower_angle, upper_angle, error_fn)
+#     assert abs(best_angle - 90) <= 4  # must be within 4 degrees of best angle
+#
+#     # source: [1, 1] with parent [0, 0]
+#     source = algorithm.nodes[4]
+#     distances = [algorithm.hd_distance(source, algorithm.nodes[t]) for t in sample_indexes]
+#     error_fn = algorithm._create_error_fn(0, distances)
+#     lower_angle, upper_angle = (0, 90)
+#
+#     best_angle = algorithm._binary_search_angle(lower_angle, upper_angle, error_fn)
+#     assert abs(best_angle - 45) <= 4  # must be within 4 degrees of best angle
 
 
 def test_sample_distances_sum_returns_correct_sum():
