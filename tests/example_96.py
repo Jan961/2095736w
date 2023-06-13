@@ -23,7 +23,7 @@ cube_dataset= cube.get_sample_dataset(3000)
 
 
 
-metric_collection = {'Average speed': 1, "Stress": 200}
+metric_collection = {'Average speed': 1, "Stress": 50}
 
 dataset = DataFetcher.fetch_data('mnist', size=3000)
 Xld = PCA(n_components=2, whiten=False, copy=True).fit_transform(cube_dataset.data).astype(np.float64)
