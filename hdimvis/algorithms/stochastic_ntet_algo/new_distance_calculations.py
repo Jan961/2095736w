@@ -21,7 +21,7 @@ def compute_quartet_dld(LD_points: np.ndarray):
 
     temp = (LD_points[:, :, None] - LD_points[:, :, None].T) ** 2
     Dld_full_matrix = np.sqrt(np.sum(
-        temp, axis=1, dtype=np.longdouble))
+        temp, axis=1, )) #dtype=np.longdouble
 
     Dld_full_matrix += 1e-164  # add a small number just in case - to
     # avoid zero division
