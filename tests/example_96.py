@@ -25,8 +25,8 @@ cube_dataset= cube.get_sample_dataset(3000)
 
 metric_collection = {'Average speed': 1, "Stress": 50}
 
-dataset = DataFetcher.fetch_data('mnist', size=3000)
-Xld = PCA(n_components=2, whiten=False, copy=True).fit_transform(cube_dataset.data).astype(np.float64)
+dataset = DataFetcher.fetch_data('mnist', size=4000)
+Xld = PCA(n_components=2, whiten=False, copy=True).fit_transform(dataset.data).astype(np.float64)
 Xld *= 10/np.std(Xld)
 
 # show_layout(positions=Xld, labels=dataset.labels, title="PCA")

@@ -1,19 +1,9 @@
 import numpy as np
 
-from experiments.utils.SimpleComparison import SimpleComparison
-from hdimvis.algorithms.spring_force_algos.chalmers96_algo.Chalmers96 import Chalmers96
-from hdimvis.visualise_layouts_and_metrics.plot import show_layout,show_generation_metrics
-from hdimvis.algorithms.stochastic_ntet_algo.SNeD import SNeD
-from hdimvis.create_low_d_layout.LayoutCreation import LayoutCreation
-from hdimvis.data_fetchers.DataFetcher import DataFetcher
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import KFold
 from experiments.utils.get_avg_classwise_f1 import get_avg_classwise_f1
-from sklearn.cluster import KMeans
-from sklearn.decomposition import PCA
-from sklearn.metrics import f1_score
-from pathlib import Path
-from definitions import PROJECT_ROOT
+
 import matplotlib.pyplot as plt
 
 

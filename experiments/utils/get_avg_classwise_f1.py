@@ -1,13 +1,6 @@
 import numpy as np
-from experiments.utils.SimpleComparison import SimpleComparison
-from hdimvis.algorithms.spring_force_algos.chalmers96_algo.Chalmers96 import Chalmers96
-from hdimvis.visualise_layouts_and_metrics.plot import show_layout,show_generation_metrics
-from hdimvis.algorithms.stochastic_ntet_algo.SNeD import SNeD
-from hdimvis.create_low_d_layout.LayoutBase import LowDLayoutBase
-from sklearn.cluster import KMeans
 from sklearn.metrics import f1_score
-from pathlib import Path
-from definitions import PROJECT_ROOT
+
 
 
 def get_avg_classwise_f1(real_labels: np.ndarray, predicted_labels: np.ndarray):
