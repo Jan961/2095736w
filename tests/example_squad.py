@@ -22,17 +22,17 @@ dataset_cube= cube.get_sample_dataset(3000)
 
 
 metric_collection = { "Average n-tet stress": 1, "Stress": 300}
-dataset = DataFetcher.fetch_data('mnist', size=3000)
+dataset = DataFetcher.fetch_data('globe', size=3000)
 
-Xld = PCA(n_components=2, whiten=False, copy=True).fit_transform(dataset.data).astype(np.float64)
+Xld = PCA(n_components=2, whiten=False, copy=True).fit_transform(dataset_cube.data).astype(np.float64)
 Xld *= 10/np.std(Xld)
 random_initial =  10*np.random.randn(dataset.data.shape[0], 2)
 
 
-squad = SNeD(dataset=dataset, initial_layout=Xld, use_nesterovs_momentum=False, ntet_size=4, use_relative_dist=True)
-layout = LayoutCreation.create_layout(squad, no_iters=2000,optional_metric_collection=metric_collection, use_decay=False)
+squad = SNeD(dataset=dataset_cube, initial_layout=Xld, use_nesterovs_momentum=False, ntet_size=4, use_relative_dist=True)
+layout = LayoutCreation.create_layout(squad, no_iters=6000,optional_metric_collection=metric_collection, use_decay=False)
 show_layout(layout, use_labels=True, color_map='rainbow', title=f"SNeD - {layout.iteration_number}")
-show_generation_metrics(layout, quartet_stress=True, title=f"iters {layout.iteration_number}" )
+show_generation_metrics(layout, quartet_stress=True, title=f"SQuaD, Cube dataset" )
 # print(layout.get_final_positions())
 
 cube.plot_2d(hd_points=layout.get_data(), layout_points=layout.get_final_positions(), title="no shuffle")
