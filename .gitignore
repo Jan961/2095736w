@@ -1,5 +1,5 @@
 
-#compiled
+#compiled/data
 \out
 \data
 *.pyc
@@ -100,6 +100,8 @@ ipython_config.py
 
 # pyenv
 .python-version
+Pipfile.lock
+Pipfile
 
 
 # SageMath parsed files
