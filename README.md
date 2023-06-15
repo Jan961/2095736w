@@ -348,7 +348,75 @@ get_final_stress()
 
 **return**
 stress of the layout: float
+<br><br><br><br>
+
+<span class = "section"> <b>Layout visualisation:</b></span><br><br>
+
+*Two functions are used to visualise the data contained in a layout object. These are described below*
+
+<br><br>
 
 
+<span class="main"><b>
+hdimvis.visualise_layouts_and_metrics.plot.show_layout</b></span><b>(<br>
+layout =None, <br>
+use_labels = False, <br>
+alpha: float = None,<br>
+color_by = None,<br>
+color_map = 'rainbow',<br>
+size = 3, <br>
+title = None,<br>
+save_to  =None,<br>
+positions =None,<br>
+labels= None<br>
+</b>
+<br><br>
 
+`layout: LowDLayoutBase`, <br>
+Layout object, if not provided must provide `positions` to plot and optionally `labels`<br><br>
+`use_labels: bool, optional`, <br>
+use data labels for colouring<br><br>
+`alpha: float, optional`,<br>
+transparency of datapoints<br><br>
+`color_by: Callable[[np.ndarray],float], optional`,<br>
+use a custom function for colouring - e.g. by one of the data dimensions rather than their labels<br><br>
+`color_map: str, optional`,<br> name of the Pyplot color map to use<br><br>
+`size: float, optional`, <br> size of a datapoint on the plot <br><br>
+`title: str, optional`,<br><br>
+`save_to: Path, optional`,<br><br>
+`positions: np.ndarray`,<br>
+if layout object not provided must use this <br><br>
+`labels: np.ndarray`<br> if layout does not contain labels or there is no Layout object pass labels them here <br><br>
 
+<br><br>
+<span class="main"><b>
+hdimvis.visualise_layouts_and_metrics.plot.show_generation_metrics(</b></span><b><br>
+layout, 
+stress = True,<br>
+average_speed = False, <br>
+quartet_stress = False,<br>
+title = None,<br>
+save_to = None, <br>
+log_scale = False,<br>
+iters_from = None, <br>
+iters_to = None<br>
+</b>
+<br><br>
+
+`layout: LowDLayoutBase`, <br>
+must provide a layout object to show collected metrics<br><br>
+`stress: bool, optional`,<br>
+show collected Kruskal stress measurements<br><br>
+`average_speed: bool, optional`, <br>
+show average speed (only available for Spring Force Layouts) if 
+`stress` is True a twin axis will be added to show both metric on the same plot <br><br>
+`quartet_stress: bool, optional`,<br>
+similar to above but for SNeD<br><br>
+`title: str, optional`,<br><br>
+`save_to: Path, optional`, <br><br>
+`log_scale: bool, optional`,<br>
+use log scale on the y axis<br><br>
+`iters_from: int, optional`, <br>
+auto adjust the plot to show only metrics collected in the specified range if None all metrics from the start will be showed <br><br>
+`iters_to: int, optional` <br>
+as above, if None, all measurements until the termination of layout creation will be showed<br><br>

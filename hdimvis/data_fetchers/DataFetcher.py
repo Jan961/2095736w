@@ -26,7 +26,7 @@ class DataFetcher:
     def fetch_data( dataset_name_raw: str='rna N3k', **kwargs):
 
         low_lvl_data_fetcher : LowLevelDataFetcherBase | None = None
-        dataset_name = dataset_name_raw.strip()
+        dataset_name = dataset_name_raw.strip().lower()
         print("#"*20)
         print(f"Fetching the \"{dataset_name}\" dataset")
 
@@ -36,7 +36,7 @@ class DataFetcher:
             low_lvl_data_fetcher = BondsFetcher()
         elif dataset_name == 'coil20':
             low_lvl_data_fetcher = COIL20Fetcher()
-        elif dataset_name == 'rna N3k':
+        elif dataset_name == 'rna n3k':
             low_lvl_data_fetcher = RNA_N3kFetcher()
         elif dataset_name == 'airfoil':
             low_lvl_data_fetcher = AirfoilNoiseFetcher()
@@ -54,7 +54,7 @@ class DataFetcher:
             low_lvl_data_fetcher = MockDataFetcher()
         elif dataset_name == 'globe':
             low_lvl_data_fetcher = GlobeFetcher()
-        elif dataset_name == 'cancer RNA':
+        elif dataset_name == 'cancer rna':
             low_lvl_data_fetcher = CancerRNAFetcher()
         elif dataset_name == 'metro':
             low_lvl_data_fetcher = MetroFetcher()

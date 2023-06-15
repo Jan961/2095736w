@@ -57,13 +57,7 @@ class BaseAlgorithm:
     #     pass
 
     def get_name(self, only_additional=False):
-        # only additional name as a key in result dictionaries - to make it easier to access them
-        if self.additional_name is None:
-            return self.name
-        elif only_additional:
-            return self.additional_name
-        else:
-            return self.name + ' - ' + self.additional_name
+        return self.name
 
     def get_vectorised_stress(self, distance_function: Callable):
         return vectorised_stress(self.data, self.get_positions(), distance_function)
