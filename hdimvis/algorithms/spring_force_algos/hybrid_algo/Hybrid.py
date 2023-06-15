@@ -54,9 +54,9 @@ class Hybrid(SpringForceBase):
                                                  neighbour_set_size=self.neighbour_set_size)
 
         self.stage:               HybridStage = HybridStage.PLACE_SAMPLE
-        print( f" sample:{len(self.sample)}")
-        print(f" idices: {len(self.sample_indices)}")
-        print(f"sample size {self.initial_sample_size}")
+        # print( f" sample:{len(self.sample)}")
+        # print(f" idices: {len(self.sample_indices)}")
+        # print(f"sample size {self.initial_sample_size}")
 
     def create_sample_indices(self):
         if self.preset_sample is not None:

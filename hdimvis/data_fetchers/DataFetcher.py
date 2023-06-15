@@ -23,7 +23,7 @@ class DataFetcher:
                          'shuttle', 'flow cytometry']
 
     @staticmethod
-    def fetch_data( dataset_name_raw: str='rna N3k', for_bhtsne: bool = False, **kwargs):
+    def fetch_data( dataset_name_raw: str='rna N3k', **kwargs):
 
         low_lvl_data_fetcher : LowLevelDataFetcherBase | None = None
         dataset_name = dataset_name_raw.strip()

@@ -147,9 +147,9 @@ def stratified_sample(data: np.ndarray, sample_size: int, num_strata: int):
                                          remaining_to_sample).ravel()
         sample_indices += top_up_sample.tolist()
 
-    print(sample_indices)
-    print(len(sample_indices))
-    print(f"remaing: {remaining_to_sample}")
-    print(len(sample_indices) == len(set(sample_indices)))
+    # print(sample_indices)
+    # print(len(sample_indices))
+    # print(f"remaing: {remaining_to_sample}")
+    # print(len(sample_indices) == len(set(sample_indices)))
 
     return sample_indices
