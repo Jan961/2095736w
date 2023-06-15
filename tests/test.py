@@ -33,7 +33,7 @@ for i, dataset in enumerate(datasets):
                         damping_constant=0, spring_constant=0.5,
                         use_knnd=False, sample_set_size=n_neigh, neighbour_set_size=n_sample)
         start = perf_counter()
-        layout = LayoutCreation.create_layout(algo96, no_iters=1)
+        layout = LayoutCreation.create_layout(algo96, num_iters=1)
         results[dataset_names[i]][0][n_neigh, n_sample, j] = perf_counter() - start
         results[dataset_names[i]][1][n_neigh, n_sample, j] = layout
 

@@ -55,8 +55,8 @@ name of the dataset<br><br>
 *this dataset is created and used differently from the other datasets described in the next section*
 <br><br>
 <span class="main">
-<b>experiments.cube.Cube.Cube( side = 10, angle = 1/6, num_points = 2, distance_axes = 2)</b>
-</span>
+<b>experiments.cube.Cube.Cube</span>( side = 10, angle = 1/6, num_points = 2, distance_axes = 2)</b>
+
 <br>
 <br>
 <span class="main">
@@ -110,7 +110,7 @@ Dataset object
 *plot the 2D embedding of the cube*
 
 `layout: LowDLayoutBase object, optional`<br>
-if provided the method extract all the required data from the layout object automatically if not `layout_points` and `hd_points` must be provided <br><br>
+if provided the method extracts all the required data from the Layout object automatically if not `layout_points` and `hd_points` in a corresponding order must be provided  <br><br>
 
 `layout_points: np.ndarray, optional`<br> see above <br><br>
 
@@ -126,11 +126,11 @@ None
 
 
 <br><br><br><br>
-<span class = "section"> <b>Loading and all other datasets:</b></span><br><br>
+<span class = "section"> <b>Loading all other datasets:</b></span><br><br>
 
 <span class="main">
-<b>hdimvis.data_fetchers.DataFetcher.DataFetcher.fetch_data( dataset_name_raw = 'rna N3k',  **kwargs)</b>
-</span>
+<b>hdimvis.data_fetchers.DataFetcher.DataFetcher.fetch_data</span>( dataset_name_raw = 'rna N3k',  **kwargs)</b>
+
 <br>
 
 *static method of the DataFetcher factory class to load any dataset*
@@ -159,4 +159,196 @@ dataset name available datasets are:<br>
 some dataset have variable size - this can be set here by passing `size` argument to the fetcher, 
 the *globe* data set can be loaded as "swiss roll" or continents on a sphere (`swiss_roll: bool = False` parameter) the "swiss roll" also has adjustable number of revolutions (`revolutions: float =2.0`) and tightness (`tightness: float = 1.0`) <br>
 this parameter also enables flexibility for adding further datasets whose loading process might be possible to adjust by some further parameter settings
+
+**returns**<br>
+Dataset object
+
+<br><br><br><br>
+<span class = "section"> <b>Algorithms</b></span><br><br>
+
+*Since for layout creation an algorithm object only needs to be created (with a dataset object passed into its __init__ method) but none of its methods need to be called directly, no descriptions of methods is provided here and only some attributes are mentioned, many parameters are also not described in detail as their names seem to be self-explanatory - for more information see the source code and dissertation* 
+
+
+<span class="main">
+<b>hdimvis.algorithms.spring_force_algos.chalmers96_algo.Chalmers96.Chalmers96</b></span>(<br>
+<b>dataset, <br>
+record_neighbour_updates = False, <br>
+nodes = None,<br>
+enable_cache = True,<br>
+use_knnd = False, knnd_parameters: Dict = None,  <br>
+neighbour_set_size = 5, <br>
+sample_set_size = 10, <br>
+spring_constant = 0.5, <br>
+sc_scaling_factor = None, <br> 
+integrate_sum  = True, <br>
+damping_constant = 0, <br>
+initial_layout = None, <br>
+distance_fn = euclidean, <br>
+**kwargs)</b><br>
+
+
+
+`dataset: Dataset object`<br><br>
+`record_neighbour_updates: bool, optional`,<br>
+record the absolute number of neighbour set updates on each iteration<br><br>
+`nodes: List[Node], optional` ,<br>
+provide a list of Node objects (datapoints) to the algorithm<br><br> 
+`enable_cache: bool optional`,<br><br>
+`use_knnd: bool, optional` , <br>
+use the kNND algorithm to pre-compute neighbour sets <br><br>
+`knnd_parameters: Dict, optional`,<br>
+a dictionary for passing optional arguments to the kNND (pynndescent) algorithm<br><br>
+`neighbour_set_size: int, optional`,<br><br>
+`sample_set_size: int, optional` ,<br><br>
+`spring_constant: float, optional` ,<br><br>
+`sc_scaling_factor: float, optional`,<br>
+spring constant scaling factor<br><br>
+`integrate_sum : bool, optional` ,<br>
+use the cumulative force (sum) for position updates if False update the position as soon as new force is calculated <br><br>
+`damping_constant: float, optional` ,<br><br>
+`initial_layout: np.ndarray, optional` ,<br>
+layout positions to initialise the algo<br><br>
+`distance_fn: Callable, optional`,<br><br>
+
+
+
+<br>
+<br>
+<br>
+
+
+<span class="main">
+<b>hdimvis.algorithms.spring_force_algos.hybrid_algo.Hybrid.Hybrid</b></span>(
+<b>dataset: Dataset, <br>
+initial_layout = None, <br>
+distance_fn = euclidean <br>
+preset_sample  = None, <br>
+ interpolation_adjustment_sample_size = 15, <br>
+use_correct_interpolation_error = True, <br>
+use_random_sample = False, <br> 
+num_strata = 20, <br>
+nodes = None, <br>
+enable_cache = True, <br>
+use_knnd = False, <br>
+knnd_parameters = None <br>
+neighbour_set_size = 5, <br>
+sample_set_size = 10, <br>
+spring_constant = 0.5, <br>
+sc_scaling_factor = None, <br>
+integrate_sum  = True <br>
+**kwargs)</b>b<br>
+
+
+<br><br>
+
+`dataset: Dataset`, <br><br>
+`initial_layout: np.ndarray, optional`, <br> as above <br><br>
+`distance_fn: Callable, optional` <br><br>
+`preset_sample : np.ndarray, optional` <br> choose the sample indices manually <br><br>
+`interpolation_adjustment_sample_size: int,optional` <br> sample size to be used when adjusting the position of a point interpolated into the layout <br><br>
+`use_correct_interpolation_error: bool, optional` <br>
+use the corrected error function if False the 2019 error will be used <br><br>
+`use_random_sample: bool, optional` <br>
+if False stratified sample will be used <br><br>
+`num_strata: int, optional` <br> number of divisions to use for the stratified sample <br><br>
+`nodes: List[Node], optional` <br>as above<br><br>
+`enable_cache: bool, optional` <br><br>
+`use_knnd: bool , optional` <br>as above<br><br>
+`knnd_parameters: Dict, optional` <br>as above<br><br>
+`neighbour_set_size: int, optional` <br><br>
+`sample_set_size: int, optional` <br><br>
+`spring_constant: float , optional` <br><br>
+`sc_scaling_factor: float , optional` <br>as above<br><br>
+`integrate_sum : bool , optional` <br>as above<br><br>
+`damping_constant: float, optiona`<br><br>
+<br><br>
+
+
+<span class="main">
+<b>hdimvis.algorithms.stochastic_ntet_algo.SNeD.SNeD</b></span>(
+<b>dataset, <br>
+initial_layout = None <br>
+distance_fn = euclidean <br>
+ntet_size = 4  <br>
+use_nesterovs_momentum = False <br>
+momentum = 0.6 <br>
+is_test = False <br>
+use_rbf_adjustment = False  <br>
+**kwargs <br>
+</b>
+<br><br>
+
+`dataset: Dataset`, <br>
+`initial_layout: np.ndarray, optional` , <br>as above<br><br>
+`distance_fn : Callable, optional`, <br>as above<br><br>
+`ntet_size: int, optional`, <br> size of the basic unit for GD and position updates<br><br>
+`use_nesterovs_momentum: bool, optional`,<br><br>
+`momentum: float, optional`,<br><br>
+`is_test: bool, optional` , <br> if True ntet_size must be set to 4 and the algorithm tests if all the vectorised gradient and distance calculations return the same results as the original code provided by the authors <br><br> 
+`use_rbf_adjustment: bool, optional` , <br>
+use rbf distances for each n_tet  <br><br>
+
+<br><br>
+
+<span class = "section"> <b>Layout creation:</b></span><br><br>
+
+
+
+*Static method of the LayoutCreation (factory) class is described below, only an Algorithm object needs to be passed to the method and the number oor iteration or another termination condition) specified to create a layout*
+
+<span class="main">
+<b>hdimvis.create_low_d_layout.LayoutCreation.LayoutCreation.create_layout(</b></span><b>( <br>
+algorithm: BaseAlgorithm, <br>
+num_iters = None , <br>
+optional_metric_collection = None,<br>
+**additional_parameters<br>
+</b>
+
+`algorithm: BaseAlgorithm`, <br><br>
+`num_iters: int, optional`,<br>
+number of iteration to run the layout creation for <br><br>
+`optional_metric_collection: dict[str: int], optional` ,<br>
+can be used to specify what metric are to be collected during layout creation and the interval of collection, the format must be: <br>
+{metric_name : iteration_interval (e.g. 2 means every 2 iterations)   <br>
+if a valid value is passed the layout create will also collect the specified metric at the beginning and after the last iteration regardless of the value of `num_iters` mod iteration_interval <br><br>
+`**additional_parameters`<br>
+additional parameters specific to each algorithm can be passed here <br><br>
+
+**returns**<br>
+Layout object
+<br><br><br>
+<span class="main">
+<b>hdimvis.create_low_d_layout.LayoutBase.LayoutBase</b></span>
+<br><br>
+
+*Layout objects are created automatically after running `create_layout` rather than directly, thus the details of its __init__ method are not described here only its most important attributes as th most important method*<br><br>
+<span class="main">
+**attributes:**<br>
+</span>
+`algorithm`<br> the algorithm object used to create the layout<br> <br> 
+`final_positions`<br> 
+positions of the point on the layout<br> <br> 
+`num_iters `<br> 
+number of iterations to be performed
+`collected_metrics `<br> 
+collected metrics stored in a dict of the form:
+{metric_name : tuple(List([iteration_numbers]),List([metric_values]))
+where iteration numbers are the numbers of iteration at which the metrics where measured<br> <br> 
+`data` <br> 
+original HD data<br> <br> 
+`labels `<br> 
+data labels<br> <br> 
+
+`iteration_number` <br> 
+current iteration number<br> <br> 
+<span class="main">
+**methods:**<br> 
+</span>
+get_final_stress()
+
+**return**
+stress of the layout: float
+
+
+
 

@@ -30,7 +30,7 @@ random_initial =  10*np.random.randn(dataset.data.shape[0], 2)
 
 
 squad = SNeD(dataset=dataset_cube, initial_layout=Xld, use_nesterovs_momentum=False, ntet_size=4, use_relative_dist=True)
-layout = LayoutCreation.create_layout(squad, no_iters=6000,optional_metric_collection=metric_collection, use_decay=False)
+layout = LayoutCreation.create_layout(squad, num_iters=6000, optional_metric_collection=metric_collection, use_decay=False)
 show_layout(layout, use_labels=True, color_map='rainbow', title=f"SNeD - {layout.iteration_number}")
 show_generation_metrics(layout, quartet_stress=True, title=f"SQuaD, Cube dataset" )
 # print(layout.get_final_positions())

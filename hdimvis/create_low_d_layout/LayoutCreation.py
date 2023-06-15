@@ -16,11 +16,15 @@ from ..data_fetchers.Dataset import Dataset
 class LayoutCreation:
 
     @staticmethod
-    def create_layout(algorithm: BaseAlgorithm, no_iters: int = None ,
+    def create_layout(algorithm: BaseAlgorithm, num_iters: int = None,
                       optional_metric_collection: dict[str: int] = None,
-                       **additional_parameters):
+                      **additional_parameters):
 
-        basic_layout_creation_parameters = [algorithm, optional_metric_collection, no_iters]
+        """Create a layout object - by delegating this task to an appropriate low level layout creator object-
+         and print all the most important setting of the parameters as a sanity check and to avoid having to rerun
+         layout creation if wrong parameters are selected"""
+
+        basic_layout_creation_parameters = [algorithm, optional_metric_collection, num_iters]
 
         print("#" * 20)
         print(f"A 2D layout of the \"{algorithm.dataset.name}\" dataset will be created \n"
@@ -34,8 +38,8 @@ class LayoutCreation:
 
         elif isinstance(algorithm, Hybrid):
             layout = HybridLayout(*basic_layout_creation_parameters, **additional_parameters)
-            if no_iters is not None:
-                print(f"The passed value of iteration numer \"no_iters\": {no_iters} will be ignored"
+            if num_iters is not None:
+                print(f"The passed value of iteration numer \"no_iters\": {num_iters} will be ignored"
                       "and the total number of iterations calculated as the sum of parameters "
                       "\"sample_layout_iterations\" and \"refine_layout_iterations\""
                       "please use those to set the number iterations for this algorithm")

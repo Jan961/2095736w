@@ -11,7 +11,7 @@ class BaseAlgorithm:
     name: str
     available_metrics: List[str]
 
-    def __init__(self, dataset: Dataset | None, additional_name: str =None,
+    def __init__(self, dataset: Dataset | None,
                  initial_layout: np.ndarray = None,
                  distance_fn = euclidean,
                  **kwargs):
@@ -19,7 +19,6 @@ class BaseAlgorithm:
         self.data = self.dataset.data if self.dataset is not None else None
         self.initial_layout = initial_layout.copy() if initial_layout is not None else self.initialise_layout()
         self.distance_fn = distance_fn
-        self.additional_name = additional_name
 
     @abstractmethod
     def get_positions(self) -> np.ndarray:

@@ -28,14 +28,14 @@ def test_low_lvl_layout_created_correctly_for_chalmers96():
         algo =algorithms[0]
         layout_class = layout_classes[0]
         layout = LayoutCreation().create_layout(algo, optional_metric_collection={'Stress': 2, 'Average speed': 1},
-                                                no_iters=4)
+                                                num_iters=4)
         assert isinstance(layout, layout_class)
         assert layout.optional_metric_collection['Stress'] == 2
         assert layout.optional_metric_collection['Average speed'] == 1
 
 def test_low_lvl_layout_created_correctly_for_squad():
     algo = SNeD(dataset=mock_dataset_2, initial_layout=initial_positions)
-    layout = LayoutCreation().create_layout(algo, no_iters=2)
+    layout = LayoutCreation().create_layout(algo, num_iters=2)
 
     assert np.allclose(initial_positions, layout.get_final_positions()) #tests if the correspondence between low D and high D
     # in the internal representation is maintained and the points are not shuffled
@@ -64,7 +64,7 @@ def test_stress_collected_correctly():
             norm_name = norms[j]
             norm_fn = norm_fns[j]
             for i in [1,2,3]:
-                layout = LayoutCreation().create_layout(algo, no_iters=4,
+                layout = LayoutCreation().create_layout(algo, num_iters=4,
                                                         optional_metric_collection={'Stress': i, "norm": norm_name})
                 if i != 3:
                     assert len(layout.collected_metrics['Stress'][0]) == 4//i + 1
@@ -86,9 +86,9 @@ def test_stress_decreases_as_expected():
     algo = SNeD(dataset=mock_dataset_3, initial_layout=initial_positions)
     stress_normal_1 = algo.get_vectorised_stress(euclidean)
     measurements = {'Stress': 1, "Average n-tet stress": 1}
-    layout1 = LayoutCreation().create_layout(algo, optional_metric_collection=measurements, no_iters=1, )
+    layout1 = LayoutCreation().create_layout(algo, optional_metric_collection=measurements, num_iters=1, )
     stress_quartet_1 = algo.get_average_quartet_stress()
-    layout2 = LayoutCreation().create_layout(algo, optional_metric_collection=measurements, no_iters=4, )
+    layout2 = LayoutCreation().create_layout(algo, optional_metric_collection=measurements, num_iters=4, )
     stress_quartet_2 = algo.get_average_quartet_stress()
     stress_normal_2 = algo.get_vectorised_stress(euclidean)
     print(layout2.collected_metrics)

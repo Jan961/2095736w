@@ -75,7 +75,7 @@ def test_nesterovs_momentum_calculated_correctly():
     sned = SNeD(dataset=mock_dataset_2, initial_layout=initial_positions, momentum=momentum,
                 use_nesterovs_momentum=True,
                 LR=LR_not_decayed)
-    layout = LayoutCreation.create_layout(sned, no_iters=1)
+    layout = LayoutCreation.create_layout(sned, num_iters=1)
     # sort as these get reordered inside the algo - but of course - see test first test here
     print(layout.get_final_positions())
     sorted_manual = np.sort(updated_points,axis=0)
