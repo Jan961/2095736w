@@ -25,7 +25,7 @@ cube_dataset= cube.get_sample_dataset(3000)
 
 metric_collection = {'Average speed': 1, "Stress": 5}
 
-dataset = DataFetcher.fetch_data('mnist', size=4000)
+dataset = DataFetcher.fetch_data('rna N3k')
 Xld = PCA(n_components=2, whiten=False, copy=True).fit_transform(cube_dataset.data).astype(np.float64)
 Xld *= 10/np.std(Xld)
 
@@ -34,12 +34,12 @@ Xld *= 10/np.std(Xld)
 zero_initial = np.zeros((dataset.data.shape[0], 2))
 random_initial =  10*np.random.randn(dataset.data.shape[0], 2)
 
-algo96 = Chalmers96(dataset=cube_dataset,  distance_fn=euclidean, initial_layout=Xld,
+algo96 = Chalmers96(dataset=dataset,  distance_fn=euclidean, initial_layout=None,
                     damping_constant=0, spring_constant=0.5,
                     use_knnd=False, sample_set_size=10, neighbour_set_size=5)
 
 
-layout = LayoutCreation.create_layout(algo96, optional_metric_collection=metric_collection, num_iters=50)
+layout = LayoutCreation.create_layout(algo96, optional_metric_collection=None, num_iters=100)
 #
 
 
@@ -57,4 +57,4 @@ show_generation_metrics(layout, average_speed=True, stress=True, title=f"Chalmer
 
 # cube.plot_2d(layout, title="Chalmers' 96")
 
-show_layout(layout, use_labels=True, color_map='rainbow', title=f'Chalmers\' {layout.iteration_number}')
+show_layout(layout, use_labels=True, color_map='rainbow', title='Chalmers\' 96, Mouse cortex scRNA')

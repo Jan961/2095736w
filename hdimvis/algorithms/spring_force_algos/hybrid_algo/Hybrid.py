@@ -36,8 +36,7 @@ class Hybrid(SpringForceBase):
         self.num_strata = num_strata
         self.preset_sample = preset_sample  # node indices - we can manually set the sample used for interpolation here
         self.initial_sample_size:             int = preset_sample.size if preset_sample is not None \
-                                                 else round(math.sqrt(len(self.nodes))) + 100
-
+                                                 else round(math.sqrt(len(self.nodes))) + 300
         self.interpolation_adjustment_sample_size:       int = interpolation_adjustment_sample_size
         self.sample_indices:        List[int] = self.create_sample_indices() # use preset_sample or select random
         self.remainder_indices:     List[int] = list(set(range(len(self.nodes))) - set(self.sample_indices))

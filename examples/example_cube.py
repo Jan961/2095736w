@@ -60,7 +60,7 @@ embedding_tsne = TSNE(n_components=2, perplexity=500).fit_transform(dataset.data
 cube.plot_2d(layout_points=embedding_tsne, hd_points=dataset.data, title="tSNE embedding")
 
 
-sned = SNeD(dataset=dataset)
+sned = SNeD(dataset=dataset, ntet_size=6)
 layout_sned = LayoutCreation().create_layout(sned, num_iters=1000)
 cube.plot_2d(layout=layout_sned)
 
