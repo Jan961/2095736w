@@ -24,18 +24,16 @@ Almost all of the code used to run and process the data in experiments
 is contained in the *experiments* package so that the obtained results can be replicated.
 
 <br>
-############
 <br>
 Below is a shortened description of the API used:
 <br>
-############
+
 <br>
 <span class = "section"> <b>Dataset object:</b></span><br><br>
 
 
-<span class="main">
-# <b>hdimvis.data_fetchers.Dataset.Dataset()</b>
-</span>
+## <b> hdimvis.data_fetchers.Dataset.Dataset() </b>
+
 
 *basic dataset object* <br> <br>
 <span class="main"><b>Attributes:</b><br></span>
@@ -55,7 +53,7 @@ name of the dataset<br><br>
 *this dataset is created and used differently from the other datasets described in the next section*
 <br><br>
 <span class="main">
-# <b>experiments.cube.Cube.Cube</span>( side = 10, angle = 1/6, num_points = 2, distance_axes = 2)</b>
+## <b>experiments.cube.Cube.Cube</span>( side = 10, angle = 1/6, num_points = 2, distance_axes = 2)</b>
 </span>
 
 <br>
@@ -82,7 +80,7 @@ name of the dataset<br><br>
 <b>Methods:</b><br><br>
 </span>
 
-# plot_3d(title: str = None, axes_labels_off = False, size_inches: int None)
+## <b> plot_3d(title: str = None, axes_labels_off = False, size_inches: int None) </b> <br>
 
 *plot the 3D cube*
 
@@ -98,7 +96,7 @@ size of the plot<br><br>
 None<br><br>
 
 
-**get_sample_dataset(self, size)** <br>
+## <b> get_sample_dataset(self, size) </b> <br>
 
 `size: int`<br>
 size of the dataset
