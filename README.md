@@ -1,19 +1,4 @@
-<style>
-.main{
-    background: lightblue;}
-.intro{
-   background: lightgreen;}
-.section{
-    background: lightpink;}
-</style>
 
-<p class="intro">
-############
-Setup
-############
-</p>
-The most convenient way to run the project ist to build a project from existing sources with any Python IDE and install all the requirements 
-from the requirements.txt file. 
 
 It is important to note that the python interpreter for the project must use **Python version 3.10** as some packages used are not compatible with other versions.  
 
