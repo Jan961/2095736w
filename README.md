@@ -25,7 +25,7 @@ is contained in the *experiments* package so that the obtained results can be re
 
 <br>
 <br>
-Below is a shortened description of the API used:
+Below is a shortened and incomplete description of the API used:
 <br>
 
 <br>
@@ -104,7 +104,7 @@ size of the dataset
 **returns**<br>
 Dataset object
 
-**plot_2d(self, layout = None, layout_points= None, hd_points =None, opacity= 1, title = None, save_to = None)**
+## <b> plot_2d(self, layout = None, layout_points= None, hd_points =None, opacity= 1, title = None, save_to = None) </b>
 
 *plot the 2D embedding of the cube*
 
@@ -127,8 +127,8 @@ None
 <br><br><br><br>
 <span class = "section"> <b>Loading all other datasets:</b></span><br><br>
 
-<span class="main">
-<b>hdimvis.data_fetchers.DataFetcher.DataFetcher.fetch_data</span>( dataset_name_raw = 'rna N3k',  **kwargs)</b>
+
+## <b>hdimvis.data_fetchers.DataFetcher.DataFetcher.fetch_data</span>( dataset_name_raw = 'rna N3k',  **kwargs)</b>
 
 <br>
 
@@ -168,8 +168,7 @@ Dataset object
 *Since for layout creation an algorithm object only needs to be created (with a dataset object passed into its __init__ method) but none of its methods need to be called directly, no descriptions of methods is provided here and only some attributes are mentioned, many parameters are also not described in detail as their names seem to be self-explanatory - for more information see the source code and dissertation* 
 
 
-<span class="main">
-<b>hdimvis.algorithms.spring_force_algos.chalmers96_algo.Chalmers96.Chalmers96</b></span>(<br>
+## <b>hdimvis.algorithms.spring_force_algos.chalmers96_algo.Chalmers96.Chalmers96</b></span>(<br>
 <b>dataset, <br>
 record_neighbour_updates = False, <br>
 nodes = None,<br>
@@ -216,8 +215,7 @@ layout positions to initialise the algo<br><br>
 <br>
 
 
-<span class="main">
-<b>hdimvis.algorithms.spring_force_algos.hybrid_algo.Hybrid.Hybrid</b></span>(
+## <b>hdimvis.algorithms.spring_force_algos.hybrid_algo.Hybrid.Hybrid</b></span>(
 <b>dataset: Dataset, <br>
 initial_layout = None, <br>
 distance_fn = euclidean <br>
@@ -263,8 +261,8 @@ if False stratified sample will be used <br><br>
 <br><br>
 
 
-<span class="main">
-<b>hdimvis.algorithms.stochastic_ntet_algo.SNeD.SNeD</b></span>(
+
+## <b>hdimvis.algorithms.stochastic_ntet_algo.SNeD.SNeD</b></span>(
 <b>dataset, <br>
 initial_layout = None <br>
 distance_fn = euclidean <br>
@@ -295,8 +293,8 @@ use rbf distances for each n_tet  <br><br>
 
 *Static method of the LayoutCreation (factory) class is described below, only an Algorithm object needs to be passed to the method and the number oor iteration or another termination condition) specified to create a layout*
 
-<span class="main">
-<b>hdimvis.create_low_d_layout.LayoutCreation.LayoutCreation.create_layout(</b></span><b>( <br>
+
+## <b>hdimvis.create_low_d_layout.LayoutCreation.LayoutCreation.create_layout(</b></span><b>( <br>
 algorithm: BaseAlgorithm, <br>
 num_iters = None , <br>
 optional_metric_collection = None,<br>
@@ -316,12 +314,12 @@ additional parameters specific to each algorithm can be passed here <br><br>
 **returns**<br>
 Layout object
 <br><br><br>
-<span class="main">
-<b>hdimvis.create_low_d_layout.LayoutBase.LayoutBase</b></span>
+
+## <b>hdimvis.create_low_d_layout.LayoutBase.LayoutBase</b></span>
 <br><br>
 
-*Layout objects are created automatically after running `create_layout` rather than directly, thus the details of its __init__ method are not described here only its most important attributes as th most important method*<br><br>
-<span class="main">
+*Layout objects are created automatically after running `create_layout` rather than directly, thus the details of its __init__ method are not described here only its most important attributes and the most important method*<br><br>
+
 **attributes:**<br>
 </span>
 `algorithm`<br> the algorithm object used to create the layout<br> <br> 
@@ -356,8 +354,7 @@ stress of the layout: float
 <br><br>
 
 
-<span class="main"><b>
-hdimvis.visualise_layouts_and_metrics.plot.show_layout</b></span><b>(<br>
+## hdimvis.visualise_layouts_and_metrics.plot.show_layout</b></span><b>(<br>
 layout =None, <br>
 use_labels = False, <br>
 alpha: float = None,<br>
@@ -388,8 +385,8 @@ if layout object not provided must use this <br><br>
 `labels: np.ndarray`<br> if layout does not contain labels or there is no Layout object pass labels them here <br><br>
 
 <br><br>
-<span class="main"><b>
-hdimvis.visualise_layouts_and_metrics.plot.show_generation_metrics(</b></span><b><br>
+
+## <b>hdimvis.visualise_layouts_and_metrics.plot.show_generation_metrics(</b></span><b><br>
 layout, 
 stress = True,<br>
 average_speed = False, <br>
