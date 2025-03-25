@@ -34,7 +34,7 @@ Below is a shortened description of the API used:
 
 
 <span class="main">
-<b>hdimvis.data_fetchers.Dataset.Dataset()</b>
+# <b>hdimvis.data_fetchers.Dataset.Dataset()</b>
 </span>
 
 *basic dataset object* <br> <br>
@@ -55,7 +55,8 @@ name of the dataset<br><br>
 *this dataset is created and used differently from the other datasets described in the next section*
 <br><br>
 <span class="main">
-<b>experiments.cube.Cube.Cube</span>( side = 10, angle = 1/6, num_points = 2, distance_axes = 2)</b>
+# <b>experiments.cube.Cube.Cube</span>( side = 10, angle = 1/6, num_points = 2, distance_axes = 2)</b>
+</span>
 
 <br>
 <br>
@@ -81,7 +82,7 @@ name of the dataset<br><br>
 <b>Methods:</b><br><br>
 </span>
 
-**plot_3d(title: str = None, axes_labels_off = False, size_inches: int None)**
+# plot_3d(title: str = None, axes_labels_off = False, size_inches: int None)
 
 *plot the 3D cube*
 
