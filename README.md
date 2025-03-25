@@ -35,7 +35,7 @@ name of the dataset<br><br>
 
 <span class = "section"> <b>Cube test dataset:</b></span><br><br>
 
-*this dataset is created and used differently from the other datasets described in the next section*
+*this isa unique dataset - created and used differently form the one described below*
 <br><br>
 <span class="main">
 ## <b>experiments.cube.Cube.Cube</span>( side = 10, angle = 1/6, num_points = 2, distance_axes = 2)</b>
@@ -65,7 +65,7 @@ name of the dataset<br><br>
 <b>Methods:</b><br><br>
 </span>
 
-## <b> plot_3d(title: str = None, axes_labels_off = False, size_inches: int None) </b> <br>
+### <b> plot_3d(title: str = None, axes_labels_off = False, size_inches: int None) </b> <br>
 
 *plot the 3D cube*
 
@@ -81,7 +81,7 @@ size of the plot<br><br>
 None<br><br>
 
 
-## <b> get_sample_dataset(self, size) </b> <br>
+### <b> get_sample_dataset(self, size) </b> <br>
 
 `size: int`<br>
 size of the dataset
@@ -89,7 +89,7 @@ size of the dataset
 **returns**<br>
 Dataset object
 
-## <b> plot_2d(self, layout = None, layout_points= None, hd_points =None, opacity= 1, title = None, save_to = None) </b>
+### <b> plot_2d(self, layout = None, layout_points= None, hd_points =None, opacity= 1, title = None, save_to = None) </b>
 
 *plot the 2D embedding of the cube*
 
