@@ -1,3 +1,7 @@
+# About
+This is a project examining the relative performace of two high dimensional data visulisation algorithms (approximate MDS) as well as tesing the effect of various modifications.
+The main metrics used are: [Stress](https://en.wikipedia.org/wiki/Multidimensional_scaling#Non-metric_multidimensional_scaling_(NMDS)), the accuracy of K-neighbours classifier and the accuracy of a K-means classifier run on the dataset after dimensionality reduction. The clustering accuracy is measured with class-wise F1 (cross validation folds=10 )
+
 
 **Datasets used:**
 - custom toy dataset of points sampled from a surface of a 3D cube
@@ -18,7 +22,7 @@ Main algorithms (re) implemented in Python here:
 - Matthew Chalmers  ["A linear iteration time layout algorithm for visualising high-dimensional data"](https://ieeexplore.ieee.org/document/567787 )
 - Alistair Morrison, Greg Ross, Matthew Chalmers ["A hybrid layout algorithm for sub-quadratic multidimensional scaling"](https://www.researchgate.net/publication/4000921_A_hybrid_layout_algorithm_for_sub-quadratic_multidimensional_scaling)
   
-For some (limited) comparison two popular high dimensional data-vis algorithm as used, as implemented in scikit-learn:
+For some (limited) comparison two popular high dimensional data-vis algorithm are also used, as implemented in scikit-learn:
 - [UMAP](https://arxiv.org/abs/1802.03426) - implementation doc [here](https://umap-learn.readthedocs.io/en/latest/basic_usage.html)
 - [t-SNE](https://www.jmlr.org/papers/volume9/vandermaaten08a/vandermaaten08a.pdf) ( Barnes-Hut variant ) - implementation doc [here](https://scikit-learn.org/stable/modules/generated/sklearn.manifold.TSNE.html) 
 
