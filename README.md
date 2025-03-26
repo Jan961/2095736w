@@ -31,7 +31,7 @@ For some (limited) comparison two popular high dimensional data-vis algorithm ar
 
 
 
-It is important to note that the python interpreter for the project must use **Python version 3.10** as some packages used are not compatible with other versions.  
+It is important to note that the python interpreter for the project must use **Python version 3.10** as some dependencies are not compatible with other versions.  
 
 The project contains 3 example scripts - each in duplicate as python file and a jupyter notebook file.
 
