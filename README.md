@@ -1,4 +1,31 @@
 
+**Datasets used:**
+- custom toy dataset of points sampled from a surface of a 3D cube
+- custom toy dataset of points sampled from a 3D globe - idea and a significant part of the implementation from  [https://github.com/NikolayOskolkov/tSNE_vs_UMAP_GlobalStructure](https://github.com/NikolayOskolkov/tSNE_vs_UMAP_GlobalStructure)
+- [Coli20](https://git-disl.github.io/GTDLBench/datasets/coil20/)
+- [Mouse scRNA](https://pubmed.ncbi.nlm.nih.gov/30382198/) as provided by the authors of SQuadMDS who use the pre-pocessing described in [https://www.nature.com/articles/s41467-019-13056-x](https://www.nature.com/articles/s41467-019-13056-x)
+- random sample (with reduced resolution) of [MNIST](https://scikit-learn.org/stable/modules/generated/sklearn.datasets.fetch_openml.html)
+- random sample (again with reduced resolution) [Fashion MNIST](https://github.com/zalandoresearch/fashion-mnist)  
+  
+  
+
+
+
+**Alogithms**
+
+Main algorithms (re) implemented in Python here:
+- Pierre Lambert, Cyril de Bodt, Michel Verleysen, John A. Lee a c ["SQuadMDS: a lean Stochastic Quartet MDS improving global structure preservation in neighbor embedding"](https://www.sciencedirect.com/science/article/abs/pii/S0925231222008402)
+- Matthew Chalmers  ["A linear iteration time layout algorithm for visualising high-dimensional data"](https://ieeexplore.ieee.org/document/567787 )
+- Alistair Morrison, Greg Ross, Matthew Chalmers ["A hybrid layout algorithm for sub-quadratic multidimensional scaling"](https://www.researchgate.net/publication/4000921_A_hybrid_layout_algorithm_for_sub-quadratic_multidimensional_scaling)
+  
+For some (limited) comparison two popular high dimensional data-vis algorithm as used, as implemented in scikit-learn:
+- [UMAP](https://arxiv.org/abs/1802.03426) - implementation doc [here](https://umap-learn.readthedocs.io/en/latest/basic_usage.html)
+- [t-SNE](https://www.jmlr.org/papers/volume9/vandermaaten08a/vandermaaten08a.pdf) ( Barnes-Hut variant ) - implementation doc [here](https://scikit-learn.org/stable/modules/generated/sklearn.manifold.TSNE.html) 
+
+
+
+
+
 
 It is important to note that the python interpreter for the project must use **Python version 3.10** as some packages used are not compatible with other versions.  
 
