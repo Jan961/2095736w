@@ -41,7 +41,7 @@ is contained in the *experiments* package so that the obtained results can be re
 
 <br>
 <br>
-Below is a shortened and incomplete description of the API used:
+Below is a shortened and incomplete description of the API:
 <br>
 
 <br>
